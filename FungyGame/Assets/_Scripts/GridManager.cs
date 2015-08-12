@@ -23,7 +23,31 @@ public class GridManager: MonoBehaviour
 	//Hexagon tile width and height in game world
 	private float hexWidth;
 	private float hexHeight;
-	
+
+    private Transform hexGridGO; //Parent object of all hex tiles
+
+    //GridManager singleton
+    public static GridManager instance = null;
+    void Awake()
+    {
+        //Check if instance already exists
+        if (instance == null)
+            //if not, set instance to this
+            instance = this;
+        //If instance already exists and it's not this:
+        else if (instance != this)
+            //Then destroy this. This enforces our singleton pattern, meaning there can only ever be one instance of a GameManager.
+            Destroy(gameObject);
+        hexGridGO = new GameObject("HexGrid").transform;
+        hexGridGO.SetParent(transform);
+        DontDestroyOnLoad(gameObject);
+
+
+        //Get the size of the hexagon prefab
+        setSizes();
+        treeGenerator = new TreeGenerator(TreeTypes);
+    }
+
 	//Method to initialise Hexagon width and height
 	void setSizes()
 	{
@@ -62,10 +86,7 @@ public class GridManager: MonoBehaviour
 	
 	//Finally the method which initialises and positions all the tiles
 	void createGrid()
-	{
-		//Game object which is the parent of all the hex tiles
-		GameObject hexGridGO = new GameObject("HexGrid");
-		
+	{		
 		for (float y = 0; y < gridHeightInHexes; y++)
 		{
 			for (float x = 0; x < gridWidthInHexes; x++)
@@ -81,12 +102,35 @@ public class GridManager: MonoBehaviour
 			}
 		}
 	}
-	
+
+    /// <summary>
+    /// Creates an hexagon tile at the selected (x,y) position
+    /// </summary>
+    /// <param name="x">X position of the desired hexagon</param>
+    /// <param name="y">Y position of the desired hexagon</param>
+    public Hexagon CreateHexagonAt(int x, int y)
+    {
+        //GameObject assigned to Hex public variable is cloned
+        GameObject hex = (GameObject)Instantiate(Hex);
+        Transform hexTr = hex.transform;
+        Hexagon hexScript = hex.GetComponent<Hexagon>();
+        hexTr.eulerAngles = new Vector3(0, 0, 0);
+        //Current position in grid
+        Vector2 gridPos = new Vector2(x, y);
+        hexTr.position = calcWorldCoord(gridPos);
+        hexTr.name = string.Format("_hexTile_{0}_{1}", x, y);
+        hex.transform.SetParent(hexGridGO.transform);
+
+        //Set hexagon script values
+        hexScript.SetPosition(x, y);
+        return hexScript;
+    }
+
 	//The grid should be generated on game start
 	void Start()
 	{
-		setSizes();
-		createGrid();
-        treeGenerator = new TreeGenerator(TreeTypes);
+		//setSizes();
+		//createGrid();
+        //treeGenerator = new TreeGenerator(TreeTypes);
 	}
 }

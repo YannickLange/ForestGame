@@ -10,7 +10,7 @@ GameObject:
   - 4: {fileID: 467454}
   - 114: {fileID: 11469750}
   m_Layer: 0
-  m_Name: Billboard
+  m_Name: BillBoard
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

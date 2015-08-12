@@ -87,62 +87,47 @@ NavMeshSettings:
     cellSize: .166666672
     manualCellSize: 0
   m_NavMeshData: {fileID: 0}
---- !u!1 &725074547
+--- !u!1 &298880041
 GameObject:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   serializedVersion: 4
   m_Component:
-  - 4: {fileID: 725074549}
-  - 114: {fileID: 725074548}
-  - 114: {fileID: 725074550}
+  - 4: {fileID: 298880043}
+  - 114: {fileID: 298880042}
   m_Layer: 0
-  m_Name: GameManager
+  m_Name: Loader
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &725074548
+--- !u!114 &298880042
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 725074547}
+  m_GameObject: {fileID: 298880041}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6cacce452383fb3448226288d9830f9b, type: 3}
+  m_Script: {fileID: 11500000, guid: 24f9daf1770ca0a46915905d9e9c21e2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Hex: {fileID: 162990, guid: 82675ede3519c2b418895be35e6097af, type: 2}
-  TreeTypes:
-  - {fileID: 125284, guid: b83d0ffbc682c5d4d95e73d2456b6c70, type: 2}
-  gridWidthInHexes: 10
-  gridHeightInHexes: 10
---- !u!4 &725074549
+  gridManager: {fileID: 101278, guid: 815811e23a99e4c4ca44df707aa14d1f, type: 2}
+  map: {fileID: 199022, guid: 92f94400e4c307f4d9c574245db55a6d, type: 2}
+--- !u!4 &298880043
 Transform:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 725074547}
+  m_GameObject: {fileID: 298880041}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 2
---- !u!114 &725074550
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 725074547}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 459b2651955717b49bebdd114b976469, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &1016141279
 GameObject:
   m_ObjectHideFlags: 0
