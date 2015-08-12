@@ -6,6 +6,16 @@ public class GridManager: MonoBehaviour
 	//following public variable is used to store the hex model prefab;
 	//instantiate it by dragging the prefab on this variable using unity editor
 	public GameObject Hex;
+
+
+
+    //TODO: CHANGE THIS FUGLY
+    public GameObject[] TreeTypes; //<<<<<<<<<<<<<<<<<<
+
+
+
+
+    public TreeGenerator treeGenerator;
 	//next two variables can also be instantiated using unity editor
 	public int gridWidthInHexes = 10;
 	public int gridHeightInHexes = 10;
@@ -77,5 +87,6 @@ public class GridManager: MonoBehaviour
 	{
 		setSizes();
 		createGrid();
+        treeGenerator = new TreeGenerator(TreeTypes);
 	}
 }

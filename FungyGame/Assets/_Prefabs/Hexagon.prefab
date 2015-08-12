@@ -13,8 +13,8 @@ GameObject:
   - 95: {fileID: 9559686}
   - 64: {fileID: 6456862}
   m_Layer: 0
-  m_Name: HexGrid
-  m_TagString: Untagged
+  m_Name: Hexagon
+  m_TagString: Hexagon
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -97,7 +97,11 @@ Prefab:
   serializedVersion: 2
   m_Modification:
     m_TransformParent: {fileID: 0}
-    m_Modifications: []
+    m_Modifications:
+    - target: {fileID: 0}
+      propertyPath: m_TagString
+      value: Hexagon
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 0}
   m_RootGameObject: {fileID: 162990}

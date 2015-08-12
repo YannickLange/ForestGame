@@ -87,49 +87,6 @@ NavMeshSettings:
     cellSize: .166666672
     manualCellSize: 0
   m_NavMeshData: {fileID: 0}
---- !u!1001 &588043804
-Prefab:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    m_TransformParent: {fileID: 0}
-    m_Modifications:
-    - target: {fileID: 420150, guid: a41f95a460648924abed7959a1a36a3f, type: 2}
-      propertyPath: m_LocalPosition.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 420150, guid: a41f95a460648924abed7959a1a36a3f, type: 2}
-      propertyPath: m_LocalPosition.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 420150, guid: a41f95a460648924abed7959a1a36a3f, type: 2}
-      propertyPath: m_LocalPosition.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 420150, guid: a41f95a460648924abed7959a1a36a3f, type: 2}
-      propertyPath: m_LocalRotation.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 420150, guid: a41f95a460648924abed7959a1a36a3f, type: 2}
-      propertyPath: m_LocalRotation.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 420150, guid: a41f95a460648924abed7959a1a36a3f, type: 2}
-      propertyPath: m_LocalRotation.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 420150, guid: a41f95a460648924abed7959a1a36a3f, type: 2}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 420150, guid: a41f95a460648924abed7959a1a36a3f, type: 2}
-      propertyPath: m_RootOrder
-      value: 3
-      objectReference: {fileID: 0}
-    m_RemovedComponents:
-    - {fileID: 6465318, guid: a41f95a460648924abed7959a1a36a3f, type: 2}
-  m_ParentPrefab: {fileID: 100100000, guid: a41f95a460648924abed7959a1a36a3f, type: 2}
-  m_IsPrefabParent: 0
 --- !u!1 &725074547
 GameObject:
   m_ObjectHideFlags: 0
@@ -159,6 +116,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Hex: {fileID: 162990, guid: 82675ede3519c2b418895be35e6097af, type: 2}
+  TreeTypes:
+  - {fileID: 125284, guid: b83d0ffbc682c5d4d95e73d2456b6c70, type: 2}
   gridWidthInHexes: 10
   gridHeightInHexes: 10
 --- !u!4 &725074549
@@ -342,19 +301,3 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cameraSpeed: 1
---- !u!1 &2108980211 stripped
-GameObject:
-  m_PrefabParentObject: {fileID: 129402, guid: a41f95a460648924abed7959a1a36a3f, type: 2}
-  m_PrefabInternal: {fileID: 588043804}
---- !u!65 &2108980214
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 2108980211}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 1, y: 1, z: 6.1232336e-17}
-  m_Center: {x: 0, y: 0, z: 0}
