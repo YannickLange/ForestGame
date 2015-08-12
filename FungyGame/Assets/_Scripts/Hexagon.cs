@@ -5,6 +5,7 @@ using System;
 public delegate void HexagonEventHandler(object sender, EventArgs e);
 public class Hexagon : MonoBehaviour
 {
+    #region CLick event
     public event HexagonEventHandler ClickEvent;
     protected virtual void OnHexagonClick(EventArgs e)
     {
@@ -12,37 +13,45 @@ public class Hexagon : MonoBehaviour
             ClickEvent(this, e);
     }
 
+    void OnMouseDown()
+    {
+        OnHexagonClick(new EventArgs());
+    }
+    #endregion
+
+    private Tree _hexTree;
+    public Tree HexTree { get { return _hexTree; } }
+
     void Awake()
     {
         _renderer = GetComponent<Renderer>();
     }
 
-    #region Hexagon positionning
     private int _posX = -1;
+    /// <summary>
+    /// X position of the hexagon in the map grid
+    /// </summary>
     public int X
     {
-        get
-        {
-            return _posX;
-        }
+        get { return _posX; }
     }
 
     private int _posY = -1;
+    /// <summary>
+    /// Y position of the hexagon in the map grid
+    /// </summary>
     public int Y
     {
-        get
-        {
-            return _posY;
-        }
+        get { return _posY; }
     }
 
     private Renderer _renderer;
+    /// <summary>
+    /// Readonly hexagon's renderer
+    /// </summary>
     public Renderer HexagonRenderer
     {
-        get
-        {
-            return _renderer;
-        }
+        get { return _renderer; }
     }
 
     /// <summary>
@@ -54,10 +63,5 @@ public class Hexagon : MonoBehaviour
     {
         _posX = x;
         _posY = y;
-    }
-    #endregion
-    void OnMouseDown()
-    {
-        OnHexagonClick(new EventArgs());
     }
 }
