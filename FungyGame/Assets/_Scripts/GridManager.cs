@@ -63,6 +63,7 @@ public class GridManager: MonoBehaviour
 				//GameObject assigned to Hex public variable is cloned
 				GameObject hex = (GameObject)Instantiate(Hex);
                 hex.transform.eulerAngles = new Vector3(0, 0, 0);
+                hex.name = "Hex x:" + x + " y:" + y;
 				//Current position in grid
 				Vector2 gridPos = new Vector2(x, y);
 				hex.transform.position = calcWorldCoord(gridPos);
