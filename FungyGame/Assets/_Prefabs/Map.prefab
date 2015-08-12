@@ -39,6 +39,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ef5aefbc98a36464ab38c20a597764be, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  TreeTypes:
+  - {fileID: 125284, guid: b83d0ffbc682c5d4d95e73d2456b6c70, type: 2}
   NormalMaterial: {fileID: 2100000, guid: a6e23a5721322e547bfe5b475832f8ec, type: 2}
   HighlightedMaterial: {fileID: 2100000, guid: 2a26ed8bd392b924eb0ac3b49ee3d15b, type: 2}
   SurroundingMaterial: {fileID: 2100000, guid: 2041376c0376b154ea3bc0b59c439034, type: 2}
@@ -48,7 +50,11 @@ Prefab:
   serializedVersion: 2
   m_Modification:
     m_TransformParent: {fileID: 0}
-    m_Modifications: []
+    m_Modifications:
+    - target: {fileID: 0}
+      propertyPath: TreeTypes.Array.size
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 0}
   m_RootGameObject: {fileID: 199022}

@@ -1,28 +1,35 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class MoveCamera : MonoBehaviour {
+public class MoveCamera : MonoBehaviour
+{
 
     public float cameraSpeed = 1f;
-	// Update is called once per frame
-	void Update () {
+    public float smooth = 2.0F;
+    // Update is called once per frame
+    void Update()
+    {
 
-        if(Input.GetKey(KeyCode.A))
+        float verticalMovement = Input.GetAxis("Vertical") * cameraSpeed;
+        float horizontalMovement = Input.GetAxis("Horizontal") * cameraSpeed;
+        verticalMovement *= Time.deltaTime;
+        horizontalMovement *= Time.deltaTime;
+        float tempY = transform.position.y;
+        transform.Translate(horizontalMovement, verticalMovement, 0);
+        transform.position = new Vector3(transform.position.x, tempY, transform.position.z);
+
+
+
+        //TODO: Change for mobile. Maybe add 2 buttons?
+        if (Input.GetKey(KeyCode.Q))
         {
-            Camera.main.transform.position = new Vector3(Camera.main.transform.position.x + cameraSpeed * Time.deltaTime, Camera.main.transform.position.y, Camera.main.transform.position.z);
+            transform.RotateAround(Vector3.zero, Vector3.up, 30 * Time.deltaTime);
         }
-        if (Input.GetKey(KeyCode.D))
+        if (Input.GetKey(KeyCode.E))
         {
-            Camera.main.transform.position = new Vector3(Camera.main.transform.position.x - cameraSpeed * Time.deltaTime, Camera.main.transform.position.y, Camera.main.transform.position.z);
+            transform.RotateAround(Vector3.zero, Vector3.up, -30 * Time.deltaTime);
         }
-        if (Input.GetKey(KeyCode.W))
-        {
-            Camera.main.transform.position = new Vector3(Camera.main.transform.position.x, Camera.main.transform.position.y , Camera.main.transform.position.z - cameraSpeed * Time.deltaTime);
-        }
-        if (Input.GetKey(KeyCode.S))
-        {
-            Camera.main.transform.position = new Vector3(Camera.main.transform.position.x, Camera.main.transform.position.y, Camera.main.transform.position.z + cameraSpeed * Time.deltaTime);
-        }
-	
-	}
+
+
+    }
 }

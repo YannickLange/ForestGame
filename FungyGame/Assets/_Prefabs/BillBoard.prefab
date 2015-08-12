@@ -27,7 +27,7 @@ GameObject:
   - 33: {fileID: 3351296}
   - 64: {fileID: 6450806}
   - 23: {fileID: 2319488}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: TreeTexture
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -135,6 +135,10 @@ Prefab:
     - target: {fileID: 0}
       propertyPath: m_LocalPosition.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_Layer
+      value: 2
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 0}

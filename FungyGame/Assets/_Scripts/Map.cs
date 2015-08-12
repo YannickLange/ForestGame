@@ -4,6 +4,11 @@ using System;
 
 public class Map : MonoBehaviour
 {
+    //TODO: CHANGE THIS FUGLY
+    public GameObject[] TreeTypes; //<<<<<<<<<<<<<<<<<<
+
+    private TreeGenerator treeGenerator;
+
     //private array of hexagons
     private Hexagon[] _hexagons;
     //Readonly hexagons
@@ -48,11 +53,12 @@ public class Map : MonoBehaviour
 
     void Start()
     {
-        BuilMap();
+        BuildMap();
+        treeGenerator = new TreeGenerator(TreeTypes);
     }
 
 
-    public void BuilMap(int width = 10, int height = 10)
+    public void BuildMap(int width = 10, int height = 10)
     {
         _width = width;
         _height = height;
@@ -183,6 +189,5 @@ public class Map : MonoBehaviour
         hex.HexagonRenderer.material = HighlightedMaterial;
 
         SetSurroundingTilesHighlighted();
-        Debug.Log(hex.name);
     }
 }
