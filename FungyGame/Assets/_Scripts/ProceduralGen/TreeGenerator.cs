@@ -32,7 +32,7 @@ public class TreeGenerator
         {
                 if(Random.value <= density)
                 {
-
+                    int treetype = Random.Range(0, TreeTypes.Length);
                     GameObject tree = (GameObject)GameObject.Instantiate(TreeTypes[0], Map.instance.Hexagons[i].transform.position, Quaternion.Euler(new Vector3(0, 0, 0)));
                     Transform child = tree.transform.GetChild(0);
                     child.transform.position += new Vector3(0, child.GetComponent<MeshFilter>().mesh.bounds.size.y / (2 / child.localScale.y));
