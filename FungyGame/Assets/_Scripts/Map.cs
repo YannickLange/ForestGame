@@ -17,8 +17,6 @@ public class Map : MonoBehaviour
 		}
 	}
 	//Size parameters
-	private int _width = 10;
-	private int _height = 10;
 	public Material NormalMaterial;
 	public Material HighlightedMaterial;
 	public Material SurroundingValidMaterial;
@@ -47,20 +45,18 @@ public class Map : MonoBehaviour
 
 	void Start ()
 	{
-		BuildMap (GridManager.instance.gridWidthInHexes, GridManager.instance.gridHeightInHexes);
+		BuildMap ();
 	}
 
-	public void BuildMap (int width, int height)
+	public void BuildMap ()
 	{
-		_width = width;
-		_height = height;
-		if (width >= height)
-			_arrayOffset = width;
+		if (GridManager.instance.gridWidthInHexes >= GridManager.instance.gridHeightInHexes)
+			_arrayOffset = GridManager.instance.gridWidthInHexes;
 		else
-			_arrayOffset = height;
-		_hexagons = new Hexagon[width * height];
-		for (int x = 0; x < width; x++)
-			for (int y = 0; y < height; y++) {
+			_arrayOffset = GridManager.instance.gridHeightInHexes;
+		_hexagons = new Hexagon[GridManager.instance.gridWidthInHexes * GridManager.instance.gridHeightInHexes];
+		for (int x = 0; x < GridManager.instance.gridWidthInHexes; x++)
+			for (int y = 0; y < GridManager.instance.gridHeightInHexes; y++) {
 				_hexagons [x + y * _arrayOffset] = GridManager.instance.CreateHexagonAt (x, y);
 				_hexagons [x + y * _arrayOffset].ClickEvent += new HexagonEventHandler (this.OnHexagonClickedEvent);
 			}
@@ -148,11 +144,11 @@ public class Map : MonoBehaviour
 	{
 		if (x < 0)
 			return true;
-		if (x >= _width)
+		if (x >= GridManager.instance.gridWidthInHexes)
 			return true;
 		if (y < 0)
 			return true;
-		if (y >= _height)
+		if (y >= GridManager.instance.gridWidthInHexes)
 			return true;
 		return false;
 	}
