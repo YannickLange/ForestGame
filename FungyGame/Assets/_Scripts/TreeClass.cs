@@ -90,7 +90,7 @@ public class TreeClass : MonoBehaviour
                 _thisTransform.localScale = Scales[3];
                 _thisTransform.localPosition = Positions[3];
                 _nextEventTime = Time.time + Random.Range(TimerValues[2] - DeltaTime, TimerValues[2] + DeltaTime); //Set the next event time value
-                Type = TreeType.Sapling; //Update the tree type
+                Type = TreeType.DeadTree; //Update the tree type
                 break;
             case TreeType.DeadTree:
                 _thisRenderer.material = ResourcesManager.instance.Tree1Mat; //Change the current material

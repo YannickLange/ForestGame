@@ -16,6 +16,7 @@ public class TreeGenerator
     {
         //Game object which is the parent of all the hex tiles
         GameObject Forest = new GameObject("Forest");
+
         TreeClass.Positions = new Vector3[4];
         TreeClass.Scales = new Vector3[4];
 

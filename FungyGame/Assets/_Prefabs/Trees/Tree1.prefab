@@ -114,7 +114,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e6f2064f36cf11d42be2b0a77604dff5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  State: 1
+  DeltaTime: 20
+  TimerValues:
+  - 60
+  - 60
+  - 60
+  - 240
+  State: 0
   Type: 0
 --- !u!114 &11438794
 MonoBehaviour:
@@ -136,7 +142,7 @@ Prefab:
     m_Modifications:
     - target: {fileID: 0}
       propertyPath: State
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 0}
