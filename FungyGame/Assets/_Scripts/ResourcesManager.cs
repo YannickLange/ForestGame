@@ -13,11 +13,6 @@ public class ResourcesManager : MonoBehaviour
     public Material Tree3Mat;
     public Material Tree4Mat;
 
-    public Transform Tree1;
-    public Transform Tree2;
-    public Transform Tree3;
-    public Transform Tree4;
-
     public static ResourcesManager instance;
 
     void Awake()
