@@ -26,7 +26,8 @@ public class Map : MonoBehaviour
 
     public Material NormalMaterial;
     public Material HighlightedMaterial;
-    public Material SurroundingMaterial;
+    public Material SurroundingValidMaterial;
+    public Material SurroundingInvalidMaterial;
 
     private Hexagon _prevHexagon = null;
     private Hexagon[] _surroundingHexs; //Array for the 6 surrounding tiles of the selected hexagon
@@ -54,7 +55,6 @@ public class Map : MonoBehaviour
     void Start()
     {
         BuildMap();
-        treeGenerator = new TreeGenerator(TreeTypes);
     }
 
 
@@ -73,6 +73,8 @@ public class Map : MonoBehaviour
                 _hexagons[x + y * _arrayOffset] = GridManager.instance.CreateHexagonAt(x, y);
                 _hexagons[x + y * _arrayOffset].ClickEvent += new HexagonEventHandler(this.OnHexagonClickedEvent);
             }
+
+        treeGenerator = new TreeGenerator(TreeTypes);
     }
 
     private void GetSurroundingTiles(int x, int y)
@@ -151,7 +153,12 @@ public class Map : MonoBehaviour
         for (int i = 0; i < 6; i++)
         {
             if (_surroundingHexs[i] != null)
-                _surroundingHexs[i].HexagonRenderer.material = SurroundingMaterial;
+            {
+                if (_surroundingHexs[i].HexTree != null)
+                    _surroundingHexs[i].HexagonRenderer.material = SurroundingValidMaterial;
+                else
+                    _surroundingHexs[i].HexagonRenderer.material = SurroundingInvalidMaterial;
+            }
         }
     }
 
@@ -177,17 +184,31 @@ public class Map : MonoBehaviour
         }
     }
 
-    private void OnHexagonClickedEvent(object sender, EventArgs e)
+    private void OnHexagonClickedEvent(object sender, EventArgs e, int clickID)
     {
-        if (_prevHexagon != null)
-            _prevHexagon.HexagonRenderer.material = NormalMaterial;
         Hexagon hex = sender as Hexagon;
-        _prevHexagon = hex;
+        switch (clickID)
+        {
+            case 0:
+                if (_prevHexagon != null)
+                    _prevHexagon.HexagonRenderer.material = NormalMaterial;
+                _prevHexagon = hex;
 
-        GetSurroundingTiles(hex.X, hex.Y);
+                GetSurroundingTiles(hex.X, hex.Y);
 
-        hex.HexagonRenderer.material = HighlightedMaterial;
+                hex.HexagonRenderer.material = HighlightedMaterial;
 
-        SetSurroundingTilesHighlighted();
+                SetSurroundingTilesHighlighted();
+                break;
+            case 1:
+                //Checking if the selected hexgon is in the surroundings
+                for (int i = 0; i < 6; i++)
+                    if (_surroundingHexs[i] == hex)
+                    {
+                        Debug.Log("Perform action on the selected hexagon...[Infect/Expand/Other?]");
+                        break;
+                    }
+                break;
+        }
     }
 }

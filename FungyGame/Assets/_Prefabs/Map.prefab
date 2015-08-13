@@ -14,7 +14,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 4294967295
   m_IsActive: 1
 --- !u!4 &453906
 Transform:
@@ -45,7 +45,10 @@ MonoBehaviour:
   - {fileID: 192906, guid: 888f4308a2d32c548876a090435bf5e1, type: 2}
   NormalMaterial: {fileID: 2100000, guid: a6e23a5721322e547bfe5b475832f8ec, type: 2}
   HighlightedMaterial: {fileID: 2100000, guid: 2a26ed8bd392b924eb0ac3b49ee3d15b, type: 2}
-  SurroundingMaterial: {fileID: 2100000, guid: 2041376c0376b154ea3bc0b59c439034, type: 2}
+  SurroundingValidMaterial: {fileID: 2100000, guid: 2041376c0376b154ea3bc0b59c439034,
+    type: 2}
+  SurroundingInvalidMaterial: {fileID: 2100000, guid: a904068af651d244bbf613c470c37f9b,
+    type: 2}
 --- !u!1001 &100100000
 Prefab:
   m_ObjectHideFlags: 1
@@ -69,6 +72,18 @@ Prefab:
       propertyPath: TreeTypes.Array.data[2]
       value: 
       objectReference: {fileID: 192906, guid: 888f4308a2d32c548876a090435bf5e1, type: 2}
+    - target: {fileID: 0}
+      propertyPath: m_StaticEditorFlags
+      value: 4294967295
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: SurroundingInvalidMaterial
+      value: 
+      objectReference: {fileID: 2100000, guid: a904068af651d244bbf613c470c37f9b, type: 2}
+    - target: {fileID: 0}
+      propertyPath: SurroundingValidMaterial
+      value: 
+      objectReference: {fileID: 2100000, guid: 2041376c0376b154ea3bc0b59c439034, type: 2}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 0}
   m_RootGameObject: {fileID: 199022}

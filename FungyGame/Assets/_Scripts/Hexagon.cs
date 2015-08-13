@@ -2,25 +2,27 @@
 using System.Collections;
 using System;
 
-public delegate void HexagonEventHandler(object sender, EventArgs e);
+public delegate void HexagonEventHandler(object sender, EventArgs e, int clickID);
 public class Hexagon : MonoBehaviour
 {
     #region CLick event
     public event HexagonEventHandler ClickEvent;
-    protected virtual void OnHexagonClick(EventArgs e)
+    protected virtual void OnHexagonClick(EventArgs e, int clickID)
     {
         if (ClickEvent != null)
-            ClickEvent(this, e);
+            ClickEvent(this, e, clickID);
     }
 
-    void OnMouseDown()
+    void OnMouseOver()
     {
-        OnHexagonClick(new EventArgs());
+        if (Input.GetMouseButtonDown(0))
+            OnHexagonClick(new EventArgs(), 0);
+        if (Input.GetMouseButtonDown(1))
+            OnHexagonClick(new EventArgs(), 1);
     }
     #endregion
 
-    private Tree _hexTree;
-    public Tree HexTree { get { return _hexTree; } }
+    public Tree HexTree { get; set; }
 
     void Awake()
     {
