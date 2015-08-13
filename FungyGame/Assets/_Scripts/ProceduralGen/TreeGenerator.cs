@@ -21,7 +21,7 @@ public class TreeGenerator
         TreeClass.Scales = new Vector3[4];
 
         //Get the local pistion of the trees (used for growing function)
-        for (int i = 0; i < 4; i++ )
+        for (int i = 0; i < TreeTypes.Length; i++ )
         {
             GameObject tree = (GameObject)GameObject.Instantiate(TreeTypes[i]);
             Transform child = tree.transform.GetChild(0);

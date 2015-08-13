@@ -57,7 +57,7 @@ public class TreeClass : MonoBehaviour
         if(_processStarted)
         {
             //CheckState();
-            if(Time.time >= _nextEventTime && State == TreeState.Alive)
+            if(Time.time >= _nextEventTime && State == TreeState.Alive && Type != TreeType.BigTree/*TMP*/)
             {
                 GrowTree();
             }
@@ -86,19 +86,22 @@ public class TreeClass : MonoBehaviour
                 Type = TreeType.BigTree; //Update the tree type
                 break;
             case TreeType.BigTree:
-                _thisRenderer.material = ResourcesManager.instance.Tree4Mat; //Change the current material
-                _thisTransform.localScale = Scales[3];
-                _thisTransform.localPosition = Positions[3];
-                _nextEventTime = Time.time + Random.Range(TimerValues[2] - DeltaTime, TimerValues[2] + DeltaTime); //Set the next event time value
-                Type = TreeType.DeadTree; //Update the tree type
+                if (Random.Range(0, 10000) == 0)
+                {
+                    _thisRenderer.material = ResourcesManager.instance.Tree4Mat; //Change the current material
+                    _thisTransform.localScale = Scales[3];
+                    _thisTransform.localPosition = Positions[3];
+                    _nextEventTime = Time.time + Random.Range(TimerValues[2] - DeltaTime, TimerValues[2] + DeltaTime); //Set the next event time value
+                    Type = TreeType.DeadTree; //Update the tree type
+                }
                 break;
-            case TreeType.DeadTree:
+            /*case TreeType.DeadTree:
                 _thisRenderer.material = ResourcesManager.instance.Tree1Mat; //Change the current material
                 _thisTransform.localScale = Scales[0];
                 _thisTransform.localPosition = Positions[0];
                 _nextEventTime = Time.time + Random.Range(TimerValues[3] - DeltaTime, TimerValues[3] + DeltaTime); //Set the next event time value
                 Type = TreeType.Sapling; //Update the tree type
-                break;
+                break;*/
         }
     }
     private void CheckState()
