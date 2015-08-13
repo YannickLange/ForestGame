@@ -22,7 +22,7 @@ public class Hexagon : MonoBehaviour
     }
     #endregion
 
-    public Tree HexTree { get; set; }
+    public TreeClass HexTree { get; set; }
 
     void Awake()
     {

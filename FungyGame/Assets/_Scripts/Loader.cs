@@ -3,6 +3,7 @@ using System.Collections;
 
 public class Loader : MonoBehaviour
 {
+    public GameObject resourcesManager;
     public GameObject gridManager;
     public GameObject map;
 
@@ -12,5 +13,7 @@ public class Loader : MonoBehaviour
             Instantiate(gridManager);
         if (Map.instance == null)
             Instantiate(map);
+        if (ResourcesManager.instance == null)
+            Instantiate(resourcesManager);
     }
 }

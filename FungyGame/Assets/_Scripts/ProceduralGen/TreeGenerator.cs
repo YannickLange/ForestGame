@@ -27,7 +27,8 @@ public class TreeGenerator
                     Transform child = tree.transform.GetChild(0);
                     child.transform.position += new Vector3(0, child.GetComponent<MeshFilter>().mesh.bounds.size.y / (2 / child.localScale.y));
                     tree.transform.parent = Forest.transform;
-                    Map.instance.Hexagons[i].HexTree = tree.GetComponent<Tree>();
+                    Map.instance.Hexagons[i].HexTree = tree.GetComponent<TreeClass>();
+                    Map.instance.Hexagons[i].HexTree.StartTreeGrowth();
                 }
         }
     }

@@ -114,6 +114,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 24f9daf1770ca0a46915905d9e9c21e2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  resourcesManager: {fileID: 150510, guid: fa32f33923c65f747a51bca6f0204237, type: 2}
   gridManager: {fileID: 101278, guid: 815811e23a99e4c4ca44df707aa14d1f, type: 2}
   map: {fileID: 199022, guid: 92f94400e4c307f4d9c574245db55a6d, type: 2}
 --- !u!4 &298880043
