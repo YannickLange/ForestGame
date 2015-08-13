@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 using System;
 
 public class Map : MonoBehaviour
@@ -16,13 +17,8 @@ public class Map : MonoBehaviour
 			return _hexagons;
 		}
 	}
-	//Size parameters
-	public Material NormalMaterial;
-	public Material HighlightedMaterial;
-	public Material SurroundingValidMaterial;
-	public Material SurroundingInvalidMaterial;
+
 	private Hexagon _prevHexagon = null;
-	//Array for the 6 surrounding tiles of the selected hexagon
 	private int _arrayOffset = 0;
 	//Map singleton
 	public static Map instance = null;
@@ -63,68 +59,54 @@ public class Map : MonoBehaviour
 		treeGenerator = new TreeGenerator (TreeTypes);
 	}
 
-	private Hexagon[] GetSurroundingTiles (Hexagon hexagon)
+	private List<Hexagon> GetSurroundingTiles (Hexagon hexagon)
 	{
+		if (hexagon == null)
+			return new List<Hexagon> ();
 		int x = hexagon.X;
 		int y = hexagon.Y;
-		Hexagon[] surroundingHexs = new Hexagon[6];
+		List<Hexagon> surroundingHexs = new List<Hexagon> ();
 		#region LEFT SIDE
 		//Left upper sider
 		if (y % 2 != 0) {
 			if (!IsOutOfBounds (x, y - 1)) {
-				surroundingHexs [0] = _hexagons [x + (y - 1) * _arrayOffset];
-			} else {
-				surroundingHexs [0] = null;
+				surroundingHexs.Add (_hexagons [x + (y - 1) * _arrayOffset]);
 			}
-		} else if (!IsOutOfBounds (x - 1, y - 1))
-			surroundingHexs [0] = _hexagons [(x - 1) + (y - 1) * _arrayOffset];
-		else
-			surroundingHexs [0] = null;
+		} else if (!IsOutOfBounds (x - 1, y - 1)) {
+			surroundingHexs.Add (_hexagons [(x - 1) + (y - 1) * _arrayOffset]);
+		}
 
 
 		//Left tile
-		if (!IsOutOfBounds (x - 1, y))
-			surroundingHexs [1] = _hexagons [(x - 1) + y * _arrayOffset];
-		else
-			surroundingHexs [1] = null;
+		if (!IsOutOfBounds (x - 1, y)) {
+			surroundingHexs.Add (_hexagons [(x - 1) + y * _arrayOffset]);
+		}
 		//Left down tile
 		if (y % 2 != 0) {
-			if (!IsOutOfBounds (x, y + 1))
-				surroundingHexs [2] = _hexagons [x + (y + 1) * _arrayOffset];
-			else
-				surroundingHexs [2] = null;
-		} else if (!IsOutOfBounds (x - 1, y + 1))
-			surroundingHexs [2] = _hexagons [(x - 1) + (y + 1) * _arrayOffset];
-		else
-			surroundingHexs [2] = null;
+			if (!IsOutOfBounds (x, y + 1)) {
+				surroundingHexs.Add (_hexagons [x + (y + 1) * _arrayOffset]);
+			}
+		} else if (!IsOutOfBounds (x - 1, y + 1)) {
+			surroundingHexs.Add (_hexagons [(x - 1) + (y + 1) * _arrayOffset]);
+		}
 
 		#endregion
 		#region RIGHT SIDE
 		//Right down tile
 		if (y % 2 == 0) {
 			if (!IsOutOfBounds (x, y + 1))
-				surroundingHexs [3] = _hexagons [x + (y + 1) * _arrayOffset];
-			else
-				surroundingHexs [3] = null;
+				surroundingHexs.Add (_hexagons [x + (y + 1) * _arrayOffset]);
 		} else if (!IsOutOfBounds (x + 1, y + 1))
-			surroundingHexs [3] = _hexagons [(x + 1) + (y + 1) * _arrayOffset];
-		else
-			surroundingHexs [3] = null;
+			surroundingHexs.Add (_hexagons [(x + 1) + (y + 1) * _arrayOffset]);
 		//Right tile
 		if (!IsOutOfBounds (x + 1, y))
-			surroundingHexs [4] = _hexagons [(x + 1) + y * _arrayOffset];
-		else
-			surroundingHexs [4] = null;
+			surroundingHexs.Add (_hexagons [(x + 1) + y * _arrayOffset]);
 
 		if (y % 2 == 0) {
 			if (!IsOutOfBounds (x, y - 1))
-				surroundingHexs [5] = _hexagons [x + (y - 1) * _arrayOffset];
-			else
-				surroundingHexs [5] = null;
+				surroundingHexs.Add (_hexagons [x + (y - 1) * _arrayOffset]);
 		} else if (!IsOutOfBounds (x + 1, y - 1))
-			surroundingHexs [5] = _hexagons [(x + 1) + (y - 1) * _arrayOffset];
-		else
-			surroundingHexs [5] = null;
+			surroundingHexs.Add (_hexagons [(x + 1) + (y - 1) * _arrayOffset]);
 		#endregion
 
 		return surroundingHexs;
@@ -132,13 +114,11 @@ public class Map : MonoBehaviour
 
 	private void SetSurroundingTilesHighlighted (Hexagon hexagon)
 	{
-		var surroundingHexagons = GetSurroundingTiles (hexagon);
-		for (int i = 0; i < 6; i++) {
-			if (surroundingHexagons [i] != null) {
-				if (surroundingHexagons [i].HexTree != null)
-					surroundingHexagons [i].HexagonRenderer.material = SurroundingValidMaterial;
-				else
-					surroundingHexagons [i].HexagonRenderer.material = SurroundingInvalidMaterial;
+		foreach (var surroundingHexagon in GetSurroundingTiles (hexagon)) {
+			if (surroundingHexagon.HexTree != null) {
+				surroundingHexagon.currentState = Hexagon.State.CanMoveThere;
+			} else {
+				surroundingHexagon.currentState = Hexagon.State.CannotMoveThere;
 			}
 		}
 	}
@@ -150,10 +130,8 @@ public class Map : MonoBehaviour
 
 	private void ResetSurroundingTilesHighlighted (Hexagon hexagon)
 	{
-		var surroundingHexagons = GetSurroundingTiles (hexagon);
-		for (int i = 0; i < 6; i++) {
-			if (surroundingHexagons [i] != null)
-				surroundingHexagons [i].HexagonRenderer.material = NormalMaterial;
+		foreach (var surroundingHexagon in GetSurroundingTiles (hexagon)) {
+			surroundingHexagon.currentState = Hexagon.State.Normal;
 		}
 	}
 
@@ -163,20 +141,20 @@ public class Map : MonoBehaviour
 		switch (clickID) {
 		case 0:
 			if (_prevHexagon != null)
-				_prevHexagon.HexagonRenderer.material = NormalMaterial;
+				_prevHexagon.currentState = Hexagon.State.Normal;
 
 			ResetSurroundingTilesHighlighted (_prevHexagon);
 			_prevHexagon = hex;
-
-			hex.HexagonRenderer.material = HighlightedMaterial;
+			
+			hex.currentState = Hexagon.State.IsSelected;
 			SetSurroundingTilesHighlighted (_prevHexagon);
 
 			break;
 		case 1:
 			//Checking if the selected hexgon is in the surroundings
 			var surroundingTiles = GetSurroundingTiles (hex);
-			foreach (var surroundingTile in surroundingTiles){
-				if (surroundingTile == hex){
+			foreach (var surroundingTile in surroundingTiles) {
+				if (surroundingTile == hex) {
 					Debug.Log ("Perform action on the selected hexagon...[Infect/Expand/Other?]");
 					break;
 				}

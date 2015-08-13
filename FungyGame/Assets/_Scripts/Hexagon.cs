@@ -5,6 +5,36 @@ using System;
 public delegate void HexagonEventHandler(object sender, EventArgs e, int clickID);
 public class Hexagon : MonoBehaviour
 {
+	public enum State {
+		Normal,
+		IsSelected,
+		CanMoveThere,
+		CannotMoveThere,
+	};
+
+	private State _currentState = State.Normal;
+
+	public State currentState {
+		get { return _currentState; }
+		set {
+			_currentState = value;
+			switch (_currentState) {
+			case State.Normal:
+				_renderer.material = ResourcesManager.instance.HexNormalMaterial;
+				break;
+			case State.IsSelected:
+				_renderer.material = ResourcesManager.instance.HexSelectedMaterial;
+				break;
+			case State.CanMoveThere:
+				_renderer.material = ResourcesManager.instance.HexValidSurroundingMaterial;
+				break;
+			case State.CannotMoveThere:
+				_renderer.material = ResourcesManager.instance.HexInvalidSurroundingMaterial;
+				break;
+			}
+		}
+	}
+
     #region CLick event
     public event HexagonEventHandler ClickEvent;
     protected virtual void OnHexagonClick(EventArgs e, int clickID)
