@@ -4,14 +4,15 @@ using System.Collections;
 public enum TreeState { Alive, Infected };
 public enum TreeType { Sapling, SmallTree, BigTree };
 
-public class Tree : MonoBehaviour
+public class TreeClass : MonoBehaviour
 {
     public TreeState State;
     public TreeType Type;
-    private float _timeSpawn; //Moment when the tree is spawned
 
-    void Start()
+    private float _nextEventTime = 0f;
+
+    public void StartTreeGrowth()
     {
-        _timeSpawn = Time.time;
+
     }
 }
