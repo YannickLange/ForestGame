@@ -12,6 +12,7 @@ public class ResourcesManager : MonoBehaviour
     public Material Tree2Mat;
     public Material Tree3Mat;
     public Material Tree4Mat;
+	public Material TreeDeadMat;
 
     public Transform Tree1;
     public Transform Tree2;

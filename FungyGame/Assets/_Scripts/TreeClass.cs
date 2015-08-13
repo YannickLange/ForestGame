@@ -12,6 +12,7 @@ public class TreeClass : MonoBehaviour
     public float Level1To2 = 20;
     public float Level2To3 = 20;
     public float Level3To4 = 120;
+	public float DeadTime = 20;
     //ar
 
     public TreeState State;
@@ -28,6 +29,7 @@ public class TreeClass : MonoBehaviour
     {
         _thisTransform = transform.GetChild(0);
         _thisRenderer = _thisTransform.GetComponent<Renderer>();
+		SetTreeState(TreeState.Infected);
     }
 
     /// <summary>
@@ -102,13 +104,42 @@ public class TreeClass : MonoBehaviour
                 break;
         }
     }
-    private void CheckState()
-    {
+    
+	private void CheckState()
+	{
         switch (State)
         {
             case TreeState.Alive:
 
                 break;
+			case TreeState.Infected:
+				if(Time.time >= _nextEventTime)
+				{
+					TreeDying();
+				}
+
+				break;
+			case TreeState.Dead:
+				
+				break;
+
         }
     }
+
+	public void SetTreeState(TreeState newState)
+	{
+		State = newState;
+		switch (State)
+		{
+		case TreeState.Infected:
+			_nextEventTime = Time.time + DeadTime;
+			break;
+		}
+	}
+
+	private void TreeDying()
+	{
+		_thisRenderer.material = ResourcesManager.instance.TreeDeadMat;
+		State = TreeState.Dead;
+	}
 }
