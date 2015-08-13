@@ -77,9 +77,9 @@ public class GridManager : MonoBehaviour
     //Finally the method which initialises and positions all the tiles
     void createGrid()
     {
-        for (float y = 0; y < gridHeightInHexes; y++)
+        for (int y = 0; y < gridHeightInHexes; y++)
         {
-            for (float x = 0; x < gridWidthInHexes; x++)
+            for (int x = 0; x < gridWidthInHexes; x++)
             {
                 //GameObject assigned to Hex public variable is cloned
                 GameObject hex = (GameObject)Instantiate(Hex);
