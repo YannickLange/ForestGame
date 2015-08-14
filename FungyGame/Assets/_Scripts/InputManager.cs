@@ -40,7 +40,7 @@ public class InputManager : MonoBehaviour {
                     hit.collider.tag = "Hexagon";
                     endHexagon = hit.collider.gameObject.GetComponent<Hexagon>();
                     Debug.Log("hit endhex");
-                    if (endHexagon.infected || endHexagon.currentState != Hexagon.State.CanMoveThere)
+                    if (endHexagon.infected || !endHexagon.isAccessible())
                     {
                         endHexagon = null;
                         Debug.Log("endhex is already infected or you cant move there");
