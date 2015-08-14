@@ -47,7 +47,7 @@ public class Map : MonoBehaviour
     {
         BuildMap();
         int rand = UnityEngine.Random.Range(0, _hexagons.Length - 1);
-        while (_hexagons[rand].HexTree == null)
+        while (_hexagons[rand].HexTree == null || _hexagons[rand].HexTree.Type == TreeType.Sapling)
         {
             rand = UnityEngine.Random.Range(0, _hexagons.Length - 1);
         }

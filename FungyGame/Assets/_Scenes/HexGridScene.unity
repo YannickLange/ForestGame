@@ -117,6 +117,7 @@ MonoBehaviour:
   resourcesManager: {fileID: 150510, guid: fa32f33923c65f747a51bca6f0204237, type: 2}
   gridManager: {fileID: 101278, guid: 815811e23a99e4c4ca44df707aa14d1f, type: 2}
   map: {fileID: 199022, guid: 92f94400e4c307f4d9c574245db55a6d, type: 2}
+  infectButton: {fileID: 0}
 --- !u!4 &298880043
 Transform:
   m_ObjectHideFlags: 0
