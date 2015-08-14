@@ -34,9 +34,14 @@ public class Fungi : MonoBehaviour {
                 stage++;
                 timer = 0f;
 
-                //Update the stage sprite
-                spriteRenderer.sprite = stageSprites[stage];
+                UpdateSprite();
             }
         }
 	}
+
+    public void UpdateSprite()
+    {
+        //Update the stage sprite
+        spriteRenderer.sprite = stageSprites[stage];
+    }
 }

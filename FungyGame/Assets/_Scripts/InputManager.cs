@@ -59,6 +59,7 @@ public class InputManager : MonoBehaviour {
                 endHexagon.infected = true;
                 fungiObject.transform.parent = endHexagon.transform;
                 startHexChildScript.stage = 0;
+                startHexChildScript.UpdateSprite();
                 endHexagon = null;
                 startHexagon = null;
             }
