@@ -3,8 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 
 public class Fungi : MonoBehaviour {
-
-    public GameObject prefab;
+    public string tileSheetName = "fungusTest";
 
     public float timer = 0f;
     public float maxTimer = 10f;
@@ -20,7 +19,8 @@ public class Fungi : MonoBehaviour {
     {
         // load all frames in fruitsSprites array
         spriteRenderer = GetComponent<SpriteRenderer>();
-        stageSprites = Resources.LoadAll<Sprite>("tileSheet");
+        stageSprites = Resources.LoadAll<Sprite>(tileSheetName);
+        maxStage = maxStage - 1;
     }
 	
 	// Update is called once per frame
