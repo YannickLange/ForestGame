@@ -8,6 +8,7 @@ public class Map : MonoBehaviour
 	//TODO: CHANGE THIS FUGLY
 	public GameObject[] TreeTypes;
 	//<<<<<<<<<<<<<<<<<<
+    public GameObject fungi;
 	private TreeGenerator treeGenerator;
 	//private array of hexagons
 	private Hexagon[] _hexagons;
@@ -41,6 +42,15 @@ public class Map : MonoBehaviour
 	void Start ()
 	{
 		BuildMap ();
+        int rand = UnityEngine.Random.Range(0, _hexagons.Length - 1);
+        while (_hexagons[rand].HexTree == null)
+        {
+            rand = UnityEngine.Random.Range(0, _hexagons.Length - 1);
+        }
+        _hexagons[rand].infected = true;
+        Instantiate(fungi, _hexagons[rand].transform.position + new Vector3(0, 0.1f, 0), Quaternion.LookRotation(Vector3.up * 90));
+
+
 	}
 
 	public void BuildMap ()
@@ -59,7 +69,7 @@ public class Map : MonoBehaviour
 		treeGenerator = new TreeGenerator (TreeTypes);
 	}
 
-	private List<Hexagon> GetSurroundingTiles (Hexagon hexagon)
+	public List<Hexagon> GetSurroundingTiles (Hexagon hexagon)
 	{
 		if (hexagon == null)
 			return new List<Hexagon> ();

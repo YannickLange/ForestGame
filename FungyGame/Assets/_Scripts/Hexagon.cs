@@ -5,11 +5,12 @@ using System;
 public delegate void HexagonEventHandler(object sender, EventArgs e, int clickID);
 public class Hexagon : MonoBehaviour
 {
+    public bool infected { get; set; }
 	public enum State {
 		Normal,
 		IsSelected,
 		CanMoveThere,
-		CannotMoveThere,
+		CannotMoveThere
 	};
 
 	private State _currentState = State.Normal;
