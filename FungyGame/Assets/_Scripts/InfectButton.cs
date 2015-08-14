@@ -15,7 +15,13 @@ public class InfectButton : MonoBehaviour
 	
     }
 
+    public delegate void ButtonEventHandler();
+
+    public event ButtonEventHandler ClickEvent;
+
     public void OnButtonClicked()
     {
+        if (ClickEvent != null)
+            ClickEvent();
     }
 }
