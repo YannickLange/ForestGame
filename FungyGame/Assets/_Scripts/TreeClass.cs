@@ -6,14 +6,11 @@ public enum TreeType { Sapling, SmallTree, BigTree, DeadTree };
 
 public class TreeClass : MonoBehaviour
 {
-    //Global timer values:
-    public float DeltaTime = 5;
-    public float Level4To1 = 20;
-    public float Level1To2 = 20;
-    public float Level2To3 = 20;
-    public float Level3To4 = 120;
-	public float DeadTime = 20;
-    //ar
+    public static Vector3[] Positions;
+    public static Vector3[] Scales;
+
+    public float DeltaTime = 20;
+    public float[] TimerValues = { 60, 60, 60, 240, 20 }; //[SAPLING],[SMALLTREE],[BIGTREE],[DEADTREE]
 
     public TreeState State;
     public TreeType Type;
@@ -40,16 +37,16 @@ public class TreeClass : MonoBehaviour
         switch (Type)
         {
             case TreeType.Sapling:
-                _nextEventTime = Time.time + Random.Range(Level4To1 - DeltaTime, Level4To1 + DeltaTime);
+                _nextEventTime = Time.time + Random.Range(TimerValues[0] - DeltaTime, TimerValues[0] + DeltaTime);
                 break;
             case TreeType.SmallTree:
-                _nextEventTime = Time.time + Random.Range(Level1To2 - DeltaTime, Level1To2 + DeltaTime);
+                _nextEventTime = Time.time + Random.Range(TimerValues[1] - DeltaTime, TimerValues[1] + DeltaTime);
                 break;
             case TreeType.BigTree:
-                _nextEventTime = Time.time + Random.Range(Level2To3 - DeltaTime, Level2To3 + DeltaTime);
+                _nextEventTime = Time.time + Random.Range(TimerValues[2] - DeltaTime, TimerValues[2] + DeltaTime);
                 break;
             case TreeType.DeadTree:
-                _nextEventTime = Time.time + Random.Range(Level4To1 - DeltaTime, Level4To1 + DeltaTime);
+                _nextEventTime = Time.time + Random.Range(TimerValues[3] - DeltaTime, TimerValues[3] + DeltaTime);
                 break;
         }
         _processStarted = true;
@@ -59,8 +56,8 @@ public class TreeClass : MonoBehaviour
     {
         if(_processStarted)
         {
-            CheckState();
-            if(Time.time >= _nextEventTime)
+            //CheckState();
+            if(Time.time >= _nextEventTime && State == TreeState.Alive && Type != TreeType.BigTree/*TMP*/)
             {
                 GrowTree();
             }
@@ -76,32 +73,35 @@ public class TreeClass : MonoBehaviour
         {
             case TreeType.Sapling:
                 _thisRenderer.material = ResourcesManager.instance.Tree2Mat; //Change the current material
-                _thisTransform.localScale = ResourcesManager.instance.Tree2.localScale;
-                _thisTransform.position = ResourcesManager.instance.Tree2.position;
-                _nextEventTime = Time.time + Random.Range(Level1To2 - DeltaTime, Level1To2 + DeltaTime); //Set the next event time value
+                _thisTransform.localScale = Scales[1];
+                _thisTransform.localPosition = Positions[1];
+                _nextEventTime = Time.time + Random.Range(TimerValues[0] - DeltaTime, TimerValues[0] + DeltaTime); //Set the next event time value
                 Type = TreeType.SmallTree; //Update the tree type
                 break;
             case TreeType.SmallTree:
                 _thisRenderer.material = ResourcesManager.instance.Tree3Mat; //Change the current material
-                _thisTransform.localScale = ResourcesManager.instance.Tree3.localScale;
-                _thisTransform.position = ResourcesManager.instance.Tree3.position;
-                _nextEventTime = Time.time + Random.Range(Level2To3 - DeltaTime, Level2To3 + DeltaTime); //Set the next event time value
+                _thisTransform.localScale = Scales[2];
+                _thisTransform.localPosition = Positions[2];
+                _nextEventTime = Time.time + Random.Range(TimerValues[1] - DeltaTime, TimerValues[1] + DeltaTime); //Set the next event time value
                 Type = TreeType.BigTree; //Update the tree type
                 break;
             case TreeType.BigTree:
-                _thisRenderer.material = ResourcesManager.instance.Tree4Mat; //Change the current material
-                _thisTransform.localScale = ResourcesManager.instance.Tree4.localScale;
-                _thisTransform.position = ResourcesManager.instance.Tree4.position;
-                _nextEventTime = Time.time + Random.Range(Level3To4 - DeltaTime, Level3To4 + DeltaTime); //Set the next event time value
-                Type = TreeType.Sapling; //Update the tree type
+                if (Random.Range(0, 10000) == 0)
+                {
+                    _thisRenderer.material = ResourcesManager.instance.Tree4Mat; //Change the current material
+                    _thisTransform.localScale = Scales[3];
+                    _thisTransform.localPosition = Positions[3];
+                    _nextEventTime = Time.time + Random.Range(TimerValues[2] - DeltaTime, TimerValues[2] + DeltaTime); //Set the next event time value
+                    Type = TreeType.DeadTree; //Update the tree type
+                }
                 break;
-            case TreeType.DeadTree:
+            /*case TreeType.DeadTree:
                 _thisRenderer.material = ResourcesManager.instance.Tree1Mat; //Change the current material
-                _thisTransform.localScale = ResourcesManager.instance.Tree1.localScale;
-                _thisTransform.position = ResourcesManager.instance.Tree1.position;
-                _nextEventTime = Time.time + Random.Range(Level4To1 - DeltaTime, Level4To1 + DeltaTime); //Set the next event time value
+                _thisTransform.localScale = Scales[0];
+                _thisTransform.localPosition = Positions[0];
+                _nextEventTime = Time.time + Random.Range(TimerValues[3] - DeltaTime, TimerValues[3] + DeltaTime); //Set the next event time value
                 Type = TreeType.Sapling; //Update the tree type
-                break;
+                break;*/
         }
     }
     

@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 using System;
 
 public class Map : MonoBehaviour
@@ -16,14 +17,8 @@ public class Map : MonoBehaviour
 			return _hexagons;
 		}
 	}
-	//Size parameters
-	public Material NormalMaterial;
-	public Material HighlightedMaterial;
-	public Material SurroundingValidMaterial;
-	public Material SurroundingInvalidMaterial;
+
 	private Hexagon _prevHexagon = null;
-	private Hexagon[] _surroundingHexs;
-	//Array for the 6 surrounding tiles of the selected hexagon
 	private int _arrayOffset = 0;
 	//Map singleton
 	public static Map instance = null;
@@ -31,16 +26,16 @@ public class Map : MonoBehaviour
 	void Awake ()
 	{
 		//Check if instance already exists
-		if (instance == null)
-            //if not, set instance to this
+		if (instance == null) {
+			//if not, set instance to this
 			instance = this;
+		}
         //If instance already exists and it's not this:
-        else if (instance != this)
-            //Then destroy this. This enforces our singleton pattern, meaning there can only ever be one instance of a GameManager.
+        else if (instance != this) {
+			//Then destroy this. This enforces our singleton pattern, meaning there can only ever be one instance of a GameManager.
 			Destroy (gameObject);
+		}
 		DontDestroyOnLoad (gameObject);
-
-		_surroundingHexs = new Hexagon[6];
 	}
 
 	void Start ()
@@ -64,100 +59,79 @@ public class Map : MonoBehaviour
 		treeGenerator = new TreeGenerator (TreeTypes);
 	}
 
-	private void GetSurroundingTiles (int x, int y)
+	private List<Hexagon> GetSurroundingTiles (Hexagon hexagon)
 	{
-		ResetSurroundingTilesHighlighted ();
-
+		if (hexagon == null)
+			return new List<Hexagon> ();
+		int x = hexagon.X;
+		int y = hexagon.Y;
+		List<Hexagon> surroundingHexs = new List<Hexagon> ();
 		#region LEFT SIDE
 		//Left upper sider
 		if (y % 2 != 0) {
 			if (!IsOutOfBounds (x, y - 1)) {
-				_surroundingHexs [0] = _hexagons [x + (y - 1) * _arrayOffset];
-			} else {
-				_surroundingHexs [0] = null;
+				surroundingHexs.Add (_hexagons [x + (y - 1) * _arrayOffset]);
 			}
-		} else if (!IsOutOfBounds (x - 1, y - 1))
-			_surroundingHexs [0] = _hexagons [(x - 1) + (y - 1) * _arrayOffset];
-		else
-			_surroundingHexs [0] = null;
+		} else if (!IsOutOfBounds (x - 1, y - 1)) {
+			surroundingHexs.Add (_hexagons [(x - 1) + (y - 1) * _arrayOffset]);
+		}
 
 
 		//Left tile
-		if (!IsOutOfBounds (x - 1, y))
-			_surroundingHexs [1] = _hexagons [(x - 1) + y * _arrayOffset];
-		else
-			_surroundingHexs [1] = null;
+		if (!IsOutOfBounds (x - 1, y)) {
+			surroundingHexs.Add (_hexagons [(x - 1) + y * _arrayOffset]);
+		}
 		//Left down tile
 		if (y % 2 != 0) {
-			if (!IsOutOfBounds (x, y + 1))
-				_surroundingHexs [2] = _hexagons [x + (y + 1) * _arrayOffset];
-			else
-				_surroundingHexs [2] = null;
-		} else if (!IsOutOfBounds (x - 1, y + 1))
-			_surroundingHexs [2] = _hexagons [(x - 1) + (y + 1) * _arrayOffset];
-		else
-			_surroundingHexs [2] = null;
+			if (!IsOutOfBounds (x, y + 1)) {
+				surroundingHexs.Add (_hexagons [x + (y + 1) * _arrayOffset]);
+			}
+		} else if (!IsOutOfBounds (x - 1, y + 1)) {
+			surroundingHexs.Add (_hexagons [(x - 1) + (y + 1) * _arrayOffset]);
+		}
 
 		#endregion
 		#region RIGHT SIDE
 		//Right down tile
 		if (y % 2 == 0) {
 			if (!IsOutOfBounds (x, y + 1))
-				_surroundingHexs [3] = _hexagons [x + (y + 1) * _arrayOffset];
-			else
-				_surroundingHexs [3] = null;
+				surroundingHexs.Add (_hexagons [x + (y + 1) * _arrayOffset]);
 		} else if (!IsOutOfBounds (x + 1, y + 1))
-			_surroundingHexs [3] = _hexagons [(x + 1) + (y + 1) * _arrayOffset];
-		else
-			_surroundingHexs [3] = null;
+			surroundingHexs.Add (_hexagons [(x + 1) + (y + 1) * _arrayOffset]);
 		//Right tile
 		if (!IsOutOfBounds (x + 1, y))
-			_surroundingHexs [4] = _hexagons [(x + 1) + y * _arrayOffset];
-		else
-			_surroundingHexs [4] = null;
+			surroundingHexs.Add (_hexagons [(x + 1) + y * _arrayOffset]);
 
 		if (y % 2 == 0) {
 			if (!IsOutOfBounds (x, y - 1))
-				_surroundingHexs [5] = _hexagons [x + (y - 1) * _arrayOffset];
-			else
-				_surroundingHexs [5] = null;
+				surroundingHexs.Add (_hexagons [x + (y - 1) * _arrayOffset]);
 		} else if (!IsOutOfBounds (x + 1, y - 1))
-			_surroundingHexs [5] = _hexagons [(x + 1) + (y - 1) * _arrayOffset];
-		else
-			_surroundingHexs [5] = null;
+			surroundingHexs.Add (_hexagons [(x + 1) + (y - 1) * _arrayOffset]);
 		#endregion
+
+		return surroundingHexs;
 	}
 
-	private void SetSurroundingTilesHighlighted ()
+	private void SetSurroundingTilesHighlighted (Hexagon hexagon)
 	{
-		for (int i = 0; i < 6; i++) {
-			if (_surroundingHexs [i] != null) {
-				if (_surroundingHexs [i].HexTree != null)
-					_surroundingHexs [i].HexagonRenderer.material = SurroundingValidMaterial;
-				else
-					_surroundingHexs [i].HexagonRenderer.material = SurroundingInvalidMaterial;
+		foreach (var surroundingHexagon in GetSurroundingTiles (hexagon)) {
+			if (surroundingHexagon.HexTree != null) {
+				surroundingHexagon.currentState = Hexagon.State.CanMoveThere;
+			} else {
+				surroundingHexagon.currentState = Hexagon.State.CannotMoveThere;
 			}
 		}
 	}
-	
+
 	private bool IsOutOfBounds (int x, int y)
 	{
-		if (x < 0)
-			return true;
-		if (x >= GridManager.instance.gridWidthInHexes)
-			return true;
-		if (y < 0)
-			return true;
-		if (y >= GridManager.instance.gridWidthInHexes)
-			return true;
-		return false;
+		return (y < 0 || x >= GridManager.instance.gridWidthInHexes || y >= GridManager.instance.gridWidthInHexes);
 	}
 
-	private void ResetSurroundingTilesHighlighted ()
+	private void ResetSurroundingTilesHighlighted (Hexagon hexagon)
 	{
-		for (int i = 0; i < 6; i++) {
-			if (_surroundingHexs [i] != null)
-				_surroundingHexs [i].HexagonRenderer.material = NormalMaterial;
+		foreach (var surroundingHexagon in GetSurroundingTiles (hexagon)) {
+			surroundingHexagon.currentState = Hexagon.State.Normal;
 		}
 	}
 
@@ -167,22 +141,24 @@ public class Map : MonoBehaviour
 		switch (clickID) {
 		case 0:
 			if (_prevHexagon != null)
-				_prevHexagon.HexagonRenderer.material = NormalMaterial;
+				_prevHexagon.currentState = Hexagon.State.Normal;
+
+			ResetSurroundingTilesHighlighted (_prevHexagon);
 			_prevHexagon = hex;
+			
+			hex.currentState = Hexagon.State.IsSelected;
+			SetSurroundingTilesHighlighted (_prevHexagon);
 
-			GetSurroundingTiles (hex.X, hex.Y);
-
-			hex.HexagonRenderer.material = HighlightedMaterial;
-
-			SetSurroundingTilesHighlighted ();
 			break;
 		case 1:
-                //Checking if the selected hexgon is in the surroundings
-			for (int i = 0; i < 6; i++)
-				if (_surroundingHexs [i] == hex) {
+			//Checking if the selected hexgon is in the surroundings
+			var surroundingTiles = GetSurroundingTiles (hex);
+			foreach (var surroundingTile in surroundingTiles) {
+				if (surroundingTile == hex) {
 					Debug.Log ("Perform action on the selected hexagon...[Infect/Expand/Other?]");
 					break;
 				}
+			}
 			break;
 		}
 	}

@@ -43,12 +43,6 @@ MonoBehaviour:
   - {fileID: 178660, guid: 890b2208cddf0ab4e9a9f69787b361eb, type: 2}
   - {fileID: 172126, guid: 29d79f6ca92a3374dbc5d7f762247c9d, type: 2}
   - {fileID: 192906, guid: 888f4308a2d32c548876a090435bf5e1, type: 2}
-  NormalMaterial: {fileID: 2100000, guid: a6e23a5721322e547bfe5b475832f8ec, type: 2}
-  HighlightedMaterial: {fileID: 2100000, guid: 2a26ed8bd392b924eb0ac3b49ee3d15b, type: 2}
-  SurroundingValidMaterial: {fileID: 2100000, guid: 2041376c0376b154ea3bc0b59c439034,
-    type: 2}
-  SurroundingInvalidMaterial: {fileID: 2100000, guid: a904068af651d244bbf613c470c37f9b,
-    type: 2}
 --- !u!1001 &100100000
 Prefab:
   m_ObjectHideFlags: 1
@@ -84,6 +78,10 @@ Prefab:
       propertyPath: SurroundingValidMaterial
       value: 
       objectReference: {fileID: 2100000, guid: 2041376c0376b154ea3bc0b59c439034, type: 2}
+    - target: {fileID: 0}
+      propertyPath: TreeTypes.Array.data[3]
+      value: 
+      objectReference: {fileID: 192906, guid: 874cdd69a232abc43a842191ae501c89, type: 2}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 0}
   m_RootGameObject: {fileID: 199022}
