@@ -24,9 +24,9 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 154234}
-  m_LocalRotation: {x: .707106829, y: 0, z: 0, w: .707106709}
-  m_LocalPosition: {x: .230149508, y: .200000003, z: -.230000004}
-  m_LocalScale: {x: .300000012, y: .25, z: .5}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: .00100000005, z: 0}
+  m_LocalScale: {x: .119999997, y: .119999997, z: .119999997}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
@@ -41,6 +41,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4168ac15339be4e47bd9ae7f511cb4d1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  fixedRotationAngle: 90
+  fixedRotationDirection: 1
 --- !u!114 &11490934
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -52,11 +54,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e7f781d808d3d464caa128da85f057d4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  tileSheetName: fungusTest
+  tileSheetName: fungiHexSheet
   timer: 0
   maxTimer: 1
   stage: 0
-  maxStage: 4
+  maxStage: 6
 --- !u!212 &21248412
 SpriteRenderer:
   m_ObjectHideFlags: 1
@@ -81,7 +83,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: a8f002674585bb4478ffd3f8f5f53692, type: 3}
+  m_Sprite: {fileID: 21300006, guid: f1a98c98b593d784eb47e4990efbce04, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
 --- !u!1001 &100100000
 Prefab:
@@ -92,15 +94,15 @@ Prefab:
     m_Modifications:
     - target: {fileID: 0}
       propertyPath: m_LocalScale.x
-      value: .300000012
+      value: .119999997
       objectReference: {fileID: 0}
     - target: {fileID: 0}
       propertyPath: m_LocalScale.y
-      value: .25
+      value: .119999997
       objectReference: {fileID: 0}
     - target: {fileID: 0}
       propertyPath: m_LocalScale.z
-      value: .5
+      value: .119999997
       objectReference: {fileID: 0}
     - target: {fileID: 0}
       propertyPath: maxTimer
@@ -109,11 +111,43 @@ Prefab:
     - target: {fileID: 0}
       propertyPath: m_Sprite
       value: 
-      objectReference: {fileID: 21300000, guid: a8f002674585bb4478ffd3f8f5f53692,
+      objectReference: {fileID: 21300006, guid: f1a98c98b593d784eb47e4990efbce04,
         type: 3}
     - target: {fileID: 0}
       propertyPath: maxStage
-      value: 4
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: tileSheetName
+      value: fungiHexSheet
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: fixedRotationDirection
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: fixedRotationAngle
+      value: 90
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_LocalPosition.y
+      value: .00100000005
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_LocalPosition.z
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 0}

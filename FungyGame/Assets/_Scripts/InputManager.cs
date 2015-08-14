@@ -34,7 +34,7 @@ public class InputManager : MonoBehaviour
 
     public void EndDrag(Hexagon endHexagon)
     {
-        GameObject fungiObject = (GameObject)Instantiate(prefab, endHexagon.transform.position + new Vector3(0, 0.1f, 0), Quaternion.LookRotation(Vector3.up * 90));
+        GameObject fungiObject = (GameObject)Instantiate(prefab, endHexagon.transform.position + new Vector3(0, 0.001f, 0), Quaternion.LookRotation(Vector3.up * 90));
         endHexagon.infected = true;
         fungiObject.transform.parent = endHexagon.transform;
         startHexChildScript.stage = 0;
