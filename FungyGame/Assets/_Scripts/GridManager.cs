@@ -19,6 +19,7 @@ public class GridManager : MonoBehaviour
     
     public InfectButton InfectButton { get; set; }
     public MoveButton MoveButton { get; set; }
+    public InputManager InputManager { get; set; }
 
     //GridManager singleton
     public static GridManager instance = null;
