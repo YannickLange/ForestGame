@@ -52,7 +52,8 @@ public class Map : MonoBehaviour
             rand = UnityEngine.Random.Range(0, _hexagons.Length - 1);
         }
         _hexagons[rand].infected = true;
-        Instantiate(fungi, _hexagons[rand].transform.position + new Vector3(0, 0.1f, 0), Quaternion.LookRotation(Vector3.up * 90));
+        GameObject fungiObject = (GameObject)Instantiate(fungi, _hexagons[rand].transform.position + new Vector3(0, 0.1f, 0), Quaternion.LookRotation(Vector3.up * 90));
+        fungiObject.transform.parent = _hexagons[rand].gameObject.transform;
 
 
     }

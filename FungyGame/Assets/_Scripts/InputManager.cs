@@ -1,12 +1,13 @@
 ﻿using UnityEngine;
 using System.Collections;
 
+//TODO: Change the name
 public class InputManager : MonoBehaviour {
 
     public GameObject prefab;
     private Hexagon startHexagon, endHexagon;
+    private Fungi startHexChildScript;
 	
-	//TODO: Change the fact that Trees are getting infected/checked to checking/infecting Hexagonsw
 	void Update () {
 
 
@@ -20,11 +21,23 @@ public class InputManager : MonoBehaviour {
                 hit.collider.tag = "Hexagon";
                 startHexagon = hit.collider.gameObject.GetComponent<Hexagon>();
                 Debug.Log("hit start hex");
+                
+
                 if (!startHexagon.infected)
                 {
                     startHexagon = null;
                     Debug.Log("start hex is not infected");
                 }
+                else if (startHexagon.infected)
+                {
+                    startHexChildScript = startHexagon.transform.GetChild(0).GetComponent<Fungi>();
+                    if (startHexChildScript.stage != startHexChildScript.maxStage)
+                    {
+                        startHexagon = null;
+                        Debug.Log("start hex is not maxstage");
+                    }
+                }
+                
             }
         }
 
@@ -52,8 +65,10 @@ public class InputManager : MonoBehaviour {
                     if (Map.instance.GetSurroundingTiles(startHexagon).Contains(endHexagon))
                     {
                         //TODO: Change this so the hexagon gets infected?
-                        Instantiate(prefab, endHexagon.transform.position + new Vector3(0, 0.1f, 0), Quaternion.LookRotation(Vector3.up * 90));
+                        GameObject fungiObject = (GameObject)Instantiate(prefab, endHexagon.transform.position + new Vector3(0, 0.1f, 0), Quaternion.LookRotation(Vector3.up * 90));
                         endHexagon.infected = true;
+                        fungiObject.transform.parent = endHexagon.transform;
+                        startHexChildScript.stage = 0;
                         endHexagon = null;
                         startHexagon = null;
                     }
