@@ -190,10 +190,14 @@ public class Map : MonoBehaviour
         switch (userInteractionState)
         {
             case UserInteractionState.Idle:
+                userInteractionState = UserInteractionState.Idle;
                 break;
             case UserInteractionState.HexagonSelected:
+                GridManager.instance.InputManager.StartDrag(_prevHexagon);
+                userInteractionState = UserInteractionState.StartedMoving;
                 break;
             case UserInteractionState.StartedMoving:
+                userInteractionState = UserInteractionState.StartedMoving;
                 break;
         }
     }
@@ -203,10 +207,13 @@ public class Map : MonoBehaviour
         switch (userInteractionState)
         {
             case UserInteractionState.Idle:
+                userInteractionState = UserInteractionState.Idle;
                 break;
             case UserInteractionState.HexagonSelected:
+                userInteractionState = UserInteractionState.HexagonSelected;
                 break;
             case UserInteractionState.StartedMoving:
+                userInteractionState = UserInteractionState.StartedMoving;
                 break;
         }
     }
@@ -216,10 +223,13 @@ public class Map : MonoBehaviour
         switch (userInteractionState)
         {
             case UserInteractionState.Idle:
+                userInteractionState = UserInteractionState.Idle;
                 break;
             case UserInteractionState.HexagonSelected:
+                userInteractionState = UserInteractionState.HexagonSelected;
                 break;
             case UserInteractionState.StartedMoving:
+                userInteractionState = UserInteractionState.StartedMoving;
                 break;
         }
     }
@@ -237,8 +247,7 @@ public class Map : MonoBehaviour
                 userInteractionState = UserInteractionState.HexagonSelected;
                 break;
             case UserInteractionState.StartedMoving:
-
-                updateSelectedHexagon(hexagon);
+                GridManager.instance.InputManager.EndDrag(hexagon);
                 userInteractionState = UserInteractionState.HexagonSelected;
                 break;
         }

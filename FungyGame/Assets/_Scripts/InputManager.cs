@@ -24,14 +24,15 @@ public class InputManager : MonoBehaviour
         return fungi;
     }
 
-    void StartDrag(Hexagon startHexagon, Fungi fungi)
+    public void StartDrag(Hexagon startHexagon)
     {
+        var fungi = getFungiFromHexagon(startHexagon);
         this.startHexagon = startHexagon;
         startHexChildScript = fungi;
         state = DragState.Dragging;
     }
 
-    void EndDrag(Hexagon endHexagon)
+    public void EndDrag(Hexagon endHexagon)
     {
         GameObject fungiObject = (GameObject)Instantiate(prefab, endHexagon.transform.position + new Vector3(0, 0.1f, 0), Quaternion.LookRotation(Vector3.up * 90));
         endHexagon.infected = true;
@@ -50,7 +51,7 @@ public class InputManager : MonoBehaviour
 
             if (hexagon.infected && fungi.stage == fungi.maxStage)
             {
-                StartDrag(hexagon, fungi);
+                StartDrag(hexagon);
             }
             else
             {
