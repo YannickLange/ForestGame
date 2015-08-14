@@ -16,6 +16,9 @@ public class GridManager : MonoBehaviour
     private float hexHeight;
 
     private Transform hexGridGO; //Parent object of all hex tiles
+    
+    public InfectButton InfectButton { get; set; }
+    public MoveButton MoveButton { get; set; }
 
     //GridManager singleton
     public static GridManager instance = null;

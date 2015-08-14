@@ -1,99 +1,123 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 using System;
 
-public delegate void HexagonEventHandler(object sender, EventArgs e, int clickID);
+public delegate void HexagonEventHandler (object sender,EventArgs e,int clickID);
+
 public class Hexagon : MonoBehaviour
 {
-	public enum State {
-		Normal,
-		IsSelected,
-		CanMoveThere,
-		CannotMoveThere,
-	};
+    public bool infected { get; set; }
 
-	private State _currentState = State.Normal;
+	public enum SelectionState
+	{
+		NotSelected,
+		IsSelected
+	}
 
-	public State currentState {
-		get { return _currentState; }
+	private SelectionState _currentSelectionState = SelectionState.NotSelected;
+	public SelectionState CurrentSelectionState {
+		get { return _currentSelectionState; }
 		set {
-			_currentState = value;
-			switch (_currentState) {
-			case State.Normal:
-				_renderer.material = ResourcesManager.instance.HexNormalMaterial;
-				break;
-			case State.IsSelected:
-				_renderer.material = ResourcesManager.instance.HexSelectedMaterial;
-				break;
-			case State.CanMoveThere:
-				_renderer.material = ResourcesManager.instance.HexValidSurroundingMaterial;
-				break;
-			case State.CannotMoveThere:
-				_renderer.material = ResourcesManager.instance.HexInvalidSurroundingMaterial;
+			_currentSelectionState = value;
+			updateMaterial();
+		}
+	}
+
+	public bool isAdjacentToSelectedHexagon()
+	{
+		bool isAdjacentToSelectedHexagon = false;
+		foreach (var hexagon in SurroundingHexagons) {
+			if (hexagon.CurrentSelectionState == SelectionState.IsSelected) {
+				isAdjacentToSelectedHexagon = true;
 				break;
 			}
+		}
+		return isAdjacentToSelectedHexagon;
+        
+    }
+    
+    public bool isAccessible()
+	{
+		return isAdjacentToSelectedHexagon() && HexTree != null;
+	}
+
+	public void updateMaterial ()
+	{
+		if (CurrentSelectionState == SelectionState.IsSelected) {
+			_renderer.material = ResourcesManager.instance.HexSelectedMaterial;
+		} else if (isAdjacentToSelectedHexagon()) {
+			if (isAccessible()) {
+				_renderer.material = ResourcesManager.instance.HexValidSurroundingMaterial;
+			} else {
+				_renderer.material = ResourcesManager.instance.HexInvalidSurroundingMaterial;
+			}
+		}
+		else
+		{
+			_renderer.material = ResourcesManager.instance.HexNormalMaterial;
 		}
 	}
 
     #region CLick event
-    public event HexagonEventHandler ClickEvent;
-    protected virtual void OnHexagonClick(EventArgs e, int clickID)
-    {
-        if (ClickEvent != null)
-            ClickEvent(this, e, clickID);
-    }
+	public event HexagonEventHandler ClickEvent;
 
-    void OnMouseOver()
-    {
-        if (Input.GetMouseButtonDown(0))
-            OnHexagonClick(new EventArgs(), 0);
-        if (Input.GetMouseButtonDown(1))
-            OnHexagonClick(new EventArgs(), 1);
-    }
+	protected virtual void OnHexagonClick (EventArgs e, int clickID)
+	{
+		if (ClickEvent != null)
+			ClickEvent (this, e, clickID);
+	}
+
+	void OnMouseOver ()
+	{
+		if (Input.GetMouseButtonDown (0))
+			OnHexagonClick (new EventArgs (), 0);
+		if (Input.GetMouseButtonDown (1))
+			OnHexagonClick (new EventArgs (), 1);
+	}
     #endregion
 
-    public TreeClass HexTree { get; set; }
+	public TreeClass HexTree { get; set; }
 
-    void Awake()
-    {
-        _renderer = GetComponent<Renderer>();
-    }
+	public List<Hexagon> SurroundingHexagons { get; set; }
 
-    private int _posX = -1;
-    /// <summary>
-    /// X position of the hexagon in the map grid
-    /// </summary>
-    public int X
-    {
-        get { return _posX; }
-    }
+	void Awake ()
+	{
+		_renderer = GetComponent<Renderer> ();
+	}
 
-    private int _posY = -1;
-    /// <summary>
-    /// Y position of the hexagon in the map grid
-    /// </summary>
-    public int Y
-    {
-        get { return _posY; }
-    }
+	private int _posX = -1;
+	/// <summary>
+	/// X position of the hexagon in the map grid
+	/// </summary>
+	public int X {
+		get { return _posX; }
+	}
 
-    private Renderer _renderer;
-    /// <summary>
-    /// Readonly hexagon's renderer
-    /// </summary>
-    public Renderer HexagonRenderer
-    {
-        get { return _renderer; }
-    }
+	private int _posY = -1;
+	/// <summary>
+	/// Y position of the hexagon in the map grid
+	/// </summary>
+	public int Y {
+		get { return _posY; }
+	}
 
-    /// <summary>
-    /// Set the (x,y) information about the position of the tile
-    /// </summary>
-    /// <param name="x"></param>
-    /// <param name="y"></param>
-    public void SetPosition(int x, int y)
-    {
-        _posX = x;
-        _posY = y;
-    }
+	private Renderer _renderer;
+	/// <summary>
+	/// Readonly hexagon's renderer
+	/// </summary>
+	public Renderer HexagonRenderer {
+		get { return _renderer; }
+	}
+
+	/// <summary>
+	/// Set the (x,y) information about the position of the tile
+	/// </summary>
+	/// <param name="x"></param>
+	/// <param name="y"></param>
+	public void SetPosition (int x, int y)
+	{
+		_posX = x;
+		_posY = y;
+	}
 }
