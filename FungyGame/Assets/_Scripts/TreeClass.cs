@@ -2,15 +2,15 @@
 using System.Collections;
 
 public enum TreeState { Alive, Infected, Dead };
-public enum TreeType { Sapling, SmallTree, BigTree, DeadTree };
+public enum TreeType { Sapling = 0, SmallTree = 1, BigTree = 2, DeadTree = 3 }; //DEADTREE must be last!
 
 public class TreeClass : MonoBehaviour
 {
     public static Vector3[] Positions;
     public static Vector3[] Scales;
 
-    public float DeltaTime = 20;
-    public float[] TimerValues = { 60, 60, 60, 240, 20 }; //[SAPLING],[SMALLTREE],[BIGTREE],[DEADTREE]
+    public float DeltaTime = 1;
+	public float[] TimerValues = { 60, 60, 60, 240 }; //[SAPLING],[SMALLTREE],[BIGTREE],[DEADTREE] 
 
     public TreeState State;
     public TreeType Type;
@@ -26,7 +26,6 @@ public class TreeClass : MonoBehaviour
     {
         _thisTransform = transform.GetChild(0);
         _thisRenderer = _thisTransform.GetComponent<Renderer>();
-		SetTreeState(TreeState.Infected);
     }
 
     /// <summary>
@@ -34,21 +33,7 @@ public class TreeClass : MonoBehaviour
     /// </summary>
     public void StartTreeGrowth()
     {
-        switch (Type)
-        {
-            case TreeType.Sapling:
-                _nextEventTime = Time.time + Random.Range(TimerValues[0] - DeltaTime, TimerValues[0] + DeltaTime);
-                break;
-            case TreeType.SmallTree:
-                _nextEventTime = Time.time + Random.Range(TimerValues[1] - DeltaTime, TimerValues[1] + DeltaTime);
-                break;
-            case TreeType.BigTree:
-                _nextEventTime = Time.time + Random.Range(TimerValues[2] - DeltaTime, TimerValues[2] + DeltaTime);
-                break;
-            case TreeType.DeadTree:
-                _nextEventTime = Time.time + Random.Range(TimerValues[3] - DeltaTime, TimerValues[3] + DeltaTime);
-                break;
-        }
+		_nextEventTime = Time.time + Random.Range(TimerValues[(int)Type] - DeltaTime, TimerValues[(int)Type] + DeltaTime);
         _processStarted = true;
     }
 
@@ -56,11 +41,7 @@ public class TreeClass : MonoBehaviour
     {
         if(_processStarted)
         {
-            //CheckState();
-            if(Time.time >= _nextEventTime && State == TreeState.Alive && Type != TreeType.BigTree/*TMP*/)
-            {
-                GrowTree();
-            }
+            CheckState();
         }
     }
 
@@ -68,41 +49,14 @@ public class TreeClass : MonoBehaviour
     /// Set the nex state of the tree
     /// </summary>
     private void GrowTree()
-    {
-        switch (Type)
-        {
-            case TreeType.Sapling:
-                _thisRenderer.material = ResourcesManager.instance.Tree2Mat; //Change the current material
-                _thisTransform.localScale = Scales[1];
-                _thisTransform.localPosition = Positions[1];
-                _nextEventTime = Time.time + Random.Range(TimerValues[0] - DeltaTime, TimerValues[0] + DeltaTime); //Set the next event time value
-                Type = TreeType.SmallTree; //Update the tree type
-                break;
-            case TreeType.SmallTree:
-                _thisRenderer.material = ResourcesManager.instance.Tree3Mat; //Change the current material
-                _thisTransform.localScale = Scales[2];
-                _thisTransform.localPosition = Positions[2];
-                _nextEventTime = Time.time + Random.Range(TimerValues[1] - DeltaTime, TimerValues[1] + DeltaTime); //Set the next event time value
-                Type = TreeType.BigTree; //Update the tree type
-                break;
-            case TreeType.BigTree:
-                if (Random.Range(0, 10000) == 0)
-                {
-                    _thisRenderer.material = ResourcesManager.instance.Tree4Mat; //Change the current material
-                    _thisTransform.localScale = Scales[3];
-                    _thisTransform.localPosition = Positions[3];
-                    _nextEventTime = Time.time + Random.Range(TimerValues[2] - DeltaTime, TimerValues[2] + DeltaTime); //Set the next event time value
-                    Type = TreeType.DeadTree; //Update the tree type
-                }
-                break;
-            /*case TreeType.DeadTree:
-                _thisRenderer.material = ResourcesManager.instance.Tree1Mat; //Change the current material
-                _thisTransform.localScale = Scales[0];
-                _thisTransform.localPosition = Positions[0];
-                _nextEventTime = Time.time + Random.Range(TimerValues[3] - DeltaTime, TimerValues[3] + DeltaTime); //Set the next event time value
-                Type = TreeType.Sapling; //Update the tree type
-                break;*/
-        }
+	{
+		int typeValue = (int)Type;
+		if (typeValue >= (int)TreeType.DeadTree)
+			return;
+
+		int newType = typeValue + 1;
+		_nextEventTime = Time.time + Random.Range(TimerValues[typeValue] - DeltaTime, TimerValues[typeValue] + DeltaTime); //Set the next event time value
+		SetTreeType(newType);
     }
     
 	private void CheckState()
@@ -110,36 +64,40 @@ public class TreeClass : MonoBehaviour
         switch (State)
         {
             case TreeState.Alive:
-
-                break;
-			case TreeState.Infected:
 				if(Time.time >= _nextEventTime)
 				{
-					TreeDying();
+					GrowTree();
 				}
-
-				break;
-			case TreeState.Dead:
-				
-				break;
-
+			break;
         }
     }
 
 	public void SetTreeState(TreeState newState)
 	{
-		State = newState;
-		switch (State)
+		switch (newState)
 		{
-		case TreeState.Infected:
-			_nextEventTime = Time.time + DeadTime;
-			break;
+			case TreeState.Alive:
+				break;
+			case TreeState.Infected:
+				break;
+			case TreeState.Dead:
+				SetTreeType(TreeType.DeadTree);
+				break;
 		}
+		State = newState;
 	}
 
-	private void TreeDying()
+	public void SetTreeType(TreeType newType)
 	{
-		_thisRenderer.material = ResourcesManager.instance.TreeDeadMat;
-		State = TreeState.Dead;
+		SetTreeType((int)newType);
+	}
+
+	public void SetTreeType(int newType)
+	{
+		TreeType treeType = (TreeType)newType;
+		_thisRenderer.material = ResourcesManager.instance.TreeMat[newType];
+		_thisTransform.localScale = Scales[newType];
+		_thisTransform.localPosition = Positions[newType];
+		Type = treeType;
 	}
 }

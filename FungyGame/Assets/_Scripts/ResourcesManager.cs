@@ -8,11 +8,8 @@ public class ResourcesManager : MonoBehaviour
     public Material HexNormalMaterial;
     public Material HexSelectedMaterial;
 
-    public Material Tree1Mat;
-    public Material Tree2Mat;
-    public Material Tree3Mat;
-    public Material Tree4Mat;
-	public Material TreeDeadMat;
+    public Material[] TreeMat;
+   
 
     public static ResourcesManager instance;
 
