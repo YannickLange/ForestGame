@@ -17,6 +17,8 @@ public class GridManager : MonoBehaviour
 
     private Transform hexGridGO; //Parent object of all hex tiles
 
+    public InfectButton InfectButton { get; set; }
+
     //GridManager singleton
     public static GridManager instance = null;
     void Awake()
