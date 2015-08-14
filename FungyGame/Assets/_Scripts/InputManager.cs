@@ -17,19 +17,40 @@ public class InputManager : MonoBehaviour
 
     DragState state;
 
+    Fungi getFungiFromHexagon(Hexagon hexagon)
+    {
+        var fungiHolder = hexagon.transform.childCount > 0 ? hexagon.transform.GetChild(0) : null;
+        var fungi = fungiHolder ? fungiHolder.GetComponent<Fungi>() : null;
+        return fungi;
+    }
+
+    void StartDrag(Hexagon startHexagon, Fungi fungi)
+    {
+        this.startHexagon = startHexagon;
+        startHexChildScript = fungi;
+        state = DragState.Dragging;
+    }
+
+    void EndDrag(Hexagon endHexagon)
+    {
+        GameObject fungiObject = (GameObject)Instantiate(prefab, endHexagon.transform.position + new Vector3(0, 0.1f, 0), Quaternion.LookRotation(Vector3.up * 90));
+        endHexagon.infected = true;
+        fungiObject.transform.parent = endHexagon.transform;
+        startHexChildScript.stage = 0;
+        startHexChildScript.UpdateSprite();
+
+        state = DragState.Idle;
+    }
+
     void OnPressingHexagon(Hexagon hexagon)
     {
         if (state == DragState.Idle)
         {
-            var fungiHolder = hexagon.transform.childCount > 0 ? hexagon.transform.GetChild(0) : null;
-            var fungi = fungiHolder ? fungiHolder.GetComponent<Fungi>() : null;
+            var fungi = getFungiFromHexagon(hexagon);
 
             if (hexagon.infected && fungi.stage == fungi.maxStage)
             {
-                //set a new starthex
-                startHexagon = hexagon;
-                startHexChildScript = fungi;
-                state = DragState.Dragging;
+                StartDrag(hexagon, fungi);
             }
             else
             {
@@ -56,12 +77,8 @@ public class InputManager : MonoBehaviour
         {
             if (hexagon.isAccessible() && !hexagon.infected)
             {
-                GameObject fungiObject = (GameObject)Instantiate(prefab, hexagon.transform.position + new Vector3(0, 0.1f, 0), Quaternion.LookRotation(Vector3.up * 90));
-                hexagon.infected = true;
-                fungiObject.transform.parent = hexagon.transform;
-                startHexChildScript.stage = 0;
-                startHexChildScript.UpdateSprite();
-                state = DragState.Idle;
+                EndDrag(hexagon);
+                
             }
             else
             {
