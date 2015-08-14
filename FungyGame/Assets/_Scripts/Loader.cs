@@ -6,6 +6,7 @@ public class Loader : MonoBehaviour
     public GameObject resourcesManager;
     public GameObject gridManager;
     public GameObject map;
+    public GameObject moveButton;
     public GameObject infectButton;
 
     void Awake()
@@ -18,5 +19,6 @@ public class Loader : MonoBehaviour
             Instantiate(resourcesManager);
 
         gridManager.GetComponent<GridManager>().InfectButton = infectButton.GetComponent<InfectButton>();
+        gridManager.GetComponent<GridManager>().MoveButton = moveButton.GetComponent<MoveButton>();
     }
 }
