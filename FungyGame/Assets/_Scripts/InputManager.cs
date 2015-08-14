@@ -2,74 +2,115 @@
 using System.Collections;
 
 //TODO: Change the name
-public class InputManager : MonoBehaviour {
+public class InputManager : MonoBehaviour
+{
 
     public GameObject prefab;
     private Hexagon startHexagon, endHexagon;
     private Fungi startHexChildScript;
-	
-	void Update () {
 
+    enum DragState
+    {
+        Idle,
+        Dragging
+    }
+
+    DragState state;
+
+    Fungi getFungiFromHexagon(Hexagon hexagon)
+    {
+        var fungiHolder = hexagon.transform.childCount > 0 ? hexagon.transform.GetChild(0) : null;
+        var fungi = fungiHolder ? fungiHolder.GetComponent<Fungi>() : null;
+        return fungi;
+    }
+
+    public void StartDrag(Hexagon startHexagon)
+    {
+        var fungi = getFungiFromHexagon(startHexagon);
+        this.startHexagon = startHexagon;
+        startHexChildScript = fungi;
+        state = DragState.Dragging;
+    }
+
+    public void EndDrag(Hexagon endHexagon)
+    {
+        GameObject fungiObject = (GameObject)Instantiate(prefab, endHexagon.transform.position + new Vector3(0, 0.1f, 0), Quaternion.LookRotation(Vector3.up * 90));
+        endHexagon.infected = true;
+        fungiObject.transform.parent = endHexagon.transform;
+        startHexChildScript.stage = 0;
+        startHexChildScript.UpdateSprite();
+
+        state = DragState.Idle;
+    }
+
+    void OnPressingHexagon(Hexagon hexagon)
+    {
+        if (state == DragState.Idle)
+        {
+            var fungi = getFungiFromHexagon(hexagon);
+
+            if (hexagon.infected && fungi.stage == fungi.maxStage)
+            {
+                StartDrag(hexagon);
+            }
+            else
+            {
+                state = DragState.Idle;
+            }
+        }
+        else if (state == DragState.Dragging)
+        {
+            state = DragState.Dragging;
+        }
+        else
+        {
+            Debug.Assert(false);
+        }
+    }
+
+    void OnReleasingHexagon(Hexagon hexagon)
+    {
+        if (state == DragState.Idle)
+        {
+            state = DragState.Idle;
+        }
+        else if (state == DragState.Dragging)
+        {
+            if (hexagon.isAccessible() && !hexagon.infected)
+            {
+                EndDrag(hexagon);
+                
+            }
+            else
+            {
+                state = DragState.Idle;
+            }
+        }
+        else
+        {
+            Debug.Assert(false);
+        }
+    }
+
+    void Update()
+    {
         RaycastHit hit;
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
         //shoot a ray to see where we currently are
         if (Physics.Raycast(ray, out hit))
         {
+            hit.collider.tag = "Hexagon";
+            var hoveredHexagon = hit.collider.gameObject.GetComponent<Hexagon>();
+
             //start the drag by pressing the screen
-            if (Input.GetMouseButtonDown(0))
+            if (Input.GetMouseButton(0))
             {
-                //if the startHex is not filled in yet, set a new starthex
-                if (startHexagon == null)
-                {
-                    //set a new starthex
-                    hit.collider.tag = "Hexagon";
-                    startHexagon = hit.collider.gameObject.GetComponent<Hexagon>();
-
-                    //if the startHex is not infected, stop and set startHex to null
-                    if (!startHexagon.infected)
-                        startHexagon = null;
-                    //if it is infected, check to see if it is in the correct stage
-                    else if (startHexagon.infected)
-                    {
-                        startHexChildScript = startHexagon.transform.GetChild(0).GetComponent<Fungi>();
-                        if (startHexChildScript.stage != startHexChildScript.maxStage)
-                            startHexagon = null;
-                    }
-                }
+                OnPressingHexagon(hoveredHexagon);
             }
-            //check to see if the finger left the screen
-            else if (Input.GetMouseButtonUp(0) && startHexagon != null)
-            {
-                //set the endHexagon
-                    hit.collider.tag = "Hexagon";
-                    endHexagon = hit.collider.gameObject.GetComponent<Hexagon>();
-
-                //if the endHexagon is already infected or it is not accesible, set it back to null
-                    if (endHexagon.infected || !endHexagon.isAccessible())
-                        endHexagon = null;
-            }
-        }
-
-        if (endHexagon != null)
-        {
-            if (Map.instance.GetSurroundingTiles(startHexagon).Contains(endHexagon))
-            {
-                //create a new fungi and set everything back
-                GameObject fungiObject = (GameObject)Instantiate(prefab, endHexagon.transform.position + new Vector3(0, 0.1f, 0), Quaternion.LookRotation(Vector3.up * 90));
-                endHexagon.infected = true;
-                fungiObject.transform.parent = endHexagon.transform;
-                startHexChildScript.stage = 0;
-                startHexChildScript.UpdateSprite();
-                endHexagon = null;
-                startHexagon = null;
-            }
-                //this can happen when the player drags to some item that is not next to the one that is selected, set everything back
             else
-            {
-                endHexagon = null;
-                startHexagon = null;
+            {//check to see if the finger left the screen
+                OnReleasingHexagon(hoveredHexagon);
             }
-
         }
-	}
+    }
 }

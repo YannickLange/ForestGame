@@ -119,6 +119,7 @@ MonoBehaviour:
   map: {fileID: 199022, guid: 92f94400e4c307f4d9c574245db55a6d, type: 2}
   moveButton: {fileID: 680027938}
   infectButton: {fileID: 2128808898}
+  inputManager: {fileID: 1960340767}
 --- !u!4 &298880043
 Transform:
   m_ObjectHideFlags: 0
@@ -261,7 +262,7 @@ MonoBehaviour:
     m_HighlightedTrigger: Highlighted
     m_PressedTrigger: Pressed
     m_DisabledTrigger: Disabled
-  m_Interactable: 0
+  m_Interactable: 1
   m_TargetGraphic: {fileID: 680027941}
   m_OnClick:
     m_PersistentCalls:
@@ -825,7 +826,7 @@ MonoBehaviour:
     m_HighlightedTrigger: Highlighted
     m_PressedTrigger: Pressed
     m_DisabledTrigger: Disabled
-  m_Interactable: 0
+  m_Interactable: 1
   m_TargetGraphic: {fileID: 2128808901}
   m_OnClick:
     m_PersistentCalls:

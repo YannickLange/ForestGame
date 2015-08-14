@@ -15,7 +15,13 @@ public class MoveButton : MonoBehaviour
 	
     }
 
+    public delegate void ButtonEventHandler();
+
+    public event ButtonEventHandler ClickEvent;
+
     public void OnButtonClicked()
     {
+        if (ClickEvent != null)
+            ClickEvent();
     }
 }

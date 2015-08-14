@@ -54,8 +54,9 @@ public class Map : MonoBehaviour
         _hexagons[rand].infected = true;
         GameObject fungiObject = (GameObject)Instantiate(fungi, _hexagons[rand].transform.position + new Vector3(0, 0.1f, 0), Quaternion.LookRotation(Vector3.up * 90));
         fungiObject.transform.parent = _hexagons[rand].gameObject.transform;
-
-
+        
+        GridManager.instance.MoveButton.ClickEvent += OnMoveClicked;
+        GridManager.instance.InfectButton.ClickEvent += OnInfectClicked;
     }
 
     public void BuildMap()
@@ -99,7 +100,7 @@ public class Map : MonoBehaviour
         }
     }
 
-	public List<Hexagon> GetSurroundingTiles (Hexagon hexagon)
+    public List<Hexagon> GetSurroundingTiles(Hexagon hexagon)
     {
         if (hexagon == null)
             return new List<Hexagon>();
@@ -170,33 +171,118 @@ public class Map : MonoBehaviour
         return (y < 0 || x < 0 || x >= GridManager.instance.gridWidthInHexes || y >= GridManager.instance.gridWidthInHexes);
     }
 
+    private MoveButton.ButtonEventHandler currentMoveHandler;
+    private InfectButton.ButtonEventHandler currentInfectHandler;
+
+    enum UserInteractionState
+    {
+        Idle,
+        HexagonSelected,
+        StartedMoving,
+    }
+
+    private void updateSelectedHexagon(Hexagon hexagonToSelect)
+    {
+        List<Hexagon> toBeUpdatedHexagons = new List<Hexagon>();
+        if (_prevHexagon != null)
+        {
+            _prevHexagon.CurrentSelectionState = Hexagon.SelectionState.NotSelected;
+            toBeUpdatedHexagons.Add(_prevHexagon);
+            toBeUpdatedHexagons.AddRange(_prevHexagon.SurroundingHexagons);
+        }
+        toBeUpdatedHexagons.Add(hexagonToSelect);
+        toBeUpdatedHexagons.AddRange(hexagonToSelect.SurroundingHexagons);
+
+        _prevHexagon = hexagonToSelect;
+
+        hexagonToSelect.CurrentSelectionState = Hexagon.SelectionState.IsSelected;
+        foreach (var toBeUpdatedHexagon in toBeUpdatedHexagons)
+        {
+            toBeUpdatedHexagon.updateMaterial();
+        }
+    }
+
+    private UserInteractionState userInteractionState = UserInteractionState.Idle;
+
+    private void OnMoveClicked()
+    {
+        switch (userInteractionState)
+        {
+            case UserInteractionState.Idle:
+                userInteractionState = UserInteractionState.Idle;
+                break;
+            case UserInteractionState.HexagonSelected:
+                GridManager.instance.InputManager.StartDrag(_prevHexagon);
+                userInteractionState = UserInteractionState.StartedMoving;
+                break;
+            case UserInteractionState.StartedMoving:
+                userInteractionState = UserInteractionState.StartedMoving;
+                break;
+        }
+    }
+
+    private void OnInfectClicked()
+    {
+        switch (userInteractionState)
+        {
+            case UserInteractionState.Idle:
+                userInteractionState = UserInteractionState.Idle;
+                break;
+            case UserInteractionState.HexagonSelected:
+                userInteractionState = UserInteractionState.HexagonSelected;
+                break;
+            case UserInteractionState.StartedMoving:
+                userInteractionState = UserInteractionState.StartedMoving;
+                break;
+        }
+    }
+
+    private void updateButtonState()
+    {
+        switch (userInteractionState)
+        {
+            case UserInteractionState.Idle:
+                userInteractionState = UserInteractionState.Idle;
+                break;
+            case UserInteractionState.HexagonSelected:
+                userInteractionState = UserInteractionState.HexagonSelected;
+                break;
+            case UserInteractionState.StartedMoving:
+                userInteractionState = UserInteractionState.StartedMoving;
+                break;
+        }
+    }
+
+    private void OnHexagonSingleClicked(Hexagon hexagon)
+    {
+        switch (userInteractionState)
+        {
+            case UserInteractionState.Idle:
+                updateSelectedHexagon(hexagon);
+                userInteractionState = UserInteractionState.HexagonSelected;
+                break;
+            case UserInteractionState.HexagonSelected:
+                updateSelectedHexagon(hexagon);
+                userInteractionState = UserInteractionState.HexagonSelected;
+                break;
+            case UserInteractionState.StartedMoving:
+                GridManager.instance.InputManager.EndDrag(hexagon);
+                userInteractionState = UserInteractionState.HexagonSelected;
+                break;
+        }
+    }
+
     private void OnHexagonClickedEvent(object sender, EventArgs e, int clickID)
     {
+
         Hexagon hex = sender as Hexagon;
         switch (clickID)
         {
             case 0:
-                List<Hexagon> toBeUpdatedHexagons = new List<Hexagon>();
-                if (_prevHexagon != null)
-                {
-                    _prevHexagon.CurrentSelectionState = Hexagon.SelectionState.NotSelected;
-                    toBeUpdatedHexagons.Add(_prevHexagon);
-                    toBeUpdatedHexagons.AddRange(_prevHexagon.SurroundingHexagons);
-                }
-                toBeUpdatedHexagons.Add(hex);
-                toBeUpdatedHexagons.AddRange(hex.SurroundingHexagons);
-
-                _prevHexagon = hex;
-			
-                hex.CurrentSelectionState = Hexagon.SelectionState.IsSelected;
-                foreach (var hexagon in toBeUpdatedHexagons)
-                {
-                    hexagon.updateMaterial();
-                }
-
+                OnHexagonSingleClicked(hex);
                 break;
             case 1:
-			//Checking if the selected hexgon is in the surroundings
+            //Checking if the selected hexgon is in the surroundings
                 var surroundingTiles = GetSurroundingTiles(hex);
                 foreach (var surroundingTile in surroundingTiles)
                 {
