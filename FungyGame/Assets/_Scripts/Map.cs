@@ -5,8 +5,6 @@ using System;
 
 public class Map : MonoBehaviour
 {
-    //TODO: CHANGE THIS FUGLY
-    public GameObject[] TreeTypes;
     //<<<<<<<<<<<<<<<<<<
     public GameObject fungi;
     private TreeGenerator treeGenerator;
@@ -25,6 +23,8 @@ public class Map : MonoBehaviour
     private int _arrayOffset = 0;
     //Map singleton
     public static Map instance = null;
+
+    public Hexagon[] HexBorders { get; set; }
 
     void Awake()
     {
@@ -60,6 +60,8 @@ public class Map : MonoBehaviour
 
     public void BuildMap()
     {
+        List<Hexagon> borders = new List<Hexagon>();
+
         if (GridManager.instance.gridWidthInHexes >= GridManager.instance.gridHeightInHexes)
             _arrayOffset = GridManager.instance.gridWidthInHexes;
         else
@@ -70,14 +72,31 @@ public class Map : MonoBehaviour
             {
                 _hexagons[x + y * _arrayOffset] = GridManager.instance.CreateHexagonAt(x, y);
                 _hexagons[x + y * _arrayOffset].ClickEvent += new HexagonEventHandler(this.OnHexagonClickedEvent);
+                //Making the border array:
+                if (x == 0 || y == 0 || x == GridManager.instance.gridWidthInHexes - 1 || y == GridManager.instance.gridHeightInHexes - 1)
+                    borders.Add(_hexagons[x + y * _arrayOffset]);
             }
+
+        HexBorders = new Hexagon[borders.Count];
+        borders.CopyTo(HexBorders, 0);
 
         foreach (var hexagon in _hexagons)
         {
             hexagon.SurroundingHexagons = GetSurroundingTiles(hexagon);
         }
 
-        treeGenerator = new TreeGenerator(TreeTypes);
+        treeGenerator = new TreeGenerator();
+    }
+
+    void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.J))
+        {
+            //TEMP
+            //Spawn planter
+            GameObject planter = Instantiate(ResourcesManager.instance.Planter) as GameObject;
+            planter.GetComponent<Planter>().Spawn();
+        }
     }
 
 	public List<Hexagon> GetSurroundingTiles (Hexagon hexagon)

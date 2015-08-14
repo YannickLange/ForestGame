@@ -4,11 +4,9 @@ using System.Collections;
 public class TreeGenerator
 {
     public float density = 0.5f;
-    public GameObject[] TreeTypes;
 
-    public TreeGenerator(GameObject[] trees)
+    public TreeGenerator()
     {
-        TreeTypes = trees;
         GenerateTrees();
     }
 
@@ -21,9 +19,9 @@ public class TreeGenerator
         TreeClass.Scales = new Vector3[4];
 
         //Get the local pistion of the trees (used for growing function)
-        for (int i = 0; i < TreeTypes.Length; i++ )
+        for (int i = 0; i < ResourcesManager.instance.TreeTypes.Length; i++ )
         {
-            GameObject tree = (GameObject)GameObject.Instantiate(TreeTypes[i]);
+            GameObject tree = GameObject.Instantiate(ResourcesManager.instance.TreeTypes[i]) as GameObject;
             Transform child = tree.transform.GetChild(0);
             child.position += new Vector3(0, child.GetComponent<MeshFilter>().mesh.bounds.size.y / (2 / child.localScale.y));
             TreeClass.Positions[i] = child.localPosition;
@@ -35,8 +33,8 @@ public class TreeGenerator
         {
             if (Random.value <= density)
             {
-                int treetype = Random.Range(0, TreeTypes.Length - 1);
-                GameObject tree = (GameObject)GameObject.Instantiate(TreeTypes[treetype], Map.instance.Hexagons[i].transform.position, Quaternion.identity);
+                int treetype = Random.Range(0, ResourcesManager.instance.TreeTypes.Length - 1);
+                GameObject tree = GameObject.Instantiate(ResourcesManager.instance.TreeTypes[treetype], Map.instance.Hexagons[i].transform.position, Quaternion.identity) as GameObject;
                 Transform child = tree.transform.GetChild(0);
                 child.position += new Vector3(0, child.GetComponent<MeshFilter>().mesh.bounds.size.y / (2 / child.localScale.y));
                 tree.transform.parent = Forest.transform;
@@ -44,6 +42,16 @@ public class TreeGenerator
                 Map.instance.Hexagons[i].HexTree.StartTreeGrowth();
             }
         }
+    }
+
+    public static void SpawnSapling(Hexagon hex)
+    {
+        GameObject tree = GameObject.Instantiate(ResourcesManager.instance.TreeTypes[0], hex.transform.position, Quaternion.identity) as GameObject;
+        Transform child = tree.transform.GetChild(0);
+        child.position += new Vector3(0, child.GetComponent<MeshFilter>().mesh.bounds.size.y / (2 / child.localScale.y));
+        tree.transform.parent = GameObject.Find("Forest").transform;
+        hex.HexTree = tree.GetComponent<TreeClass>();
+        hex.HexTree.StartTreeGrowth();
     }
 
 

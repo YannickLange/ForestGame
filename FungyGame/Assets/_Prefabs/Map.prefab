@@ -39,10 +39,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ef5aefbc98a36464ab38c20a597764be, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  TreeTypes:
-  - {fileID: 178660, guid: 890b2208cddf0ab4e9a9f69787b361eb, type: 2}
-  - {fileID: 172126, guid: 29d79f6ca92a3374dbc5d7f762247c9d, type: 2}
-  - {fileID: 192906, guid: 888f4308a2d32c548876a090435bf5e1, type: 2}
   fungi: {fileID: 154234, guid: 9ca5f0a11fff63443a1c4c01efbb1859, type: 2}
 --- !u!1001 &100100000
 Prefab:

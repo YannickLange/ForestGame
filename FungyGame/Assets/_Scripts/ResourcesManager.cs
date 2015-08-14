@@ -9,7 +9,10 @@ public class ResourcesManager : MonoBehaviour
     public Material HexSelectedMaterial;
 
     public Material[] TreeMat;
-   
+
+    public GameObject[] TreeTypes;
+
+    public GameObject Planter;
 
     public static ResourcesManager instance;
 

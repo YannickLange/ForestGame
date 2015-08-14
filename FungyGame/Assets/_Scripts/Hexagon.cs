@@ -78,12 +78,13 @@ public class Hexagon : MonoBehaviour
     #endregion
 
 	public TreeClass HexTree { get; set; }
-
+    public bool isPlanterTarget { get; set; }
 	public List<Hexagon> SurroundingHexagons { get; set; }
 
 	void Awake ()
 	{
 		_renderer = GetComponent<Renderer> ();
+        isPlanterTarget = false;
 	}
 
 	private int _posX = -1;
