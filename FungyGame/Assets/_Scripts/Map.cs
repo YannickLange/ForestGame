@@ -58,12 +58,32 @@ public class Map : MonoBehaviour
         }
         _hexagons[rand].infected = true;
         PutFungiOn(_hexagons[rand]);
+        CheckSpawn(_hexagons[rand]);
     }
 
     public void PutFungiOn(Hexagon hex)
     {
         GameObject fungiObject = Instantiate(fungi, hex.transform.position + new Vector3(0, 0.001f, 0), Quaternion.LookRotation(Vector3.up * 90)) as GameObject;
         fungiObject.transform.parent = hex.gameObject.transform;
+    }
+
+    public void CheckSpawn(Hexagon hex)
+    {
+        List<Hexagon> surroundings = GetSurroundingTiles(hex);
+        if (surroundings.Count > 1)
+            return;
+        else
+        {
+            for (int i = 0; i < Hexagons.Length; i++)
+            {
+                surroundings = GetSurroundingTiles(hex);
+                if (surroundings.Count > 1)
+                {
+                    PutFungiOn(Hexagons[i]);
+                    return;
+                }
+            }
+        }
     }
 
     public void BuildMap()
