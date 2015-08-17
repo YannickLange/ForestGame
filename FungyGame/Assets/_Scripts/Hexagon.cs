@@ -61,7 +61,8 @@ public class Hexagon : MonoBehaviour
     
     public bool adjacentAccessibleHexagonExists()
     {
-        foreach (var hexagon in SurroundingHexagons){
+        foreach (var hexagon in SurroundingHexagons)
+        {
             if (hexagon.isAccessible())
                 return true;
         }
@@ -80,7 +81,7 @@ public class Hexagon : MonoBehaviour
         {
             _renderer.material = ResourcesManager.instance.HexSelectedMaterial;
         }
-        else if (adjacentSelectedHexagon != null )
+        else if (adjacentSelectedHexagon != null)
         {
             if (adjacentSelectedHexagon.isAbleToMoveAwayFrom() && isAccessible())
             {
@@ -129,17 +130,29 @@ public class Hexagon : MonoBehaviour
 
     void OnMouseOver()
     {
-        if (!UnityEngine.EventSystems.EventSystem.current.IsPointerOverGameObject())
+        if (UnityEngine.EventSystems.EventSystem.current.IsPointerOverGameObject())
         {
-            if (Input.GetMouseButtonDown(0))
-            {
-                OnHexagonClick(new EventArgs(), 0);
-            }
-            if (Input.GetMouseButtonDown(1))
-            {
-                OnHexagonClick(new EventArgs(), 1);
-            }
+            return;
         }
+
+        foreach (Touch t in Input.touches)
+        {
+            if (UnityEngine.EventSystems.EventSystem.current.IsPointerOverGameObject(t.fingerId))
+                return;
+
+            if (t.phase == TouchPhase.Ended)
+                return;
+        }
+
+        if (Input.GetMouseButtonDown(0))
+        {
+            OnHexagonClick(new EventArgs(), 0);
+        }
+        if (Input.GetMouseButtonDown(1))
+        {
+            OnHexagonClick(new EventArgs(), 1);
+        }
+
     }
     #endregion
 
