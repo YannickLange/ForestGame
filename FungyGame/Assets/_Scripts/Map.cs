@@ -181,8 +181,19 @@ public class Map : MonoBehaviour
         StartedMoving,
     }
 
+    private void moveButtonTo(MonoBehaviour button, Hexagon hexagon, Vector3 offset)
+    {
+        var screenPoint = Camera.main.WorldToScreenPoint(hexagon.transform.position);
+        var rectTransform = button.GetComponent<RectTransform>();
+        rectTransform.transform.position = screenPoint + offset;
+    }
+
+
     private void updateSelectedHexagon(Hexagon hexagonToSelect)
     {
+        moveButtonTo(GridManager.instance.MoveButton, hexagonToSelect, new Vector3(60, 60, 0));
+        moveButtonTo(GridManager.instance.InfectButton, hexagonToSelect, new Vector3(-60, 60, 0));
+        
         List<Hexagon> toBeUpdatedHexagons = new List<Hexagon>();
         if (_prevHexagon != null)
         {
