@@ -88,6 +88,92 @@ public class Map : MonoBehaviour
 
         treeGenerator = new TreeGenerator();
     }
+    
+    private Hexagon startHexagon, endHexagon;
+    private Fungi startHexChildScript;
+    
+    enum DragState
+    {
+        Idle,
+        Dragging
+    }
+    
+    DragState state;
+    
+    Fungi getFungiFromHexagon(Hexagon hexagon)
+    {
+        var fungiHolder = hexagon.transform.childCount > 0 ? hexagon.transform.GetChild(0) : null;
+        var fungi = fungiHolder ? fungiHolder.GetComponent<Fungi>() : null;
+        return fungi;
+    }
+    
+    public void StartDrag(Hexagon startHexagon)
+    {
+        var fungi = getFungiFromHexagon(startHexagon);
+        this.startHexagon = startHexagon;
+        startHexChildScript = fungi;
+        state = DragState.Dragging;
+    }
+    
+    public void EndDrag(Hexagon endHexagon)
+    {
+        GameObject fungiObject = (GameObject)Instantiate(fungi, endHexagon.transform.position + new Vector3(0, 0.001f, 0), Quaternion.LookRotation(Vector3.up * 90));
+        endHexagon.infected = true;
+        fungiObject.transform.parent = endHexagon.transform;
+        startHexChildScript.stage = 0;
+        startHexChildScript.UpdateSprite();
+        
+        state = DragState.Idle;
+    }
+    
+    void OnPressingHexagon(Hexagon hexagon)
+    {
+        if (state == DragState.Idle)
+        {
+            var fungi = getFungiFromHexagon(hexagon);
+            
+            if (hexagon.infected && fungi.stage == fungi.maxStage)
+            {
+                StartDrag(hexagon);
+            }
+            else
+            {
+                state = DragState.Idle;
+            }
+        }
+        else if (state == DragState.Dragging)
+        {
+            state = DragState.Dragging;
+        }
+        else
+        {
+            Debug.Assert(false);
+        }
+    }
+    
+    void OnReleasingHexagon(Hexagon hexagon)
+    {
+        if (state == DragState.Idle)
+        {
+            state = DragState.Idle;
+        }
+        else if (state == DragState.Dragging)
+        {
+            if (hexagon.isAccessible() && !hexagon.infected)
+            {
+                EndDrag(hexagon);
+                
+            }
+            else
+            {
+                state = DragState.Idle;
+            }
+        }
+        else
+        {
+            Debug.Assert(false);
+        }
+    }
 
     void Update()
     {
@@ -104,6 +190,28 @@ public class Map : MonoBehaviour
             //Spawn planter
             GameObject lumberjack = Instantiate(ResourcesManager.instance.Lumberjack) as GameObject;
             lumberjack.GetComponent<Lumberjack>().Spawn();
+        }
+
+        
+        RaycastHit hit;
+        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+        //shoot a ray to see where we currently are
+        if (Physics.Raycast(ray, out hit))
+        {
+            if (hit.collider.tag == "Hexagon")
+            {
+                var hoveredHexagon = hit.collider.gameObject.GetComponent<Hexagon>();
+            
+                //start the drag by pressing the screen
+                if (Input.GetMouseButton(0))
+                {
+                    OnPressingHexagon(hoveredHexagon);
+                }
+                else
+                {//check to see if the finger left the screen
+                    OnReleasingHexagon(hoveredHexagon);
+                }
+            }
         }
     }
 
@@ -194,13 +302,19 @@ public class Map : MonoBehaviour
         var rectTransform = button.GetComponent<RectTransform>();
         rectTransform.transform.position = screenPoint + offset;
     }
+    
+    private bool isMoveButtonActive(Hexagon selectedHexagon)
+    {
+        return userInteractionState == UserInteractionState.HexagonSelected && selectedHexagon.infected;
+    }
 
+    private bool isInfectButtonActive(Hexagon selectedHexagon)
+    {
+        return userInteractionState == UserInteractionState.HexagonSelected && selectedHexagon.infected && selectedHexagon.HexTree.State == TreeState.Alive;
+    }
 
     private void updateSelectedHexagon(Hexagon hexagonToSelect)
     {
-        moveButtonTo(GridManager.instance.MoveButton, hexagonToSelect, new Vector3(40, 60, 0));
-        moveButtonTo(GridManager.instance.InfectButton, hexagonToSelect, new Vector3(-40, 60, 0));
-        
         List<Hexagon> toBeUpdatedHexagons = new List<Hexagon>();
         if (_prevHexagon != null)
         {
@@ -218,6 +332,12 @@ public class Map : MonoBehaviour
         {
             toBeUpdatedHexagon.updateMaterial();
         }
+        
+        moveButtonTo(GridManager.instance.MoveButton, hexagonToSelect, new Vector3(40, 60, 0));
+        moveButtonTo(GridManager.instance.InfectButton, hexagonToSelect, new Vector3(-40, 60, 0));
+
+        GridManager.instance.MoveButton.GetComponent<UnityEngine.UI.Button>().interactable = isMoveButtonActive(hexagonToSelect);
+        GridManager.instance.InfectButton.GetComponent<UnityEngine.UI.Button>().interactable = isInfectButtonActive(hexagonToSelect);
     }
 
     private UserInteractionState userInteractionState = UserInteractionState.Idle;
@@ -230,13 +350,14 @@ public class Map : MonoBehaviour
                 userInteractionState = UserInteractionState.Idle;
                 break;
             case UserInteractionState.HexagonSelected:
-                GridManager.instance.InputManager.StartDrag(_prevHexagon);
+                StartDrag(_prevHexagon);
                 userInteractionState = UserInteractionState.StartedMoving;
                 break;
             case UserInteractionState.StartedMoving:
                 userInteractionState = UserInteractionState.StartedMoving;
                 break;
         }
+        updateSelectedHexagon(_prevHexagon);
     }
 
     private void OnInfectClicked()
@@ -253,6 +374,7 @@ public class Map : MonoBehaviour
                 userInteractionState = UserInteractionState.StartedMoving;
                 break;
         }
+        updateSelectedHexagon(_prevHexagon);
     }
 
     private void updateButtonState()
@@ -276,20 +398,19 @@ public class Map : MonoBehaviour
         switch (userInteractionState)
         {
             case UserInteractionState.Idle:
-                updateSelectedHexagon(hexagon);
                 userInteractionState = UserInteractionState.HexagonSelected;
                 break;
             case UserInteractionState.HexagonSelected:
-                updateSelectedHexagon(hexagon);
                 userInteractionState = UserInteractionState.HexagonSelected;
                 break;
             case UserInteractionState.StartedMoving:
-                GridManager.instance.InputManager.EndDrag(hexagon);
+                EndDrag(hexagon);
                 userInteractionState = UserInteractionState.HexagonSelected;
                 break;
         }
+        updateSelectedHexagon(hexagon);
     }
-
+    
     private void OnHexagonClickedEvent(object sender, EventArgs e, int clickID)
     {
 

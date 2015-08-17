@@ -21,6 +21,5 @@ public class Loader : MonoBehaviour
 
         GridManager.instance.GetComponent<GridManager>().InfectButton = infectButton.GetComponent<InfectButton>();
         GridManager.instance.GetComponent<GridManager>().MoveButton = moveButton.GetComponent<MoveButton>();
-        GridManager.instance.GetComponent<GridManager>().InputManager = inputManager.GetComponent<InputManager>();
     }
 }
