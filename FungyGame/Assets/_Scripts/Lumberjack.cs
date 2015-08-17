@@ -56,11 +56,11 @@ public class Lumberjack : MonoBehaviour
     {
         #region 1:Moving
         float sqrRemainingDistance = (transform.position - _targetTr.position).sqrMagnitude;
-        Vector3 newPostion;
+        Vector3 newPosition;
         while (sqrRemainingDistance > 1e-6)
         {
-            newPostion = Vector3.MoveTowards(_rb.position, _targetTr.position, MoveTime * Time.deltaTime);
-            _rb.MovePosition(newPostion);
+            newPosition = Vector3.MoveTowards(_rb.position, _targetTr.position, MoveTime * Time.deltaTime);
+            _rb.MovePosition(newPosition);
 
 
             sqrRemainingDistance = (_thisTransform.position - _targetTr.position).sqrMagnitude;
@@ -92,8 +92,8 @@ public class Lumberjack : MonoBehaviour
             sqrRemainingDistance = (transform.position - _exitHex.transform.position).sqrMagnitude;
             while (sqrRemainingDistance > 1e-6)
             {
-                newPostion = Vector3.MoveTowards(_rb.position, _exitHex.transform.position, MoveTime * Time.deltaTime);
-                _rb.MovePosition(newPostion);
+                newPosition = Vector3.MoveTowards(_rb.position, _exitHex.transform.position, MoveTime * Time.deltaTime);
+                _rb.MovePosition(newPosition);
 
 
                 sqrRemainingDistance = (_thisTransform.position - _exitHex.transform.position).sqrMagnitude;

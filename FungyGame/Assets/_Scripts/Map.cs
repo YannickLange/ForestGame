@@ -62,7 +62,7 @@ public class Map : MonoBehaviour
 
     public void PutFungiOn(Hexagon hex)
     {
-        GameObject fungiObject = (GameObject)Instantiate(fungi, hex.transform.position + new Vector3(0, 0.001f, 0), Quaternion.LookRotation(Vector3.up * 90));
+        GameObject fungiObject = Instantiate(fungi, hex.transform.position + new Vector3(0, 0.001f, 0), Quaternion.LookRotation(Vector3.up * 90)) as GameObject;
         fungiObject.transform.parent = hex.gameObject.transform;
     }
 
@@ -103,6 +103,7 @@ public class Map : MonoBehaviour
             //TEMP
             //Spawn planter
             GameObject planter = Instantiate(ResourcesManager.instance.Planter) as GameObject;
+            planter.transform.position = new Vector3(0f, 1.4f, 0f);
             planter.transform.SetParent(_planter);
             planter.GetComponent<Planter>().Spawn();
         }
