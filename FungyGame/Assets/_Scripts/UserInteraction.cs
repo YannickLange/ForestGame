@@ -186,7 +186,7 @@ public class UserInteraction : MonoBehaviour {
                 }
                 else
                 {
-                    userInteractionState = UserInteractionState.StartedMoving;
+                    userInteractionState = UserInteractionState.HexagonSelected;
                 }
                 break;
             case UserInteractionState.StartedDragging:
