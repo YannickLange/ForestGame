@@ -8,12 +8,14 @@ public class ResourcesManager : MonoBehaviour
     public Material HexNormalMaterial;
     public Material HexSelectedMaterial;
     public Material HexPlanterTargetMat;
+    public Material HexLumberjackTargetMat;
 
     public Material[] TreeMat;
 
     public GameObject[] TreeTypes;
 
     public GameObject Planter;
+    public GameObject Lumberjack;
 
     public static ResourcesManager instance;
 

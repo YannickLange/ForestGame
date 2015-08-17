@@ -98,6 +98,13 @@ public class Map : MonoBehaviour
             GameObject planter = Instantiate(ResourcesManager.instance.Planter) as GameObject;
             planter.GetComponent<Planter>().Spawn();
         }
+        if (Input.GetKeyDown(KeyCode.K))
+        {
+            //TEMP
+            //Spawn planter
+            GameObject lumberjack = Instantiate(ResourcesManager.instance.Lumberjack) as GameObject;
+            lumberjack.GetComponent<Lumberjack>().Spawn();
+        }
     }
 
     public List<Hexagon> GetSurroundingTiles(Hexagon hexagon)

@@ -2,10 +2,10 @@
 using System.Collections;
 using System.Collections.Generic;
 
-public class Planter : MonoBehaviour
+public class Lumberjack : MonoBehaviour
 {
     public float MoveTime = 0.5f;
-    public float PlantActionTime = 5.0f;
+    public float ChopActionTime = 5.0f;
 
 
     private Hexagon _targetHex = null;
@@ -25,19 +25,22 @@ public class Planter : MonoBehaviour
     }
     public void Spawn()
     {
-        List<Hexagon> emptyHex = new List<Hexagon>();
+        List<Hexagon> fullHex = new List<Hexagon>();
         //1:Looking for a spot:
         for (int i = 0; i < Map.instance.Hexagons.Length; i++)
         {
-            if (Map.instance.Hexagons[i].HexTree == null && !Map.instance.Hexagons[i].isTarget)
-                emptyHex.Add(Map.instance.Hexagons[i]);
+            if (Map.instance.Hexagons[i].HexTree != null &&
+                !Map.instance.Hexagons[i].isTarget &&
+                Map.instance.Hexagons[i].HexTree.Type != TreeType.Sapling &&
+                Map.instance.Hexagons[i].HexTree.Type != TreeType.DeadTree)
+                fullHex.Add(Map.instance.Hexagons[i]);
         }
 
-        _targetHex = emptyHex[Random.Range(0, emptyHex.Count)];
+        _targetHex = fullHex[Random.Range(0, fullHex.Count)];
         _targetHex.isTarget = true;
         _targetTr = _targetHex.transform;
         //Highlight the hexgon
-        StartCoroutine(_targetHex.FlashHexagon(ResourcesManager.instance.HexPlanterTargetMat));
+        StartCoroutine(_targetHex.FlashHexagon(ResourcesManager.instance.HexLumberjackTargetMat));
 
         //2:Looking for the spawn hexagon
         _spawnHex = Map.instance.HexBorders[Random.Range(0, Map.instance.HexBorders.Length)];
@@ -45,10 +48,10 @@ public class Planter : MonoBehaviour
         //4:Enable the movement
         transform.position = _spawnHex.transform.position;
 
-        StartCoroutine(MovePlanter());
+        StartCoroutine(MoveLumberjack());
     }
 
-    private IEnumerator MovePlanter()
+    private IEnumerator MoveLumberjack()
     {
         #region 1:Moving
         float sqrRemainingDistance = (transform.position - _targetTr.position).sqrMagnitude;
@@ -65,11 +68,11 @@ public class Planter : MonoBehaviour
         }
         #endregion
 
-        #region 2:PlantSeed
-        yield return new WaitForSeconds(PlantActionTime);
-        PlantSeed();
-
-        yield return new WaitForSeconds(PlantActionTime);
+        #region 2:ChopTree
+        yield return new WaitForSeconds(ChopActionTime);
+        ChopDownTree();
+            
+        yield return new WaitForSeconds(ChopActionTime);
         #endregion
 
         #region 3:Moving out the map
@@ -106,9 +109,10 @@ public class Planter : MonoBehaviour
         #endregion
     }
 
-    private void PlantSeed()
+    private void ChopDownTree()
     {
-        //1:Instantiate a new Tree at the _current position
-        TreeGenerator.SpawnSapling(_targetHex);
+        //1:Destroy the current tree
+        GameObject.Destroy(_targetHex.HexTree.gameObject);
+        _targetHex.HexTree = null;
     }
 }

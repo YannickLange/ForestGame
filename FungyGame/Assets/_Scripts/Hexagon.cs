@@ -76,7 +76,8 @@ public class Hexagon : MonoBehaviour
                 tmp = true;
             }
             yield return new WaitForSeconds(.4f);
-        } while (isPlanterTarget);
+        } while (isTarget);
+
         yield return null;
     }
 
@@ -99,13 +100,13 @@ public class Hexagon : MonoBehaviour
     #endregion
 
 	public TreeClass HexTree { get; set; }
-    public bool isPlanterTarget { get; set; }
+    public bool isTarget { get; set; }
 	public List<Hexagon> SurroundingHexagons { get; set; }
 
 	void Awake ()
 	{
 		_renderer = GetComponent<Renderer> ();
-        isPlanterTarget = false;
+        isTarget = false;
 	}
 
 	private int _posX = -1;

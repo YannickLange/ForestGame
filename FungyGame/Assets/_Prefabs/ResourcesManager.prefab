@@ -46,6 +46,8 @@ MonoBehaviour:
   HexNormalMaterial: {fileID: 2100000, guid: a6e23a5721322e547bfe5b475832f8ec, type: 2}
   HexSelectedMaterial: {fileID: 2100000, guid: 2a26ed8bd392b924eb0ac3b49ee3d15b, type: 2}
   HexPlanterTargetMat: {fileID: 2100000, guid: 97cf73535277a914ca4d5b4412b4e79e, type: 2}
+  HexLumberjackTargetMat: {fileID: 2100000, guid: f78d001e2bc48234bac8a04bc42222c1,
+    type: 2}
   TreeMat:
   - {fileID: 2100000, guid: 2a27e81a304cd144c84f261468ffbb6b, type: 2}
   - {fileID: 2100000, guid: 2ae399ee2d33041499958e3c1f820e57, type: 2}
@@ -56,6 +58,7 @@ MonoBehaviour:
   - {fileID: 172126, guid: 29d79f6ca92a3374dbc5d7f762247c9d, type: 2}
   - {fileID: 192906, guid: 874cdd69a232abc43a842191ae501c89, type: 2}
   Planter: {fileID: 168730, guid: af7e749de5ddac94fa83a4b6cc4dbd8f, type: 2}
+  Lumberjack: {fileID: 168730, guid: e784589fe896b784aaedc5a9a1777e71, type: 2}
 --- !u!1001 &100100000
 Prefab:
   m_ObjectHideFlags: 1
@@ -79,6 +82,10 @@ Prefab:
       propertyPath: TreeTypes.Array.data[3]
       value: 
       objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: Lumberjack
+      value: 
+      objectReference: {fileID: 168730, guid: e784589fe896b784aaedc5a9a1777e71, type: 2}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 0}
   m_RootGameObject: {fileID: 150510}
