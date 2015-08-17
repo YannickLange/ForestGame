@@ -161,6 +161,8 @@ public class UserInteraction : MonoBehaviour
                 userInteractionState = UserInteractionState.Idle;
                 break;
             case UserInteractionState.HexagonSelected:
+                if (_prevHexagon.Fungi.stage == _prevHexagon.Fungi.maxStage)
+                    _prevHexagon.HexTree.InfectTree();
                 userInteractionState = UserInteractionState.HexagonSelected;
                 break;
             case UserInteractionState.StartedMoving:
@@ -267,6 +269,7 @@ public class UserInteraction : MonoBehaviour
                 userInteractionState = UserInteractionState.Idle;
                 break;
             case UserInteractionState.HexagonSelected:
+                
                 userInteractionState = UserInteractionState.HexagonSelected;
                 break;
             case UserInteractionState.StartedMoving:

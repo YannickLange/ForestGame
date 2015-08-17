@@ -15,15 +15,18 @@ public class TreeClass : MonoBehaviour
     private float _nextEventTime = 0f;
     private bool _processStarted = false;
     public Hexagon occupiedHexagon {get; set;}
+    private GameObject _treeInfectPrefab;
 
     //Cached components
     private SpriteRenderer _spriteRenderer;
     private TreeClass _treeClassScript;
+    private Fungi _infection;
 
     void Awake()
     {
         _spriteRenderer = GetComponent<SpriteRenderer>();
         _treeClassScript = GetComponent<TreeClass>();
+        _treeInfectPrefab = (GameObject)Resources.Load("InfectLoadingBar");
         _nextEventTime = Time.time + Random.Range(growTime, growTime + randomGrowTimeRange);
         _processStarted = true;
     }
@@ -34,6 +37,15 @@ public class TreeClass : MonoBehaviour
         {
             CheckState();
         }
+        if(_infection != null)
+        {
+            if (_infection.stage == _infection.maxStage)
+            {
+                Type = TreeType.DeadTree;
+                State = TreeState.Dead;
+                Destroy(_infection.gameObject);
+            }
+        }
     }
 
     /// <summary>
@@ -42,7 +54,7 @@ public class TreeClass : MonoBehaviour
     private void GrowTree()
 	{
 		int typeValue = (int)Type;
-        if (typeValue >= (int)TreeType.BigTree) //TODO: Change this back to deadtree when they exist
+        if (typeValue >= (int)TreeType.DeadTree) //TODO: Change this back to deadtree when they exist
 			return;
 
 		int newType = typeValue + 1;
@@ -66,5 +78,13 @@ public class TreeClass : MonoBehaviour
 				}
 			break;
         }
+    }
+
+    public void InfectTree()
+    {
+        GameObject treeInfect = (GameObject)Instantiate(_treeInfectPrefab, transform.position, transform.rotation);
+        treeInfect.transform.parent = transform;
+        _infection = treeInfect.GetComponent<Fungi>();
+        State = TreeState.Infected;
     }
 }

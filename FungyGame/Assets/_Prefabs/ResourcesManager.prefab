@@ -57,6 +57,7 @@ MonoBehaviour:
   - {fileID: 113476, guid: a648d059f32cc3a4095f6115cc6db275, type: 2}
   - {fileID: 109070, guid: 918858e79c5190c429d0f428fbf31339, type: 2}
   - {fileID: 195710, guid: ee5d7325f16bce5499e7b63782ca6c55, type: 2}
+  - {fileID: 180536, guid: 5f17c5de146be52458f850e4228a2b5c, type: 2}
   Planter: {fileID: 168730, guid: af7e749de5ddac94fa83a4b6cc4dbd8f, type: 2}
   Lumberjack: {fileID: 168730, guid: e784589fe896b784aaedc5a9a1777e71, type: 2}
 --- !u!1001 &100100000
@@ -68,7 +69,7 @@ Prefab:
     m_Modifications:
     - target: {fileID: 0}
       propertyPath: TreeTypes.Array.size
-      value: 3
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 0}
       propertyPath: TreeDeadMat
@@ -81,7 +82,7 @@ Prefab:
     - target: {fileID: 0}
       propertyPath: TreeTypes.Array.data[3]
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 180536, guid: 5f17c5de146be52458f850e4228a2b5c, type: 2}
     - target: {fileID: 0}
       propertyPath: Lumberjack
       value: 
