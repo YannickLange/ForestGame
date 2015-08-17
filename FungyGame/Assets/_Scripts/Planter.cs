@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 public class Planter : MonoBehaviour
 {
-    public float MoveTime = 0.5f;
+    public float MoveTime = 0.6f;
     public float PlantActionTime = 5.0f;
 
 
@@ -53,16 +53,15 @@ public class Planter : MonoBehaviour
     private IEnumerator MovePlanter()
     {
         #region 1:Moving
-        float sqrRemainingDistance = (transform.position - _targetTr.position).sqrMagnitude;
+        float sqrRemainingDistance = (_thisTransform.position - _targetTr.position).sqrMagnitude;
         Vector3 newPostion;
-        while (sqrRemainingDistance > float.Epsilon)
+        while (sqrRemainingDistance > 1e-6)
         {
             newPostion = Vector3.MoveTowards(_rb.position, _targetTr.position, MoveTime * Time.deltaTime);
             _rb.MovePosition(newPostion);
 
 
             sqrRemainingDistance = (_thisTransform.position - _targetTr.position).sqrMagnitude;
-
             yield return null;
         }
         #endregion
@@ -75,7 +74,7 @@ public class Planter : MonoBehaviour
         #endregion
 
         #region 3:Moving out the map
-        float dist = 9999f;
+        float dist = 500f;
         Hexagon _exitHex = null;
         for (int i = 0; i < Map.instance.HexBorders.Length; i++)
         {
@@ -88,7 +87,7 @@ public class Planter : MonoBehaviour
         if (_exitHex != null)
         {
             sqrRemainingDistance = (transform.position - _exitHex.transform.position).sqrMagnitude;
-            while (sqrRemainingDistance > float.Epsilon)
+            while (sqrRemainingDistance > 1e-6)
             {
                 newPostion = Vector3.MoveTowards(_rb.position, _exitHex.transform.position, MoveTime * Time.deltaTime);
                 _rb.MovePosition(newPostion);

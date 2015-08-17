@@ -25,6 +25,9 @@ public class Map : MonoBehaviour
 
     public Hexagon[] HexBorders { get; set; }
 
+    //TEMP
+    private Transform _planter;
+    private Transform _lumberjack;
     void Awake()
     {
         //Check if instance already exists
@@ -40,6 +43,9 @@ public class Map : MonoBehaviour
             Destroy(gameObject);
         }
         DontDestroyOnLoad(gameObject);
+
+        _planter = GameObject.Find("Planters").transform;
+        _lumberjack = GameObject.Find("Lumberjacks").transform;
     }
 
     void Start()
@@ -97,6 +103,7 @@ public class Map : MonoBehaviour
             //TEMP
             //Spawn planter
             GameObject planter = Instantiate(ResourcesManager.instance.Planter) as GameObject;
+            planter.transform.SetParent(_planter);
             planter.GetComponent<Planter>().Spawn();
         }
         if (Input.GetKeyDown(KeyCode.K))
@@ -104,6 +111,7 @@ public class Map : MonoBehaviour
             //TEMP
             //Spawn planter
             GameObject lumberjack = Instantiate(ResourcesManager.instance.Lumberjack) as GameObject;
+            lumberjack.transform.SetParent(_lumberjack);
             lumberjack.GetComponent<Lumberjack>().Spawn();
         }
     }

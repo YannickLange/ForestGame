@@ -57,7 +57,7 @@ public class Lumberjack : MonoBehaviour
         #region 1:Moving
         float sqrRemainingDistance = (transform.position - _targetTr.position).sqrMagnitude;
         Vector3 newPostion;
-        while (sqrRemainingDistance > float.Epsilon)
+        while (sqrRemainingDistance > 1e-6)
         {
             newPostion = Vector3.MoveTowards(_rb.position, _targetTr.position, MoveTime * Time.deltaTime);
             _rb.MovePosition(newPostion);
@@ -77,7 +77,7 @@ public class Lumberjack : MonoBehaviour
         #endregion
 
         #region 3:Moving out the map
-        float dist = 9999f;
+        float dist = 500f;
         Hexagon _exitHex = null;
         for (int i = 0; i < Map.instance.HexBorders.Length; i++)
         {
@@ -90,7 +90,7 @@ public class Lumberjack : MonoBehaviour
         if (_exitHex != null)
         {
             sqrRemainingDistance = (transform.position - _exitHex.transform.position).sqrMagnitude;
-            while (sqrRemainingDistance > float.Epsilon)
+            while (sqrRemainingDistance > 1e-6)
             {
                 newPostion = Vector3.MoveTowards(_rb.position, _exitHex.transform.position, MoveTime * Time.deltaTime);
                 _rb.MovePosition(newPostion);
