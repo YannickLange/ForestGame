@@ -6,11 +6,8 @@ public enum TreeType { Sapling = 0, SmallTree = 1, BigTree = 2, DeadTree = 3 }; 
 
 public class TreeClass : MonoBehaviour
 {
-    public static Vector3[] Positions;
-    public static Vector3[] Scales;
-
-    public float DeltaTime = 1;
-	public float[] TimerValues = { 60, 60, 60, 240 }; //[SAPLING],[SMALLTREE],[BIGTREE],[DEADTREE] 
+    public float growTime = 10f;
+    public float randomGrowTimeRange = 5f;
 
     public TreeState State;
     public TreeType Type;
@@ -19,21 +16,12 @@ public class TreeClass : MonoBehaviour
     private bool _processStarted = false;
 
     //Cached components
-    private Renderer _thisRenderer;
-    private Transform _thisTransform;
+    private SpriteRenderer _spriteRenderer;
 
     void Awake()
     {
-        _thisTransform = transform.GetChild(0);
-        _thisRenderer = _thisTransform.GetComponent<Renderer>();
-    }
-
-    /// <summary>
-    /// Start the growth processus
-    /// </summary>
-    public void StartTreeGrowth()
-    {
-		_nextEventTime = Time.time + Random.Range(TimerValues[(int)Type] - DeltaTime, TimerValues[(int)Type] + DeltaTime);
+        _spriteRenderer = GetComponent<SpriteRenderer>();
+        _nextEventTime = Time.time + Random.Range(growTime, growTime + randomGrowTimeRange);
         _processStarted = true;
     }
 
@@ -46,17 +34,19 @@ public class TreeClass : MonoBehaviour
     }
 
     /// <summary>
-    /// Set the nex state of the tree
+    /// Set the next state of the tree
     /// </summary>
     private void GrowTree()
 	{
 		int typeValue = (int)Type;
-		if (typeValue >= (int)TreeType.DeadTree)
+        if (typeValue >= (int)TreeType.BigTree) //TODO: Change this back to deadtree when they exist
 			return;
 
 		int newType = typeValue + 1;
-		_nextEventTime = Time.time + Random.Range(TimerValues[typeValue] - DeltaTime, TimerValues[typeValue] + DeltaTime); //Set the next event time value
-		SetTreeType(newType);
+        _nextEventTime = Time.time + Random.Range(growTime, growTime + randomGrowTimeRange); //Set the next event time value
+        GameObject tree = (GameObject)Instantiate(ResourcesManager.instance.TreeTypes[newType], gameObject.transform.position, gameObject.transform.rotation);
+        tree.transform.parent = GameObject.Find("Forest").transform;
+        GameObject.Destroy(this.gameObject);
     }
     
 	private void CheckState()
@@ -71,33 +61,4 @@ public class TreeClass : MonoBehaviour
 			break;
         }
     }
-
-	public void SetTreeState(TreeState newState)
-	{
-		switch (newState)
-		{
-			case TreeState.Alive:
-				break;
-			case TreeState.Infected:
-				break;
-			case TreeState.Dead:
-				SetTreeType(TreeType.DeadTree);
-				break;
-		}
-		State = newState;
-	}
-
-	public void SetTreeType(TreeType newType)
-	{
-		SetTreeType((int)newType);
-	}
-
-	public void SetTreeType(int newType)
-	{
-		TreeType treeType = (TreeType)newType;
-		_thisRenderer.material = ResourcesManager.instance.TreeMat[newType];
-		_thisTransform.localScale = Scales[newType];
-		_thisTransform.localPosition = Positions[newType];
-		Type = treeType;
-	}
 }
