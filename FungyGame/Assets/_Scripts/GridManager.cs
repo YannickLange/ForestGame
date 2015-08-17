@@ -8,8 +8,8 @@ public class GridManager : MonoBehaviour
     public GameObject Hex;
 
     //next two variables can also be instantiated using unity editor
-    public int gridWidthInHexes = 10;
-    public int gridHeightInHexes = 10;
+    public int gridWidthInHexes = 8;
+    public int gridHeightInHexes = 7;
 
     //Hexagon tile width and height in game world
     private float hexWidth;
