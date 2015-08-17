@@ -139,16 +139,13 @@ public class Hexagon : MonoBehaviour
         {
             if (UnityEngine.EventSystems.EventSystem.current.IsPointerOverGameObject(t.fingerId))
                 return;
-
-            if (t.phase == TouchPhase.Ended)
-                return;
         }
 
-        if (Input.GetMouseButtonDown(0))
+        if (Input.GetMouseButtonUp(0))
         {
             OnHexagonClick(new EventArgs(), 0);
         }
-        if (Input.GetMouseButtonDown(1))
+        if (Input.GetMouseButtonUp(1))
         {
             OnHexagonClick(new EventArgs(), 1);
         }
