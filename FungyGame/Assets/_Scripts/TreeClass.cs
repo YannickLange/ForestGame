@@ -54,7 +54,7 @@ public class TreeClass : MonoBehaviour
     private void GrowTree()
 	{
 		int typeValue = (int)Type;
-        if (typeValue >= (int)TreeType.DeadTree) //TODO: Change this back to deadtree when they exist
+        if (typeValue >= (int)TreeType.DeadTree - 1) //TODO: Change this back to deadtree when they exist
 			return;
 
 		int newType = typeValue + 1;
