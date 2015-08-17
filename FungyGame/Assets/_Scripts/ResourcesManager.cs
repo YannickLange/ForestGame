@@ -7,6 +7,7 @@ public class ResourcesManager : MonoBehaviour
     public Material HexInvalidSurroundingMaterial;
     public Material HexNormalMaterial;
     public Material HexSelectedMaterial;
+    public Material HexPlanterTargetMat;
 
     public Material[] TreeMat;
 

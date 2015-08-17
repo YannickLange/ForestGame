@@ -36,6 +36,8 @@ public class Planter : MonoBehaviour
         _targetHex = emptyHex[Random.Range(0, emptyHex.Count)];
         _targetHex.isPlanterTarget = true;
         _targetTr = _targetHex.transform;
+        //Highlight the hexgon
+        StartCoroutine(_targetHex.FlashHexagon(ResourcesManager.instance.HexPlanterTargetMat));
 
         //2:Looking for the spawn hexagon
         _spawnHex = Map.instance.HexBorders[Random.Range(0, Map.instance.HexBorders.Length)];

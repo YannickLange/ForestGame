@@ -59,6 +59,27 @@ public class Hexagon : MonoBehaviour
 		}
 	}
 
+
+    public IEnumerator FlashHexagon(Material flashMat)
+    {
+        bool tmp = false;
+        do
+        {
+            if (tmp)
+            {
+                HexagonRenderer.material = ResourcesManager.instance.HexNormalMaterial;
+                tmp = false;
+            }
+            else
+            {
+                HexagonRenderer.material = flashMat;
+                tmp = true;
+            }
+            yield return new WaitForSeconds(.4f);
+        } while (isPlanterTarget);
+        yield return null;
+    }
+
     #region CLick event
 	public event HexagonEventHandler ClickEvent;
 

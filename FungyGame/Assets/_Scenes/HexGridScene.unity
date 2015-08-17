@@ -743,7 +743,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   prefab: {fileID: 154234, guid: 9ca5f0a11fff63443a1c4c01efbb1859, type: 2}
-  InfectedBtn: {fileID: 2128808903}
 --- !u!4 &1960340769
 Transform:
   m_ObjectHideFlags: 0
