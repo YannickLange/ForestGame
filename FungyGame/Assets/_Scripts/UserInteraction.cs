@@ -78,43 +78,58 @@ public class UserInteraction : MonoBehaviour
     }
     
     UserInteractionState _DEBUG_lastState = UserInteractionState.Idle;
+    
+    private void updateView()
+    {
+        updateView(false);
+    }
 
-    private void updateSelectedHexagon(Hexagon hexagonToSelect)
+    private void updateView(bool updateAll)
     {
         if (_DEBUG_lastState != userInteractionState)
         {
             Debug.Log(userInteractionState);
             _DEBUG_lastState = userInteractionState;
         }
+
         List<Hexagon> toBeUpdatedHexagons = new List<Hexagon>();
-        if (_prevHexagon != null)
+        if (updateAll)
         {
-            _prevHexagon.CurrentSelectionState = Hexagon.SelectionState.NotSelected;
-            toBeUpdatedHexagons.Add(_prevHexagon);
-            toBeUpdatedHexagons.AddRange(_prevHexagon.SurroundingHexagons);
+            toBeUpdatedHexagons.AddRange(Map.instance.Hexagons);
         }
-        if (hexagonToSelect)
+        else
         {
-            toBeUpdatedHexagons.Add(hexagonToSelect);
-            toBeUpdatedHexagons.AddRange(hexagonToSelect.SurroundingHexagons);
-        }
-        
-        _prevHexagon = hexagonToSelect;
-        
-        if (hexagonToSelect)
-        {
-            hexagonToSelect.CurrentSelectionState = Hexagon.SelectionState.IsSelected;
+            if (_prevHexagon != null)
+            {
+                toBeUpdatedHexagons.Add(_prevHexagon);
+                toBeUpdatedHexagons.AddRange(_prevHexagon.SurroundingHexagons);
+            }
         }
         foreach (var toBeUpdatedHexagon in toBeUpdatedHexagons)
         {
             toBeUpdatedHexagon.updateMaterial();
         }
+
+        moveButtonTo(GridManager.instance.MoveButton, _prevHexagon, new Vector3(40, 60, 0));
+        moveButtonTo(GridManager.instance.InfectButton, _prevHexagon, new Vector3(-40, 60, 0));
         
-        moveButtonTo(GridManager.instance.MoveButton, hexagonToSelect, new Vector3(40, 60, 0));
-        moveButtonTo(GridManager.instance.InfectButton, hexagonToSelect, new Vector3(-40, 60, 0));
-        
-        GridManager.instance.MoveButton.GetComponent<UnityEngine.UI.Button>().interactable = isMoveButtonActive(hexagonToSelect);
-        GridManager.instance.InfectButton.GetComponent<UnityEngine.UI.Button>().interactable = isInfectButtonActive(hexagonToSelect);
+        GridManager.instance.MoveButton.GetComponent<UnityEngine.UI.Button>().interactable = isMoveButtonActive(_prevHexagon);
+        GridManager.instance.InfectButton.GetComponent<UnityEngine.UI.Button>().interactable = isInfectButtonActive(_prevHexagon);
+    }
+
+    private void selectDifferentHexagon(Hexagon hexagonToSelect)
+    {
+        if (_prevHexagon)
+        {
+            _prevHexagon.CurrentSelectionState = Hexagon.SelectionState.NotSelected;
+        }
+        _prevHexagon = hexagonToSelect;
+
+        if (hexagonToSelect)
+        {
+            hexagonToSelect.CurrentSelectionState = Hexagon.SelectionState.IsSelected;
+        }
+        updateView(true);
     }
     
     private void OnMoveClicked()
@@ -135,7 +150,7 @@ public class UserInteraction : MonoBehaviour
                 userInteractionState = UserInteractionState.StartedDragging;
                 break;
         }
-        updateSelectedHexagon(_prevHexagon);
+        updateView();
     }
     
     private void OnInfectClicked()
@@ -155,26 +170,7 @@ public class UserInteraction : MonoBehaviour
                 userInteractionState = UserInteractionState.StartedDragging;
                 break;
         }
-        updateSelectedHexagon(_prevHexagon);
-    }
-    
-    private void updateButtonState()
-    {
-        switch (userInteractionState)
-        {
-            case UserInteractionState.Idle:
-                userInteractionState = UserInteractionState.Idle;
-                break;
-            case UserInteractionState.HexagonSelected:
-                userInteractionState = UserInteractionState.HexagonSelected;
-                break;
-            case UserInteractionState.StartedMoving:
-                userInteractionState = UserInteractionState.StartedMoving;
-                break;
-            case UserInteractionState.StartedDragging:
-                userInteractionState = UserInteractionState.StartedDragging;
-                break;
-        }
+        updateView();
     }
     
     private void OnHexagonSingleClicked(Hexagon hexagon)
@@ -182,9 +178,8 @@ public class UserInteraction : MonoBehaviour
         switch (userInteractionState)
         {
             case UserInteractionState.Idle:
-                userInteractionState = UserInteractionState.HexagonSelected;
-                break;
             case UserInteractionState.HexagonSelected:
+                selectDifferentHexagon(hexagon);
                 userInteractionState = UserInteractionState.HexagonSelected;
                 break;
             case UserInteractionState.StartedMoving:
@@ -202,7 +197,7 @@ public class UserInteraction : MonoBehaviour
                 userInteractionState = UserInteractionState.StartedDragging;
                 break;
         }
-        updateSelectedHexagon(hexagon);
+        updateView();
     }
     
     public void OnHexagonClickedEvent(object sender, EventArgs e, int clickID)
@@ -253,7 +248,7 @@ public class UserInteraction : MonoBehaviour
                 userInteractionState = UserInteractionState.StartedDragging;
                 break;
         }
-        updateSelectedHexagon(_prevHexagon);
+        updateView();
     }
     
     void OnReleasingHexagon(Hexagon hexagon)
@@ -281,7 +276,7 @@ public class UserInteraction : MonoBehaviour
                 }
                 break;
         }
-        updateSelectedHexagon(_prevHexagon);
+        updateView();
     }
     
     public void StartDrag(Hexagon startHexagon)
