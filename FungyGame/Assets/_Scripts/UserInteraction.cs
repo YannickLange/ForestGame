@@ -3,7 +3,8 @@ using System.Collections;
 using System.Collections.Generic;
 using System;
 
-public class UserInteraction : MonoBehaviour {
+public class UserInteraction : MonoBehaviour
+{
     
     
     enum UserInteractionState
@@ -18,14 +19,16 @@ public class UserInteraction : MonoBehaviour {
     private Hexagon _prevHexagon = null;
     private UserInteractionState userInteractionState = UserInteractionState.Idle;
 
-	// Use this for initialization
-	void Start () {
+    // Use this for initialization
+    void Start()
+    {
         GridManager.instance.MoveButton.ClickEvent += OnMoveClicked;
         GridManager.instance.InfectButton.ClickEvent += OnInfectClicked;
-   	}
-	
-	// Update is called once per frame
-    void Update () {
+    }
+    
+    // Update is called once per frame
+    void Update()
+    {
         RaycastHit hit;
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
         //shoot a ray to see where we currently are
@@ -74,9 +77,15 @@ public class UserInteraction : MonoBehaviour {
         return selectedHexagon != null && userInteractionState == UserInteractionState.HexagonSelected && selectedHexagon.infected && selectedHexagon.HexTree.State == TreeState.Alive;
     }
     
+    UserInteractionState _DEBUG_lastState = UserInteractionState.Idle;
+
     private void updateSelectedHexagon(Hexagon hexagonToSelect)
     {
-        Debug.Log(userInteractionState);
+        if (_DEBUG_lastState != userInteractionState)
+        {
+            Debug.Log(userInteractionState);
+            _DEBUG_lastState = userInteractionState;
+        }
         List<Hexagon> toBeUpdatedHexagons = new List<Hexagon>();
         if (_prevHexagon != null)
         {

@@ -58,10 +58,19 @@ public class Hexagon : MonoBehaviour
     {
         return isAdjacentToSelectedHexagon() && HexTree != null && !infected;
     }
-
+    
+    public bool adjacentAccessibleHexagonExists()
+    {
+        foreach (var hexagon in SurroundingHexagons){
+            if (hexagon.isAccessible())
+                return true;
+        }
+        return false;
+    }
+    
     public bool isAbleToMoveAwayFrom()
     {
-        return infected && Fungi.stage == Fungi.maxStage;
+        return infected && Fungi.stage == Fungi.maxStage && adjacentAccessibleHexagonExists();
     }
 
     public void updateMaterial()
