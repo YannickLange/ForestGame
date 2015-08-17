@@ -198,8 +198,8 @@ public class Map : MonoBehaviour
 
     private void updateSelectedHexagon(Hexagon hexagonToSelect)
     {
-        moveButtonTo(GridManager.instance.MoveButton, hexagonToSelect, new Vector3(60, 60, 0));
-        moveButtonTo(GridManager.instance.InfectButton, hexagonToSelect, new Vector3(-60, 60, 0));
+        moveButtonTo(GridManager.instance.MoveButton, hexagonToSelect, new Vector3(40, 60, 0));
+        moveButtonTo(GridManager.instance.InfectButton, hexagonToSelect, new Vector3(-40, 60, 0));
         
         List<Hexagon> toBeUpdatedHexagons = new List<Hexagon>();
         if (_prevHexagon != null)
