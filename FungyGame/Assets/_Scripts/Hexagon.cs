@@ -39,17 +39,19 @@ public class Hexagon : MonoBehaviour
 
     public bool isAdjacentToSelectedHexagon()
     {
-        bool isAdjacentToSelectedHexagon = false;
+        return getAdjacentSelectedHexagon() != null;
+    }
+
+    public Hexagon getAdjacentSelectedHexagon()
+    {
         foreach (var hexagon in SurroundingHexagons)
         {
             if (hexagon.CurrentSelectionState == SelectionState.IsSelected)
             {
-                isAdjacentToSelectedHexagon = true;
-                break;
+                return hexagon;
             }
         }
-        return isAdjacentToSelectedHexagon;
-        
+        return null;
     }
     
     public bool isAccessible()
@@ -64,13 +66,14 @@ public class Hexagon : MonoBehaviour
 
     public void updateMaterial()
     {
+        var adjacentSelectedHexagon = getAdjacentSelectedHexagon();
         if (CurrentSelectionState == SelectionState.IsSelected)
         {
             _renderer.material = ResourcesManager.instance.HexSelectedMaterial;
         }
-        else if (isAdjacentToSelectedHexagon())
+        else if (adjacentSelectedHexagon != null )
         {
-            if (isAccessible())
+            if (adjacentSelectedHexagon.isAbleToMoveAwayFrom() && isAccessible())
             {
                 _renderer.material = ResourcesManager.instance.HexValidSurroundingMaterial;
             }
