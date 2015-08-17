@@ -32,6 +32,8 @@ public class Planter : MonoBehaviour
             if (Map.instance.Hexagons[i].HexTree == null && !Map.instance.Hexagons[i].isTarget)
                 emptyHex.Add(Map.instance.Hexagons[i]);
         }
+        if (emptyHex.Count == 0)
+            return;
 
         _targetHex = emptyHex[Random.Range(0, emptyHex.Count)];
         _targetHex.isTarget = true;

@@ -35,7 +35,8 @@ public class Lumberjack : MonoBehaviour
                 Map.instance.Hexagons[i].HexTree.Type != TreeType.DeadTree)
                 fullHex.Add(Map.instance.Hexagons[i]);
         }
-
+        if (fullHex.Count == 0)
+            return;
         _targetHex = fullHex[Random.Range(0, fullHex.Count)];
         _targetHex.isTarget = true;
         _targetTr = _targetHex.transform;
