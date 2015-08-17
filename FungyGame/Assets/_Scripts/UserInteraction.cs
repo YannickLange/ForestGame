@@ -54,7 +54,7 @@ public class UserInteraction : MonoBehaviour
     private void moveButtonTo(MonoBehaviour button, Hexagon hexagon, Vector3 offset)
     {
         var rectTransform = button.GetComponent<RectTransform>();
-        if (hexagon != null)
+        if (hexagon != null && !(userInteractionState == UserInteractionState.StartedDragging || userInteractionState == UserInteractionState.StartedMoving))
         {
             var screenPoint = Camera.main.WorldToScreenPoint(hexagon.transform.position);
             
