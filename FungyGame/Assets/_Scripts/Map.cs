@@ -19,7 +19,6 @@ public class Map : MonoBehaviour
         }
     }
 
-    private int _arrayOffset = 0;
     //Map singleton
     public static Map instance = null;
 
@@ -90,20 +89,16 @@ public class Map : MonoBehaviour
     {
         List<Hexagon> borders = new List<Hexagon>();
 
-        if (GridManager.instance.gridWidthInHexes >= GridManager.instance.gridHeightInHexes)
-            _arrayOffset = GridManager.instance.gridWidthInHexes;
-        else
-            _arrayOffset = GridManager.instance.gridHeightInHexes;
-        _hexagons = new Hexagon[GridManager.instance.gridWidthInHexes * GridManager.instance.gridHeightInHexes];
+        _hexagons = new Hexagon[GridManager.instance.gridHeightInHexes * GridManager.instance.gridWidthInHexes];
         for (int x = 0; x < GridManager.instance.gridWidthInHexes; x++)
             for (int y = 0; y < GridManager.instance.gridHeightInHexes; y++)
             {
-                _hexagons[x + y * _arrayOffset] = GridManager.instance.CreateHexagonAt(x, y);
-                _hexagons[x + y * _arrayOffset].ClickEvent += new HexagonEventHandler(GridManager.instance.UserInteraction.OnHexagonClickedEvent);
+            _hexagons[x + y * GridManager.instance.gridWidthInHexes] = GridManager.instance.CreateHexagonAt(x, y);
+            _hexagons[x + y * GridManager.instance.gridWidthInHexes].ClickEvent += new HexagonEventHandler(GridManager.instance.UserInteraction.OnHexagonClickedEvent);
                 //Making the border array:
                 if (x == 0 || y == 0 || x == GridManager.instance.gridWidthInHexes - 1 || y == GridManager.instance.gridHeightInHexes - 1)
-                    borders.Add(_hexagons[x + y * _arrayOffset]);
-            }
+                borders.Add(_hexagons[x + y * GridManager.instance.gridWidthInHexes]);
+        }
 
         HexBorders = new Hexagon[borders.Count];
         borders.CopyTo(HexBorders, 0);
@@ -150,31 +145,31 @@ public class Map : MonoBehaviour
         {
             if (!IsOutOfBounds(x, y - 1))
             {
-                surroundingHexs.Add(_hexagons[x + (y - 1) * _arrayOffset]);
+                surroundingHexs.Add(_hexagons[x + (y - 1) * GridManager.instance.gridWidthInHexes]);
             }
         }
         else if (!IsOutOfBounds(x - 1, y - 1))
         {
-            surroundingHexs.Add(_hexagons[(x - 1) + (y - 1) * _arrayOffset]);
+            surroundingHexs.Add(_hexagons[(x - 1) + (y - 1) * GridManager.instance.gridWidthInHexes]);
         }
 
 
         //Left tile
         if (!IsOutOfBounds(x - 1, y))
         {
-            surroundingHexs.Add(_hexagons[(x - 1) + y * _arrayOffset]);
+            surroundingHexs.Add(_hexagons[(x - 1) + y * GridManager.instance.gridWidthInHexes]);
         }
         //Left down tile
         if (y % 2 != 0)
         {
             if (!IsOutOfBounds(x, y + 1))
             {
-                surroundingHexs.Add(_hexagons[x + (y + 1) * _arrayOffset]);
+                surroundingHexs.Add(_hexagons[x + (y + 1) * GridManager.instance.gridWidthInHexes]);
             }
         }
         else if (!IsOutOfBounds(x - 1, y + 1))
         {
-            surroundingHexs.Add(_hexagons[(x - 1) + (y + 1) * _arrayOffset]);
+            surroundingHexs.Add(_hexagons[(x - 1) + (y + 1) * GridManager.instance.gridWidthInHexes]);
         }
 
         #endregion
@@ -183,21 +178,21 @@ public class Map : MonoBehaviour
         if (y % 2 == 0)
         {
             if (!IsOutOfBounds(x, y + 1))
-                surroundingHexs.Add(_hexagons[x + (y + 1) * _arrayOffset]);
+                surroundingHexs.Add(_hexagons[x + (y + 1) * GridManager.instance.gridWidthInHexes]);
         }
         else if (!IsOutOfBounds(x + 1, y + 1))
-            surroundingHexs.Add(_hexagons[(x + 1) + (y + 1) * _arrayOffset]);
+            surroundingHexs.Add(_hexagons[(x + 1) + (y + 1) * GridManager.instance.gridWidthInHexes]);
         //Right tile
         if (!IsOutOfBounds(x + 1, y))
-            surroundingHexs.Add(_hexagons[(x + 1) + y * _arrayOffset]);
+            surroundingHexs.Add(_hexagons[(x + 1) + y * GridManager.instance.gridWidthInHexes]);
 
         if (y % 2 == 0)
         {
             if (!IsOutOfBounds(x, y - 1))
-                surroundingHexs.Add(_hexagons[x + (y - 1) * _arrayOffset]);
+                surroundingHexs.Add(_hexagons[x + (y - 1) * GridManager.instance.gridWidthInHexes]);
         }
         else if (!IsOutOfBounds(x + 1, y - 1))
-            surroundingHexs.Add(_hexagons[(x + 1) + (y - 1) * _arrayOffset]);
+            surroundingHexs.Add(_hexagons[(x + 1) + (y - 1) * GridManager.instance.gridWidthInHexes]);
         #endregion
 
         return surroundingHexs;
@@ -205,6 +200,6 @@ public class Map : MonoBehaviour
 
     private bool IsOutOfBounds(int x, int y)
     {
-        return (y < 0 || x < 0 || x >= GridManager.instance.gridWidthInHexes || y >= GridManager.instance.gridWidthInHexes);
+        return (y < 0 || x < 0 || x >= GridManager.instance.gridWidthInHexes || y >= GridManager.instance.gridHeightInHexes);
     }
 }
