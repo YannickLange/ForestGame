@@ -43,7 +43,7 @@ MonoBehaviour:
     type: 2}
   HexInvalidSurroundingMaterial: {fileID: 2100000, guid: a904068af651d244bbf613c470c37f9b,
     type: 2}
-  HexNormalMaterial: {fileID: 2100000, guid: a6e23a5721322e547bfe5b475832f8ec, type: 2}
+  HexNormalMaterial: {fileID: 2100000, guid: 6dd5bf5d6f908f545806feb28c7b83a7, type: 2}
   HexSelectedMaterial: {fileID: 2100000, guid: 2a26ed8bd392b924eb0ac3b49ee3d15b, type: 2}
   HexPlanterTargetMat: {fileID: 2100000, guid: 97cf73535277a914ca4d5b4412b4e79e, type: 2}
   HexLumberjackTargetMat: {fileID: 2100000, guid: f78d001e2bc48234bac8a04bc42222c1,
@@ -95,6 +95,10 @@ Prefab:
       propertyPath: TreeTypes.Array.data[0]
       value: 
       objectReference: {fileID: 113476, guid: a648d059f32cc3a4095f6115cc6db275, type: 2}
+    - target: {fileID: 0}
+      propertyPath: HexNormalMaterial
+      value: 
+      objectReference: {fileID: 2100000, guid: 6dd5bf5d6f908f545806feb28c7b83a7, type: 2}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 0}
   m_RootGameObject: {fileID: 150510}
