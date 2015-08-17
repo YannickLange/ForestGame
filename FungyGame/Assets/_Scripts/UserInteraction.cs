@@ -241,7 +241,7 @@ public class UserInteraction : MonoBehaviour
                 userInteractionState = UserInteractionState.Idle;
                 break;
             case UserInteractionState.HexagonSelected:
-                if (hexagon.isAbleToMoveAwayFrom())
+                if (hexagon.isAbleToMoveAwayFrom() && hexagon == _prevHexagon)
                 {
                     StartDrag(hexagon);
                     userInteractionState = UserInteractionState.StartedDragging;
