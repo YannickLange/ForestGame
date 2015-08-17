@@ -14,13 +14,16 @@ public class TreeClass : MonoBehaviour
 
     private float _nextEventTime = 0f;
     private bool _processStarted = false;
+    public Hexagon occupiedHexagon {get; set;}
 
     //Cached components
     private SpriteRenderer _spriteRenderer;
+    private TreeClass _treeClassScript;
 
     void Awake()
     {
         _spriteRenderer = GetComponent<SpriteRenderer>();
+        _treeClassScript = GetComponent<TreeClass>();
         _nextEventTime = Time.time + Random.Range(growTime, growTime + randomGrowTimeRange);
         _processStarted = true;
     }
@@ -45,7 +48,10 @@ public class TreeClass : MonoBehaviour
 		int newType = typeValue + 1;
         _nextEventTime = Time.time + Random.Range(growTime, growTime + randomGrowTimeRange); //Set the next event time value
         GameObject tree = (GameObject)Instantiate(ResourcesManager.instance.TreeTypes[newType], gameObject.transform.position, gameObject.transform.rotation);
+        TreeClass newTreeClassScript = tree.GetComponent<TreeClass>();
         tree.transform.parent = GameObject.Find("Forest").transform;
+        newTreeClassScript.occupiedHexagon = _treeClassScript.occupiedHexagon;
+        newTreeClassScript.occupiedHexagon.HexTree = newTreeClassScript;
         GameObject.Destroy(this.gameObject);
     }
     

@@ -24,6 +24,7 @@ public class TreeGenerator
                 GameObject tree = GameObject.Instantiate(ResourcesManager.instance.TreeTypes[treetype], Map.instance.Hexagons[i].transform.position, Quaternion.identity) as GameObject;
                 tree.transform.parent = Forest.transform;
                 Map.instance.Hexagons[i].HexTree = tree.GetComponent<TreeClass>();
+                tree.GetComponent<TreeClass>().occupiedHexagon = Map.instance.Hexagons[i];
             }
         }
     }
