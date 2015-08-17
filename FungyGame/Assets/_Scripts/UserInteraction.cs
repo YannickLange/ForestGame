@@ -110,8 +110,8 @@ public class UserInteraction : MonoBehaviour
             toBeUpdatedHexagon.updateMaterial();
         }
 
-        moveButtonTo(GridManager.instance.MoveButton, _prevHexagon, new Vector3(40, 60, 0));
-        moveButtonTo(GridManager.instance.InfectButton, _prevHexagon, new Vector3(-40, 60, 0));
+        moveButtonTo(GridManager.instance.MoveButton, _prevHexagon, new Vector3(50, 60, 0));
+        moveButtonTo(GridManager.instance.InfectButton, _prevHexagon, new Vector3(-50, 60, 0));
         
         GridManager.instance.MoveButton.GetComponent<UnityEngine.UI.Button>().interactable = isMoveButtonActive(_prevHexagon);
         GridManager.instance.InfectButton.GetComponent<UnityEngine.UI.Button>().interactable = isInfectButtonActive(_prevHexagon);
