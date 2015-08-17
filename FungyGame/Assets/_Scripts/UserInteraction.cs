@@ -179,8 +179,16 @@ public class UserInteraction : MonoBehaviour
         {
             case UserInteractionState.Idle:
             case UserInteractionState.HexagonSelected:
-                selectDifferentHexagon(hexagon);
-                userInteractionState = UserInteractionState.HexagonSelected;
+                if (hexagon.infected)
+                {
+                    selectDifferentHexagon(hexagon);
+                    userInteractionState = UserInteractionState.HexagonSelected;
+                }
+                else
+                {
+                    selectDifferentHexagon(null);
+                    userInteractionState = UserInteractionState.Idle;
+                }
                 break;
             case UserInteractionState.StartedMoving:
                 if (hexagon.isAccessible() && !hexagon.infected)
