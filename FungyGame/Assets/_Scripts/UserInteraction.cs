@@ -66,7 +66,7 @@ public class UserInteraction : MonoBehaviour {
     
     private bool isMoveButtonActive(Hexagon selectedHexagon)
     {
-        return selectedHexagon != null && userInteractionState == UserInteractionState.HexagonSelected && selectedHexagon.infected;
+        return selectedHexagon != null && selectedHexagon.isAbleToMoveAwayFrom() && userInteractionState == UserInteractionState.HexagonSelected && selectedHexagon.infected;
     }
     
     private bool isInfectButtonActive(Hexagon selectedHexagon)
@@ -221,14 +221,13 @@ public class UserInteraction : MonoBehaviour {
     
     void OnPressingHexagon(Hexagon hexagon)
     {
-        var fungi = getFungiFromHexagon(hexagon);
         switch (userInteractionState)
         {
             case UserInteractionState.Idle:
                 userInteractionState = UserInteractionState.Idle;
                 break;
             case UserInteractionState.HexagonSelected:
-                if (hexagon.infected && fungi.stage == fungi.maxStage)
+                if (hexagon.isAbleToMoveAwayFrom())
                 {
                     StartDrag(hexagon);
                     userInteractionState = UserInteractionState.StartedDragging;
@@ -276,18 +275,10 @@ public class UserInteraction : MonoBehaviour {
         updateSelectedHexagon(_prevHexagon);
     }
     
-    Fungi getFungiFromHexagon(Hexagon hexagon)
-    {
-        var fungiHolder = hexagon.transform.childCount > 0 ? hexagon.transform.GetChild(0) : null;
-        var fungi = fungiHolder ? fungiHolder.GetComponent<Fungi>() : null;
-        return fungi;
-    }
-    
     public void StartDrag(Hexagon startHexagon)
     {
-        var fungi = getFungiFromHexagon(startHexagon);
         this.startHexagon = startHexagon;
-        startHexChildScript = fungi;
+        startHexChildScript = startHexagon.Fungi;
     }
     
     public void EndDrag(Hexagon endHexagon)

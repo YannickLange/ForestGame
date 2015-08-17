@@ -26,6 +26,16 @@ public class Hexagon : MonoBehaviour
             updateMaterial();
         }
     }
+    
+    public Fungi Fungi
+    {
+        get
+        {
+            var fungiHolder = transform.childCount > 0 ? transform.GetChild(0) : null;
+            var fungi = fungiHolder ? fungiHolder.GetComponent<Fungi>() : null;
+            return fungi;
+        }
+    }
 
     public bool isAdjacentToSelectedHexagon()
     {
@@ -44,7 +54,12 @@ public class Hexagon : MonoBehaviour
     
     public bool isAccessible()
     {
-        return isAdjacentToSelectedHexagon() && HexTree != null;
+        return isAdjacentToSelectedHexagon() && HexTree != null && !infected;
+    }
+
+    public bool isAbleToMoveAwayFrom()
+    {
+        return infected && Fungi.stage == Fungi.maxStage;
     }
 
     public void updateMaterial()
