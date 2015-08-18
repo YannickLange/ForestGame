@@ -8,7 +8,7 @@ public class Loader : MonoBehaviour
     public GameObject map;
     public GameObject moveButton;
     public GameObject infectButton;
-    public GameObject inputManager;
+    public GameObject userInteraction;
 
     void Awake()
     {
@@ -21,6 +21,6 @@ public class Loader : MonoBehaviour
 
         GridManager.instance.GetComponent<GridManager>().InfectButton = infectButton.GetComponent<InfectButton>();
         GridManager.instance.GetComponent<GridManager>().MoveButton = moveButton.GetComponent<MoveButton>();
-        GridManager.instance.GetComponent<GridManager>().InputManager = inputManager.GetComponent<InputManager>();
+        GridManager.instance.GetComponent<GridManager>().UserInteraction = userInteraction.GetComponent<UserInteraction>();
     }
 }

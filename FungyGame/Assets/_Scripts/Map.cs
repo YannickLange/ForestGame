@@ -19,13 +19,14 @@ public class Map : MonoBehaviour
         }
     }
 
-    private Hexagon _prevHexagon = null;
-    private int _arrayOffset = 0;
     //Map singleton
     public static Map instance = null;
 
     public Hexagon[] HexBorders { get; set; }
 
+    //TEMP
+    private Transform _planter;
+    private Transform _lumberjack;
     void Awake()
     {
         //Check if instance already exists
@@ -41,6 +42,9 @@ public class Map : MonoBehaviour
             Destroy(gameObject);
         }
         DontDestroyOnLoad(gameObject);
+
+        _planter = GameObject.Find("Planters").transform;
+        _lumberjack = GameObject.Find("Lumberjacks").transform;
     }
 
     void Start()
@@ -52,31 +56,49 @@ public class Map : MonoBehaviour
             rand = UnityEngine.Random.Range(0, _hexagons.Length - 1);
         }
         _hexagons[rand].infected = true;
-        GameObject fungiObject = (GameObject)Instantiate(fungi, _hexagons[rand].transform.position + new Vector3(0, 0.001f, 0), Quaternion.LookRotation(Vector3.up * 90));
-        fungiObject.transform.parent = _hexagons[rand].gameObject.transform;
-        
-        GridManager.instance.MoveButton.ClickEvent += OnMoveClicked;
-        GridManager.instance.InfectButton.ClickEvent += OnInfectClicked;
+        PutFungiOn(_hexagons[rand]);
+        CheckSpawn(_hexagons[rand]);
+    }
+
+    public void PutFungiOn(Hexagon hex)
+    {
+        GameObject fungiObject = Instantiate(fungi, hex.transform.position + new Vector3(0, 0.001f, 0), Quaternion.LookRotation(Vector3.up * 90)) as GameObject;
+        fungiObject.transform.parent = hex.gameObject.transform;
+    }
+
+    public void CheckSpawn(Hexagon hex)
+    {
+        List<Hexagon> surroundings = GetSurroundingTiles(hex);
+        if (surroundings.Count > 1)
+            return;
+        else
+        {
+            for (int i = 0; i < Hexagons.Length; i++)
+            {
+                surroundings = GetSurroundingTiles(hex);
+                if (surroundings.Count > 1)
+                {
+                    PutFungiOn(Hexagons[i]);
+                    return;
+                }
+            }
+        }
     }
 
     public void BuildMap()
     {
         List<Hexagon> borders = new List<Hexagon>();
 
-        if (GridManager.instance.gridWidthInHexes >= GridManager.instance.gridHeightInHexes)
-            _arrayOffset = GridManager.instance.gridWidthInHexes;
-        else
-            _arrayOffset = GridManager.instance.gridHeightInHexes;
-        _hexagons = new Hexagon[GridManager.instance.gridWidthInHexes * GridManager.instance.gridHeightInHexes];
+        _hexagons = new Hexagon[GridManager.instance.gridHeightInHexes * GridManager.instance.gridWidthInHexes];
         for (int x = 0; x < GridManager.instance.gridWidthInHexes; x++)
             for (int y = 0; y < GridManager.instance.gridHeightInHexes; y++)
             {
-                _hexagons[x + y * _arrayOffset] = GridManager.instance.CreateHexagonAt(x, y);
-                _hexagons[x + y * _arrayOffset].ClickEvent += new HexagonEventHandler(this.OnHexagonClickedEvent);
+            _hexagons[x + y * GridManager.instance.gridWidthInHexes] = GridManager.instance.CreateHexagonAt(x, y);
+            _hexagons[x + y * GridManager.instance.gridWidthInHexes].ClickEvent += new HexagonEventHandler(GridManager.instance.UserInteraction.OnHexagonClickedEvent);
                 //Making the border array:
                 if (x == 0 || y == 0 || x == GridManager.instance.gridWidthInHexes - 1 || y == GridManager.instance.gridHeightInHexes - 1)
-                    borders.Add(_hexagons[x + y * _arrayOffset]);
-            }
+                borders.Add(_hexagons[x + y * GridManager.instance.gridWidthInHexes]);
+        }
 
         HexBorders = new Hexagon[borders.Count];
         borders.CopyTo(HexBorders, 0);
@@ -96,7 +118,17 @@ public class Map : MonoBehaviour
             //TEMP
             //Spawn planter
             GameObject planter = Instantiate(ResourcesManager.instance.Planter) as GameObject;
+            planter.transform.position = new Vector3(0f, 1.4f, 0f);
+            planter.transform.SetParent(_planter);
             planter.GetComponent<Planter>().Spawn();
+        }
+        if (Input.GetKeyDown(KeyCode.K))
+        {
+            //TEMP
+            //Spawn planter
+            GameObject lumberjack = Instantiate(ResourcesManager.instance.Lumberjack) as GameObject;
+            lumberjack.transform.SetParent(_lumberjack);
+            lumberjack.GetComponent<Lumberjack>().Spawn();
         }
     }
 
@@ -113,31 +145,31 @@ public class Map : MonoBehaviour
         {
             if (!IsOutOfBounds(x, y - 1))
             {
-                surroundingHexs.Add(_hexagons[x + (y - 1) * _arrayOffset]);
+                surroundingHexs.Add(_hexagons[x + (y - 1) * GridManager.instance.gridWidthInHexes]);
             }
         }
         else if (!IsOutOfBounds(x - 1, y - 1))
         {
-            surroundingHexs.Add(_hexagons[(x - 1) + (y - 1) * _arrayOffset]);
+            surroundingHexs.Add(_hexagons[(x - 1) + (y - 1) * GridManager.instance.gridWidthInHexes]);
         }
 
 
         //Left tile
         if (!IsOutOfBounds(x - 1, y))
         {
-            surroundingHexs.Add(_hexagons[(x - 1) + y * _arrayOffset]);
+            surroundingHexs.Add(_hexagons[(x - 1) + y * GridManager.instance.gridWidthInHexes]);
         }
         //Left down tile
         if (y % 2 != 0)
         {
             if (!IsOutOfBounds(x, y + 1))
             {
-                surroundingHexs.Add(_hexagons[x + (y + 1) * _arrayOffset]);
+                surroundingHexs.Add(_hexagons[x + (y + 1) * GridManager.instance.gridWidthInHexes]);
             }
         }
         else if (!IsOutOfBounds(x - 1, y + 1))
         {
-            surroundingHexs.Add(_hexagons[(x - 1) + (y + 1) * _arrayOffset]);
+            surroundingHexs.Add(_hexagons[(x - 1) + (y + 1) * GridManager.instance.gridWidthInHexes]);
         }
 
         #endregion
@@ -146,21 +178,21 @@ public class Map : MonoBehaviour
         if (y % 2 == 0)
         {
             if (!IsOutOfBounds(x, y + 1))
-                surroundingHexs.Add(_hexagons[x + (y + 1) * _arrayOffset]);
+                surroundingHexs.Add(_hexagons[x + (y + 1) * GridManager.instance.gridWidthInHexes]);
         }
         else if (!IsOutOfBounds(x + 1, y + 1))
-            surroundingHexs.Add(_hexagons[(x + 1) + (y + 1) * _arrayOffset]);
+            surroundingHexs.Add(_hexagons[(x + 1) + (y + 1) * GridManager.instance.gridWidthInHexes]);
         //Right tile
         if (!IsOutOfBounds(x + 1, y))
-            surroundingHexs.Add(_hexagons[(x + 1) + y * _arrayOffset]);
+            surroundingHexs.Add(_hexagons[(x + 1) + y * GridManager.instance.gridWidthInHexes]);
 
         if (y % 2 == 0)
         {
             if (!IsOutOfBounds(x, y - 1))
-                surroundingHexs.Add(_hexagons[x + (y - 1) * _arrayOffset]);
+                surroundingHexs.Add(_hexagons[x + (y - 1) * GridManager.instance.gridWidthInHexes]);
         }
         else if (!IsOutOfBounds(x + 1, y - 1))
-            surroundingHexs.Add(_hexagons[(x + 1) + (y - 1) * _arrayOffset]);
+            surroundingHexs.Add(_hexagons[(x + 1) + (y - 1) * GridManager.instance.gridWidthInHexes]);
         #endregion
 
         return surroundingHexs;
@@ -168,142 +200,6 @@ public class Map : MonoBehaviour
 
     private bool IsOutOfBounds(int x, int y)
     {
-        return (y < 0 || x < 0 || x >= GridManager.instance.gridWidthInHexes || y >= GridManager.instance.gridWidthInHexes);
-    }
-
-    private MoveButton.ButtonEventHandler currentMoveHandler;
-    private InfectButton.ButtonEventHandler currentInfectHandler;
-
-    enum UserInteractionState
-    {
-        Idle,
-        HexagonSelected,
-        StartedMoving,
-    }
-
-    private void moveButtonTo(MonoBehaviour button, Hexagon hexagon, Vector3 offset)
-    {
-        var screenPoint = Camera.main.WorldToScreenPoint(hexagon.transform.position);
-        var rectTransform = button.GetComponent<RectTransform>();
-        rectTransform.transform.position = screenPoint + offset;
-    }
-
-
-    private void updateSelectedHexagon(Hexagon hexagonToSelect)
-    {
-        moveButtonTo(GridManager.instance.MoveButton, hexagonToSelect, new Vector3(60, 60, 0));
-        moveButtonTo(GridManager.instance.InfectButton, hexagonToSelect, new Vector3(-60, 60, 0));
-        
-        List<Hexagon> toBeUpdatedHexagons = new List<Hexagon>();
-        if (_prevHexagon != null)
-        {
-            _prevHexagon.CurrentSelectionState = Hexagon.SelectionState.NotSelected;
-            toBeUpdatedHexagons.Add(_prevHexagon);
-            toBeUpdatedHexagons.AddRange(_prevHexagon.SurroundingHexagons);
-        }
-        toBeUpdatedHexagons.Add(hexagonToSelect);
-        toBeUpdatedHexagons.AddRange(hexagonToSelect.SurroundingHexagons);
-
-        _prevHexagon = hexagonToSelect;
-
-        hexagonToSelect.CurrentSelectionState = Hexagon.SelectionState.IsSelected;
-        foreach (var toBeUpdatedHexagon in toBeUpdatedHexagons)
-        {
-            toBeUpdatedHexagon.updateMaterial();
-        }
-    }
-
-    private UserInteractionState userInteractionState = UserInteractionState.Idle;
-
-    private void OnMoveClicked()
-    {
-        switch (userInteractionState)
-        {
-            case UserInteractionState.Idle:
-                userInteractionState = UserInteractionState.Idle;
-                break;
-            case UserInteractionState.HexagonSelected:
-                GridManager.instance.InputManager.StartDrag(_prevHexagon);
-                userInteractionState = UserInteractionState.StartedMoving;
-                break;
-            case UserInteractionState.StartedMoving:
-                userInteractionState = UserInteractionState.StartedMoving;
-                break;
-        }
-    }
-
-    private void OnInfectClicked()
-    {
-        switch (userInteractionState)
-        {
-            case UserInteractionState.Idle:
-                userInteractionState = UserInteractionState.Idle;
-                break;
-            case UserInteractionState.HexagonSelected:
-                userInteractionState = UserInteractionState.HexagonSelected;
-                break;
-            case UserInteractionState.StartedMoving:
-                userInteractionState = UserInteractionState.StartedMoving;
-                break;
-        }
-    }
-
-    private void updateButtonState()
-    {
-        switch (userInteractionState)
-        {
-            case UserInteractionState.Idle:
-                userInteractionState = UserInteractionState.Idle;
-                break;
-            case UserInteractionState.HexagonSelected:
-                userInteractionState = UserInteractionState.HexagonSelected;
-                break;
-            case UserInteractionState.StartedMoving:
-                userInteractionState = UserInteractionState.StartedMoving;
-                break;
-        }
-    }
-
-    private void OnHexagonSingleClicked(Hexagon hexagon)
-    {
-        switch (userInteractionState)
-        {
-            case UserInteractionState.Idle:
-                updateSelectedHexagon(hexagon);
-                userInteractionState = UserInteractionState.HexagonSelected;
-                break;
-            case UserInteractionState.HexagonSelected:
-                updateSelectedHexagon(hexagon);
-                userInteractionState = UserInteractionState.HexagonSelected;
-                break;
-            case UserInteractionState.StartedMoving:
-                GridManager.instance.InputManager.EndDrag(hexagon);
-                userInteractionState = UserInteractionState.HexagonSelected;
-                break;
-        }
-    }
-
-    private void OnHexagonClickedEvent(object sender, EventArgs e, int clickID)
-    {
-
-        Hexagon hex = sender as Hexagon;
-        switch (clickID)
-        {
-            case 0:
-                OnHexagonSingleClicked(hex);
-                break;
-            case 1:
-            //Checking if the selected hexgon is in the surroundings
-                var surroundingTiles = GetSurroundingTiles(hex);
-                foreach (var surroundingTile in surroundingTiles)
-                {
-                    if (surroundingTile == hex)
-                    {
-                        Debug.Log("Perform action on the selected hexagon...[Infect/Expand/Other?]");
-                        break;
-                    }
-                }
-                break;
-        }
+        return (y < 0 || x < 0 || x >= GridManager.instance.gridWidthInHexes || y >= GridManager.instance.gridHeightInHexes);
     }
 }

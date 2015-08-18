@@ -79,6 +79,10 @@ Prefab:
       propertyPath: fungi
       value: 
       objectReference: {fileID: 154234, guid: 9ca5f0a11fff63443a1c4c01efbb1859, type: 2}
+    - target: {fileID: 0}
+      propertyPath: prefab
+      value: 
+      objectReference: {fileID: 125284, guid: b83d0ffbc682c5d4d95e73d2456b6c70, type: 2}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 0}
   m_RootGameObject: {fileID: 199022}

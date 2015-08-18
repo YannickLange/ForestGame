@@ -24,9 +24,5 @@ public class Meter : MonoBehaviour {
 		if(Indicator.transform.position.x <= -100 && Indicator.transform.position.y >= 100) {
 			//GameOver ();
 		}
-		if (Input.GetKeyDown("space")) 
-		{
-			Fungus(2);
-		}
 	}
 }

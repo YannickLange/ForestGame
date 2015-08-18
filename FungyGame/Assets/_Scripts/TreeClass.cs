@@ -6,34 +6,28 @@ public enum TreeType { Sapling = 0, SmallTree = 1, BigTree = 2, DeadTree = 3 }; 
 
 public class TreeClass : MonoBehaviour
 {
-    public static Vector3[] Positions;
-    public static Vector3[] Scales;
-
-    public float DeltaTime = 1;
-	public float[] TimerValues = { 60, 60, 60, 240 }; //[SAPLING],[SMALLTREE],[BIGTREE],[DEADTREE] 
+    public float growTime = 10f;
+    public float randomGrowTimeRange = 5f;
 
     public TreeState State;
     public TreeType Type;
 
     private float _nextEventTime = 0f;
     private bool _processStarted = false;
+    public Hexagon occupiedHexagon {get; set;}
+    private GameObject _treeInfectPrefab;
 
     //Cached components
-    private Renderer _thisRenderer;
-    private Transform _thisTransform;
+    private SpriteRenderer _spriteRenderer;
+    private TreeClass _treeClassScript;
+    private Fungi _infection;
 
     void Awake()
     {
-        _thisTransform = transform.GetChild(0);
-        _thisRenderer = _thisTransform.GetComponent<Renderer>();
-    }
-
-    /// <summary>
-    /// Start the growth processus
-    /// </summary>
-    public void StartTreeGrowth()
-    {
-		_nextEventTime = Time.time + Random.Range(TimerValues[(int)Type] - DeltaTime, TimerValues[(int)Type] + DeltaTime);
+        _spriteRenderer = GetComponent<SpriteRenderer>();
+        _treeClassScript = GetComponent<TreeClass>();
+        _treeInfectPrefab = (GameObject)Resources.Load("InfectLoadingBar");
+        _nextEventTime = Time.time + Random.Range(growTime, growTime + randomGrowTimeRange);
         _processStarted = true;
     }
 
@@ -43,20 +37,35 @@ public class TreeClass : MonoBehaviour
         {
             CheckState();
         }
+        if(_infection != null)
+        {
+            if (_infection.stage == _infection.maxStage)
+            {
+                Debug.Log("Tree should be dead");
+
+                //Does not do anything, just here for completion sake
+                State = TreeState.Dead;
+                Type = TreeType.DeadTree;
+                //End of useless code
+
+                ReplaceTree((int)TreeType.DeadTree);
+                Destroy(_infection.gameObject);
+            }
+        }
     }
 
     /// <summary>
-    /// Set the nex state of the tree
+    /// Set the next state of the tree
     /// </summary>
     private void GrowTree()
 	{
 		int typeValue = (int)Type;
-		if (typeValue >= (int)TreeType.DeadTree)
+        if (typeValue >= (int)TreeType.DeadTree - 1) //TODO: Change this back to deadtree when they exist
 			return;
 
 		int newType = typeValue + 1;
-		_nextEventTime = Time.time + Random.Range(TimerValues[typeValue] - DeltaTime, TimerValues[typeValue] + DeltaTime); //Set the next event time value
-		SetTreeType(newType);
+        _nextEventTime = Time.time + Random.Range(growTime, growTime + randomGrowTimeRange); //Set the next event time value
+        ReplaceTree(newType);
     }
     
 	private void CheckState()
@@ -72,32 +81,25 @@ public class TreeClass : MonoBehaviour
         }
     }
 
-	public void SetTreeState(TreeState newState)
-	{
-		switch (newState)
-		{
-			case TreeState.Alive:
-				break;
-			case TreeState.Infected:
-				break;
-			case TreeState.Dead:
-				SetTreeType(TreeType.DeadTree);
-				break;
-		}
-		State = newState;
-	}
+    public void InfectTree()
+    {
+        GameObject treeInfect = (GameObject)Instantiate(_treeInfectPrefab, transform.position, transform.rotation);
+        treeInfect.transform.parent = transform;
+        _infection = treeInfect.GetComponent<Fungi>();
+        State = TreeState.Infected;
+    }
 
-	public void SetTreeType(TreeType newType)
-	{
-		SetTreeType((int)newType);
-	}
-
-	public void SetTreeType(int newType)
-	{
-		TreeType treeType = (TreeType)newType;
-		_thisRenderer.material = ResourcesManager.instance.TreeMat[newType];
-		_thisTransform.localScale = Scales[newType];
-		_thisTransform.localPosition = Positions[newType];
-		Type = treeType;
-	}
+    public void ReplaceTree(int newType)
+    {
+        //create the new tree
+        GameObject tree = (GameObject)Instantiate(ResourcesManager.instance.TreeTypes[newType], gameObject.transform.position, gameObject.transform.rotation);
+        TreeClass newTreeClassScript = tree.GetComponent<TreeClass>();
+        //Make the forest the parent
+        tree.transform.parent = GameObject.Find("Forest").transform;
+        //Make sure the hexagon and the tree now know their significant other
+        newTreeClassScript.occupiedHexagon = _treeClassScript.occupiedHexagon;
+        newTreeClassScript.occupiedHexagon.HexTree = newTreeClassScript;
+        //destroy the original
+        GameObject.Destroy(this.gameObject);
+    }
 }

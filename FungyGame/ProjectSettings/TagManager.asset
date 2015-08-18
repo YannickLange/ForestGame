@@ -5,6 +5,8 @@ TagManager:
   serializedVersion: 2
   tags:
   - Hexagon
+  - Planter
+  - Lumberjack
   layers:
   - Default
   - TransparentFX
@@ -41,4 +43,7 @@ TagManager:
   m_SortingLayers:
   - name: Default
     uniqueID: 0
+    locked: 0
+  - name: Fungus
+    uniqueID: 3883248053
     locked: 0
