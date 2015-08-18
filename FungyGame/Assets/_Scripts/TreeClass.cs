@@ -42,7 +42,7 @@ public class TreeClass : MonoBehaviour
             if (_infection.stage == _infection.maxStage)
             {
                 Debug.Log("Tree should be dead");
-
+                occupiedHexagon.Fungi.stage = 0;
                 //Does not do anything, just here for completion sake
                 State = TreeState.Dead;
                 Type = TreeType.DeadTree;
@@ -50,7 +50,6 @@ public class TreeClass : MonoBehaviour
 
                 ReplaceTree((int)TreeType.DeadTree);
                 Destroy(_infection.gameObject);
-				GridManager.instance.Meter.Fungus(2);
             }
         }
     }
@@ -61,7 +60,7 @@ public class TreeClass : MonoBehaviour
     private void GrowTree()
 	{
 		int typeValue = (int)Type;
-        if (typeValue >= (int)TreeType.DeadTree - 1) //TODO: Change this back to deadtree when they exist
+        if (typeValue >= (int)TreeType.DeadTree) //TODO: Change this back to deadtree when they exist
 			return;
 
 		int newType = typeValue + 1;
@@ -100,6 +99,8 @@ public class TreeClass : MonoBehaviour
         //Make sure the hexagon and the tree now know their significant other
         newTreeClassScript.occupiedHexagon = _treeClassScript.occupiedHexagon;
         newTreeClassScript.occupiedHexagon.HexTree = newTreeClassScript;
+        if (newTreeClassScript.Type == TreeType.DeadTree)
+            GridManager.instance.Meter.Fungus(2);
         //destroy the original
         GameObject.Destroy(this.gameObject);
     }
