@@ -25,6 +25,21 @@ public class Lumberjack : MonoBehaviour
     }
     public void Spawn()
     {
+        SelectTarget();   
+        //Highlight the hexgon
+        StartCoroutine(_targetHex.FlashHexagon(ResourcesManager.instance.HexLumberjackTargetMat));
+
+        //2:Looking for the spawn hexagon
+        _spawnHex = Map.instance.HexBorders[Random.Range(0, Map.instance.HexBorders.Length)];
+
+        //4:Enable the movement
+        transform.position = _spawnHex.transform.position;
+
+        StartCoroutine(MoveLumberjack());
+    }
+
+    private void SelectTarget()
+    {
         List<Hexagon> fullHex = new List<Hexagon>();
         //1:Looking for a spot:
         for (int i = 0; i < Map.instance.Hexagons.Length; i++)
@@ -40,16 +55,6 @@ public class Lumberjack : MonoBehaviour
         _targetHex = fullHex[Random.Range(0, fullHex.Count)];
         _targetHex.isTarget = true;
         _targetTr = _targetHex.transform;
-        //Highlight the hexgon
-        StartCoroutine(_targetHex.FlashHexagon(ResourcesManager.instance.HexLumberjackTargetMat));
-
-        //2:Looking for the spawn hexagon
-        _spawnHex = Map.instance.HexBorders[Random.Range(0, Map.instance.HexBorders.Length)];
-
-        //4:Enable the movement
-        transform.position = _spawnHex.transform.position;
-
-        StartCoroutine(MoveLumberjack());
     }
 
     private IEnumerator MoveLumberjack()
@@ -59,6 +64,10 @@ public class Lumberjack : MonoBehaviour
         Vector3 newPosition;
         while (sqrRemainingDistance > 1e-6)
         {
+            if(_targetHex.HexTree.Type == TreeType.DeadTree)
+            {
+                SelectTarget();
+            }
             newPosition = Vector3.MoveTowards(_rb.position, _targetTr.position, MoveTime * Time.deltaTime);
             _rb.MovePosition(newPosition);
 
@@ -114,6 +123,8 @@ public class Lumberjack : MonoBehaviour
     {
         //1:Destroy the current tree
         GameObject.Destroy(_targetHex.HexTree.gameObject);
+        if (_targetHex.Fungi != null)
+            GameObject.Destroy(_targetHex.Fungi.gameObject);
         _targetHex.HexTree = null;
         GridManager.instance.Meter.Forest(2);
     }

@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using Random = UnityEngine.Random;
 using System;
 
 public class Map : MonoBehaviour
@@ -19,6 +20,14 @@ public class Map : MonoBehaviour
         }
     }
 
+    //Spawner variables
+    private float _planterNextSpawn = 6f;
+    private float _planterRndUp = 2.6f;
+    private float _planterRndDown = 4f;
+
+    private float _lumberjackNextSpawn = 4f;
+    private float _lumberjackRndUp = 2.2f;
+    private float _lumberjackRndDown = 3.8f;
     //Map singleton
     public static Map instance = null;
 
@@ -113,23 +122,41 @@ public class Map : MonoBehaviour
 
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.J))
+        #region Planter
+        if(Time.time > _planterNextSpawn)
         {
-            //TEMP
-            //Spawn planter
+            _planterNextSpawn = Time.time + Mathf.Exp(Random.Range(_planterRndDown, _planterRndUp));
+            _planterRndDown -= 0.2f;
+            if (_planterRndDown <= 0)
+                _planterRndDown = 2.6f;
+            _planterRndUp -= 0.2f;
+            if (_planterRndUp <= 0)
+                _planterRndUp = 4f;
+
+
             GameObject planter = Instantiate(ResourcesManager.instance.Planter) as GameObject;
-            planter.transform.position = new Vector3(0f, 1.4f, 0f);
             planter.transform.SetParent(_planter);
             planter.GetComponent<Planter>().Spawn();
         }
-        if (Input.GetKeyDown(KeyCode.K))
+
+        #endregion
+        #region Lumberjack
+        if (Time.time > _lumberjackNextSpawn)
         {
-            //TEMP
-            //Spawn planter
+            _lumberjackNextSpawn = Time.time + Mathf.Exp(Random.Range(_lumberjackRndDown, _lumberjackRndUp));
+            _lumberjackRndDown -= 0.3f;
+            if (_lumberjackRndDown <= 0)
+                _lumberjackRndDown = 2.2f;
+            _lumberjackRndUp -= 0.3f;
+            if (_lumberjackRndUp <= 0)
+                _lumberjackRndUp = 3.8f;
+
+
             GameObject lumberjack = Instantiate(ResourcesManager.instance.Lumberjack) as GameObject;
             lumberjack.transform.SetParent(_lumberjack);
             lumberjack.GetComponent<Lumberjack>().Spawn();
         }
+        #endregion
     }
 
     public List<Hexagon> GetSurroundingTiles(Hexagon hexagon)

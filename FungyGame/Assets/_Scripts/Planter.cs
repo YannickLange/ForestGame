@@ -7,6 +7,7 @@ public class Planter : MonoBehaviour
     public float MoveTime = 0.6f;
     public float PlantActionTime = 5.0f;
 
+    public const float MaxSpawnConst = 5;
 
     private Hexagon _targetHex = null;
     private Transform _targetTr = null;
@@ -23,6 +24,18 @@ public class Planter : MonoBehaviour
         _thisTransform = transform;
         _rb = GetComponent<Rigidbody>();
     }
+    public static float GetNextSpawnTime()
+    {
+        float val = 0f;
+
+        //y = 
+
+
+
+
+        return val;
+    }
+
     public void Spawn()
     {
         List<Hexagon> emptyHex = new List<Hexagon>();

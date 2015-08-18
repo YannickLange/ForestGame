@@ -5,8 +5,6 @@ using System;
 
 public class UserInteraction : MonoBehaviour
 {
-    
-    
     enum UserInteractionState
     {
         Idle,
@@ -92,7 +90,7 @@ public class UserInteraction : MonoBehaviour
     
     private bool isInfectButtonActive(Hexagon selectedHexagon)
     {
-        return selectedHexagon != null && userInteractionState == UserInteractionState.HexagonSelected && selectedHexagon.infected && selectedHexagon.HexTree.State == TreeState.Alive && selectedHexagon.Fungi != null && selectedHexagon.Fungi.stage == selectedHexagon.Fungi.maxStage;
+        return selectedHexagon != null && userInteractionState == UserInteractionState.HexagonSelected && selectedHexagon.infected && selectedHexagon.HexTree.State == TreeState.Alive && selectedHexagon.HexTree.Type == TreeType.BigTree && selectedHexagon.HexTree && selectedHexagon.Fungi != null && selectedHexagon.Fungi.stage == selectedHexagon.Fungi.maxStage;
     }
     
     UserInteractionState _DEBUG_lastState = UserInteractionState.Idle;
@@ -179,9 +177,16 @@ public class UserInteraction : MonoBehaviour
                 userInteractionState = UserInteractionState.Idle;
                 break;
             case UserInteractionState.HexagonSelected:
-                if (_prevHexagon.Fungi.stage == _prevHexagon.Fungi.maxStage)
+                if (isInfectButtonActive(_prevHexagon))
+                {
                     _prevHexagon.HexTree.InfectTree();
-                userInteractionState = UserInteractionState.HexagonSelected;
+                    selectDifferentHexagon(null);
+                    userInteractionState = UserInteractionState.Idle;
+                }
+                else
+                {
+                    userInteractionState = UserInteractionState.HexagonSelected;
+                }
                 break;
             case UserInteractionState.StartedMoving:
                 userInteractionState = UserInteractionState.StartedMoving;
@@ -214,7 +219,8 @@ public class UserInteraction : MonoBehaviour
                 if (hexagon.isAccessible() && !hexagon.infected)
                 {
                     EndDrag(hexagon);
-                    userInteractionState = UserInteractionState.HexagonSelected;
+                    selectDifferentHexagon(null);
+                    userInteractionState = UserInteractionState.Idle;
                 }
                 else
                 {
@@ -312,7 +318,8 @@ public class UserInteraction : MonoBehaviour
                 if (hexagon.isAccessible() && !hexagon.infected)
                 {
                     EndDrag(hexagon);
-                    userInteractionState = UserInteractionState.HexagonSelected;
+                    selectDifferentHexagon(null);
+                    userInteractionState = UserInteractionState.Idle;
                 }
                 else
                 {
