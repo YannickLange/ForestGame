@@ -8,7 +8,7 @@ public delegate void HexagonEventHandler(object sender,EventArgs e,int clickID);
 public class Hexagon : MonoBehaviour
 {
     public bool infected { get; set; }
-
+    public NGO ngo { get; set; }
     public enum SelectionState
     {
         NotSelected,

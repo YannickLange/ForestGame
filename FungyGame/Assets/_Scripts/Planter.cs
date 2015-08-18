@@ -24,17 +24,6 @@ public class Planter : MonoBehaviour
         _thisTransform = transform;
         _rb = GetComponent<Rigidbody>();
     }
-    public static float GetNextSpawnTime()
-    {
-        float val = 0f;
-
-        //y = 
-
-
-
-
-        return val;
-    }
 
     public void Spawn()
     {

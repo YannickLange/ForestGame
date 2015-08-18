@@ -48,6 +48,7 @@ MonoBehaviour:
   HexPlanterTargetMat: {fileID: 2100000, guid: 97cf73535277a914ca4d5b4412b4e79e, type: 2}
   HexLumberjackTargetMat: {fileID: 2100000, guid: f78d001e2bc48234bac8a04bc42222c1,
     type: 2}
+  HexNGOTargetMat: {fileID: 2100000, guid: b05c70ae31e13574e9d26b399a4526c7, type: 2}
   TreeMat:
   - {fileID: 0}
   - {fileID: 0}
@@ -61,6 +62,7 @@ MonoBehaviour:
   - {fileID: 195710, guid: 2e5d8c50f19f17e43882580b0040b91a, type: 2}
   Planter: {fileID: 168730, guid: af7e749de5ddac94fa83a4b6cc4dbd8f, type: 2}
   Lumberjack: {fileID: 168730, guid: e784589fe896b784aaedc5a9a1777e71, type: 2}
+  NGO: {fileID: 168730, guid: 141c89df6be2e4245901bb00aa41f0ed, type: 2}
 --- !u!1001 &100100000
 Prefab:
   m_ObjectHideFlags: 1
