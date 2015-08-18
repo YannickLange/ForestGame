@@ -114,6 +114,7 @@ public class Lumberjack : MonoBehaviour
     {
         //1:Destroy the current tree
         GameObject.Destroy(_targetHex.HexTree.gameObject);
+        GameObject.Destroy(_targetHex.Fungi.gameObject);
         _targetHex.HexTree = null;
     }
 }
