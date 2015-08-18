@@ -51,6 +51,17 @@ public class UserInteraction : MonoBehaviour
         }
         else
         {
+            if (UnityEngine.EventSystems.EventSystem.current.IsPointerOverGameObject())
+            {
+                return;
+            }
+
+            foreach (Touch t in Input.touches)
+            {
+                if (UnityEngine.EventSystems.EventSystem.current.IsPointerOverGameObject(t.fingerId))
+                    return;
+            }
+
             if (Input.GetMouseButton(0))
             {
                 OnPressingNowhere();
