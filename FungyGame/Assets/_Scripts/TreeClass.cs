@@ -89,6 +89,8 @@ public class TreeClass : MonoBehaviour
         treeInfect.transform.parent = transform;
         _infection = treeInfect.GetComponent<Fungi>();
         State = TreeState.Infected;
+        
+        GridManager.instance.UserInteraction.updateView();
     }
 
     public void ReplaceTree(int newType)
@@ -105,5 +107,7 @@ public class TreeClass : MonoBehaviour
             GridManager.instance.Meter.Fungus(2);
         //destroy the original
         GameObject.Destroy(this.gameObject);
+
+        GridManager.instance.UserInteraction.updateView();
     }
 }
