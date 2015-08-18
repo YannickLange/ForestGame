@@ -50,6 +50,7 @@ public class TreeClass : MonoBehaviour
 
                 ReplaceTree((int)TreeType.DeadTree);
                 Destroy(_infection.gameObject);
+				GridManager.instance.Meter.Fungus(2);
             }
         }
     }

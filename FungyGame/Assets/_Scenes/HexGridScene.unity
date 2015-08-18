@@ -181,6 +181,7 @@ MonoBehaviour:
   moveButton: {fileID: 680027938}
   infectButton: {fileID: 2128808898}
   userInteraction: {fileID: 1552663117}
+  meter: {fileID: 448677864}
 --- !u!4 &298880043
 Transform:
   m_ObjectHideFlags: 0
@@ -205,7 +206,7 @@ GameObject:
   - 114: {fileID: 448677866}
   - 114: {fileID: 448677868}
   m_Layer: 5
-  m_Name: Background
+  m_Name: Healthbar
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -224,9 +225,9 @@ RectTransform:
   - {fileID: 246896179}
   m_Father: {fileID: 1168236502}
   m_RootOrder: 4
-  m_AnchorMin: {x: .5, y: .5}
-  m_AnchorMax: {x: .5, y: .5}
-  m_AnchoredPosition: {x: -306.5, y: -252.800003}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 175, y: 50}
   m_SizeDelta: {x: 325, y: 70}
   m_Pivot: {x: .5, y: .5}
 --- !u!114 &448677866
