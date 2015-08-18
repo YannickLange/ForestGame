@@ -21,7 +21,7 @@ public class TreeGenerator
         {
             if (Random.value <= density)
             {
-                int treetype = Random.Range(0, ResourcesManager.instance.TreeTypes.Length - 1);
+                int treetype = Random.Range(0, ResourcesManager.instance.TreeTypes.Length - 2);
                 GameObject tree = GameObject.Instantiate(ResourcesManager.instance.TreeTypes[treetype], Map.instance.Hexagons[i].transform.position, Quaternion.identity) as GameObject;
                 tree.transform.parent = Forest.transform;
                 Map.instance.Hexagons[i].HexTree = tree.GetComponent<TreeClass>();

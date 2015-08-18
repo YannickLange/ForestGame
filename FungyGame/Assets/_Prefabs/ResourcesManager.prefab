@@ -58,6 +58,7 @@ MonoBehaviour:
   - {fileID: 109070, guid: 918858e79c5190c429d0f428fbf31339, type: 2}
   - {fileID: 195710, guid: ee5d7325f16bce5499e7b63782ca6c55, type: 2}
   - {fileID: 180536, guid: 5f17c5de146be52458f850e4228a2b5c, type: 2}
+  - {fileID: 195710, guid: 2e5d8c50f19f17e43882580b0040b91a, type: 2}
   Planter: {fileID: 168730, guid: af7e749de5ddac94fa83a4b6cc4dbd8f, type: 2}
   Lumberjack: {fileID: 168730, guid: e784589fe896b784aaedc5a9a1777e71, type: 2}
 --- !u!1001 &100100000

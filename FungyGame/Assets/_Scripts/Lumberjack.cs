@@ -40,6 +40,8 @@ public class Lumberjack : MonoBehaviour
 
     private void SelectTarget()
     {
+        if (_targetHex != null)
+            _targetHex.isTarget = false;
         List<Hexagon> fullHex = new List<Hexagon>();
         //1:Looking for a spot:
         for (int i = 0; i < Map.instance.Hexagons.Length; i++)
@@ -55,6 +57,8 @@ public class Lumberjack : MonoBehaviour
         _targetHex = fullHex[Random.Range(0, fullHex.Count)];
         _targetHex.isTarget = true;
         _targetTr = _targetHex.transform;
+
+        StartCoroutine(_targetHex.FlashHexagon(ResourcesManager.instance.HexLumberjackTargetMat));
     }
 
     private IEnumerator MoveLumberjack()
@@ -79,7 +83,10 @@ public class Lumberjack : MonoBehaviour
         #endregion
 
         #region 2:ChopTree
-        yield return new WaitForSeconds(ChopActionTime);
+        //Change the sprite of the tree:
+        yield return new WaitForSeconds(ChopActionTime / 2f);
+        _targetHex.HexTree.ReplaceTree(4);
+        yield return new WaitForSeconds(ChopActionTime / 2f);
         ChopDownTree();
             
         yield return new WaitForSeconds(ChopActionTime);
