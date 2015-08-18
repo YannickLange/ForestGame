@@ -104,7 +104,7 @@ public class TreeClass : MonoBehaviour
         newTreeClassScript.occupiedHexagon = _treeClassScript.occupiedHexagon;
         newTreeClassScript.occupiedHexagon.HexTree = newTreeClassScript;
         if (newTreeClassScript.Type == TreeType.DeadTree)
-            GridManager.instance.Meter.Fungus(2);
+            GridManager.instance.Meter.Fungus(5);
         //destroy the original
         GameObject.Destroy(this.gameObject);
 
