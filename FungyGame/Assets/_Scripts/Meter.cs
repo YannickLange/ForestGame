@@ -9,13 +9,19 @@ public class Meter : MonoBehaviour {
 	void Start () {
 		Indicator = this.gameObject.transform.GetChild(0).gameObject;
 	}
-
-	public void Forest (float dmg = 2) {
+    
+    public void Forest () {
+        Forest(2f);
+    }
+	public void Forest (float dmg) {
 		Indicator.transform.position = new Vector2(Indicator.transform.position.x - dmg, 
 		                                           Indicator.transform.position.y);
 	}
-
-	public void Fungus (float dmg = 2) {
+    
+    public void Fungus () {
+        Fungus(2f);
+    }
+	public void Fungus (float dmg) {
 		Indicator.transform.position = new Vector2(Indicator.transform.position.x + dmg,
 		                                           Indicator.transform.position.y);
 	}
