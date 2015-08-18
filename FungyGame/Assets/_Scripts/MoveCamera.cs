@@ -37,12 +37,12 @@ public class MoveCamera : MonoBehaviour
 
     public void RotateLeft()
     {
-        transform.RotateAround(Vector3.zero, Vector3.up, 30 * Time.deltaTime);
+        transform.RotateAround(Vector3.zero, Vector3.up, 60 * Time.deltaTime);
     }
 
     public void RotateRight()
     {
-        transform.RotateAround(Vector3.zero, Vector3.up, -30 * Time.deltaTime);
+        transform.RotateAround(Vector3.zero, Vector3.up, -60 * Time.deltaTime);
     }
 
     public float cameraSpeed = 1f;
