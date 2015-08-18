@@ -70,29 +70,5 @@ public class MoveCamera : MonoBehaviour
         {
             RotateRight();
         }
-
-
-        // only work with one touch
-        if (Input.touchCount == 1)
-        {
-            Touch currentTouch = Input.GetTouch(0);
-            
-            if (currentTouch.phase == TouchPhase.Began)
-            {
-                this.worldStartPoint = this.getWorldPoint(currentTouch.position);
-            }
-            
-            if (currentTouch.phase == TouchPhase.Moved)
-            {
-                Vector2 worldDelta = this.getWorldPoint(currentTouch.position) - this.worldStartPoint;
-                
-                Camera.main.transform.Translate(
-                    -worldDelta.x,
-                    -worldDelta.y,
-                    0
-                );
-            }
-        }
-
     }
 }
