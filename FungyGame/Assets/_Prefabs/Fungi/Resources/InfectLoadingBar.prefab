@@ -43,6 +43,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   fixedRotationAngle: 90
   fixedRotationDirection: 0
+  Important: 1
 --- !u!114 &11480698
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -119,6 +120,10 @@ Prefab:
     - target: {fileID: 0}
       propertyPath: m_SortingLayerID
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: Important
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 0}

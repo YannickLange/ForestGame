@@ -84,7 +84,7 @@ public class TreeClass : MonoBehaviour
 
     public void InfectTree()
     {
-        GameObject treeInfect = (GameObject)Instantiate(_treeInfectPrefab, transform.position, transform.rotation);
+        GameObject treeInfect = (GameObject)Instantiate(_treeInfectPrefab, transform.position + new Vector3(0f, 0f, 0.01f), transform.rotation);
         treeInfect.transform.parent = transform;
         _infection = treeInfect.GetComponent<Fungi>();
         State = TreeState.Infected;
