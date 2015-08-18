@@ -262,12 +262,19 @@ public class UserInteraction : MonoBehaviour
         switch (userInteractionState)
         {
             case UserInteractionState.Idle:
-                selectDifferentHexagon(hexagon);
-                userInteractionState = UserInteractionState.HexagonSelected;
-                if (isMoveButtonActive(hexagon))
+                if (hexagon.infected)
                 {
-                    StartDrag(hexagon);
-                    userInteractionState = UserInteractionState.StartedDragging;
+                    selectDifferentHexagon(hexagon);
+                    userInteractionState = UserInteractionState.HexagonSelected;
+                    if (isMoveButtonActive(hexagon))
+                    {
+                        StartDrag(hexagon);
+                        userInteractionState = UserInteractionState.StartedDragging;
+                    }
+                }
+                else
+                {
+                    userInteractionState = UserInteractionState.Idle;
                 }
                 break;
             case UserInteractionState.HexagonSelected:
