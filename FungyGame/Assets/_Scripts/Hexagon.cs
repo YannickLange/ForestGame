@@ -152,8 +152,28 @@ public class Hexagon : MonoBehaviour
 
     }
     #endregion
+    
+    private TreeClass _HexTree;
 
-    public TreeClass HexTree { get; set; }
+    public TreeClass HexTree
+    {
+        get{ return _HexTree;}
+        set
+        {
+            if (_HexTree != value)
+            {
+                if (_HexTree)
+                { //remove from from old
+                    _HexTree.occupiedHexagon = null;
+                }
+                _HexTree = value;
+                if (_HexTree)
+                { //add to new hexagon
+                    _HexTree.occupiedHexagon = this;
+                }
+            }
+        }
+    }
 
     public bool isTarget { get; set; }
 
