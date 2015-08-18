@@ -35,6 +35,21 @@ public class Hexagon : MonoBehaviour
             var fungi = fungiHolder ? fungiHolder.GetComponent<Fungi>() : null;
             return fungi;
         }
+        set
+        {
+            if (Fungi != value)
+            {
+                if (Fungi)
+                { //remove from from old
+                    Fungi.occupiedHexagon = null;
+                }
+                Fungi = value;
+                if (Fungi)
+                { //add to new hexagon
+                    Fungi.occupiedHexagon = this;
+                }
+            }
+        }
     }
 
     public bool isAdjacentToSelectedHexagon()

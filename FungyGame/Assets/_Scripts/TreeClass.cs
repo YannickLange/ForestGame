@@ -42,7 +42,6 @@ public class TreeClass : MonoBehaviour
             if (_infection.stage == _infection.maxStage)
             {
                 Debug.Log("Tree should be dead");
-                occupiedHexagon.Fungi.stage = 0;
                 //Does not do anything, just here for completion sake
                 State = TreeState.Dead;
                 Type = TreeType.DeadTree;
@@ -87,6 +86,7 @@ public class TreeClass : MonoBehaviour
     {
         GameObject treeInfect = Instantiate(_treeInfectPrefab, transform.position + new Vector3(0f, 0f, 0.01f), transform.rotation) as GameObject;
         treeInfect.transform.parent = transform;
+        occupiedHexagon.Fungi.stage = 0;
         _infection = treeInfect.GetComponent<Fungi>();
         State = TreeState.Infected;
         
