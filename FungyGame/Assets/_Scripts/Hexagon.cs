@@ -71,7 +71,7 @@ public class Hexagon : MonoBehaviour
     
     public bool isAbleToMoveAwayFrom()
     {
-        return infected && Fungi.stage == Fungi.maxStage && adjacentAccessibleHexagonExists();
+        return infected && Fungi != null && Fungi.stage == Fungi.maxStage && adjacentAccessibleHexagonExists();
     }
 
     public void updateMaterial()
