@@ -7,6 +7,7 @@ TagManager:
   - Hexagon
   - Planter
   - Lumberjack
+  - NGO
   layers:
   - Default
   - TransparentFX

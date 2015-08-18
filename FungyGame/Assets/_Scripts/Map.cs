@@ -11,6 +11,7 @@ public class Map : MonoBehaviour
     private TreeGenerator treeGenerator;
     //private array of hexagons
     private Hexagon[] _hexagons;
+    public int MinimumSpawnTrees = 1;
     //Readonly hexagons
     public Hexagon[] Hexagons
     {
@@ -65,8 +66,7 @@ public class Map : MonoBehaviour
             rand = UnityEngine.Random.Range(0, _hexagons.Length - 1);
         }
         _hexagons[rand].infected = true;
-        PutFungiOn(_hexagons[rand]);
-        CheckSpawn(_hexagons[rand]);
+        SpawnFungi(_hexagons[rand]);
     }
 
     public void PutFungiOn(Hexagon hex)
@@ -75,20 +75,40 @@ public class Map : MonoBehaviour
         fungiObject.transform.parent = hex.gameObject.transform;
     }
 
-    public void CheckSpawn(Hexagon hex)
+    public void SpawnFungi(Hexagon hex)
     {
-        List<Hexagon> surroundings = GetSurroundingTiles(hex);
-        if (surroundings.Count > 1)
-            return;
+        //get all the surrounding hexagons that contains a tree
+        List<Hexagon> treesTiles = GetAccessibleTiles(hex);
+        //If there's one or more tile with a tree on it
+        if (treesTiles.Count > MinimumSpawnTrees)
+            PutFungiOn(hex);
         else
         {
+            //remove the spawned one
+
+            //Browsing all the hexagons to get at least "MinimumSpawnTrees"
             for (int i = 0; i < Hexagons.Length; i++)
             {
-                surroundings = GetSurroundingTiles(hex);
-                if (surroundings.Count > 1)
+                //Get the surroundings tiles for hex
+                treesTiles = GetAccessibleTiles(Hexagons[i]);
+                if (treesTiles.Count > MinimumSpawnTrees)
                 {
                     PutFungiOn(Hexagons[i]);
                     return;
+                }
+            }
+            //Spawn a new tree
+            List<Hexagon> surroundingTiles = GetSurroundingTiles(hex);
+            PutFungiOn(hex);
+            int count = MinimumSpawnTrees - treesTiles.Count;
+            for (int i = 0; i < surroundingTiles.Count; i ++ )
+            {
+                if(surroundingTiles[i].HexTree == null)
+                {
+                    TreeGenerator.SpawnSapling(surroundingTiles[i]);
+                    count--;
+                    if (count == 0)
+                        return;
                 }
             }
         }
@@ -228,5 +248,16 @@ public class Map : MonoBehaviour
     private bool IsOutOfBounds(int x, int y)
     {
         return (y < 0 || x < 0 || x >= GridManager.instance.gridWidthInHexes || y >= GridManager.instance.gridHeightInHexes);
+    }
+
+    public List<Hexagon> GetAccessibleTiles(Hexagon hex)
+    {
+        List<Hexagon> surroundingTrees = new List<Hexagon>();
+        foreach(Hexagon h in GetSurroundingTiles(hex))
+        {
+            if (h.HexTree != null)
+                surroundingTrees.Add(h);
+        }
+        return surroundingTrees;
     }
 }
