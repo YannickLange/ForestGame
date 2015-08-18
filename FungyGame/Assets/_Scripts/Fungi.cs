@@ -43,5 +43,6 @@ public class Fungi : MonoBehaviour {
     {
         //Update the stage sprite
         spriteRenderer.sprite = stageSprites[stage];
+        GridManager.instance.UserInteraction.updateView();
     }
 }
