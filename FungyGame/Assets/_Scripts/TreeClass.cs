@@ -41,8 +41,14 @@ public class TreeClass : MonoBehaviour
         {
             if (_infection.stage == _infection.maxStage)
             {
-                Type = TreeType.DeadTree;
+                Debug.Log("Tree should be dead");
+
+                //Does not do anything, just here for completion sake
                 State = TreeState.Dead;
+                Type = TreeType.DeadTree;
+                //End of useless code
+
+                ReplaceTree((int)TreeType.DeadTree);
                 Destroy(_infection.gameObject);
             }
         }
@@ -59,12 +65,7 @@ public class TreeClass : MonoBehaviour
 
 		int newType = typeValue + 1;
         _nextEventTime = Time.time + Random.Range(growTime, growTime + randomGrowTimeRange); //Set the next event time value
-        GameObject tree = (GameObject)Instantiate(ResourcesManager.instance.TreeTypes[newType], gameObject.transform.position, gameObject.transform.rotation);
-        TreeClass newTreeClassScript = tree.GetComponent<TreeClass>();
-        tree.transform.parent = GameObject.Find("Forest").transform;
-        newTreeClassScript.occupiedHexagon = _treeClassScript.occupiedHexagon;
-        newTreeClassScript.occupiedHexagon.HexTree = newTreeClassScript;
-        GameObject.Destroy(this.gameObject);
+        ReplaceTree(newType);
     }
     
 	private void CheckState()
@@ -86,5 +87,19 @@ public class TreeClass : MonoBehaviour
         treeInfect.transform.parent = transform;
         _infection = treeInfect.GetComponent<Fungi>();
         State = TreeState.Infected;
+    }
+
+    public void ReplaceTree(int newType)
+    {
+        //create the new tree
+        GameObject tree = (GameObject)Instantiate(ResourcesManager.instance.TreeTypes[newType], gameObject.transform.position, gameObject.transform.rotation);
+        TreeClass newTreeClassScript = tree.GetComponent<TreeClass>();
+        //Make the forest the parent
+        tree.transform.parent = GameObject.Find("Forest").transform;
+        //Make sure the hexagon and the tree now know their significant other
+        newTreeClassScript.occupiedHexagon = _treeClassScript.occupiedHexagon;
+        newTreeClassScript.occupiedHexagon.HexTree = newTreeClassScript;
+        //destroy the original
+        GameObject.Destroy(this.gameObject);
     }
 }
