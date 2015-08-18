@@ -71,6 +71,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8e8bf2f56790aba4bb12d3f5752e0a72, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  PlanterWithSapling: {fileID: 21300000, guid: ed83c24db995d4b4c9efd317a85b03bb, type: 3}
+  PlanterWithoutSapling: {fileID: 21300000, guid: 2240dcc59f4663e4f869f49e3d8d0e29,
+    type: 3}
   MoveTime: 3
   PlantActionTime: 5
 --- !u!212 &21280664
@@ -97,7 +100,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: 2240dcc59f4663e4f869f49e3d8d0e29, type: 3}
+  m_Sprite: {fileID: 21300000, guid: ed83c24db995d4b4c9efd317a85b03bb, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
 --- !u!1001 &100100000
 Prefab:

@@ -4,6 +4,8 @@ using System.Collections.Generic;
 
 public class Planter : MonoBehaviour
 {
+    public Sprite PlanterWithSapling;
+    public Sprite PlanterWithoutSapling;
     public float MoveTime = 0.6f;
     public float PlantActionTime = 5.0f;
 
@@ -71,7 +73,7 @@ public class Planter : MonoBehaviour
         #region 2:PlantSeed
         yield return new WaitForSeconds(PlantActionTime);
         PlantSeed();
-
+        GetComponent<SpriteRenderer>().sprite = PlanterWithoutSapling;
         yield return new WaitForSeconds(PlantActionTime);
         #endregion
 

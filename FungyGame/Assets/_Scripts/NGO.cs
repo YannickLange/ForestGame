@@ -108,6 +108,7 @@ public class NGO : MonoBehaviour
         _targetHex.isTarget = false;
         _targetHex.ngo = null;
         _targetHex.HexagonRenderer.material = ResourcesManager.instance.HexNormalMaterial;
+        isNGOWaiting = false;
         Destroy(gameObject);
         #endregion
 

@@ -172,10 +172,10 @@ public class Map : MonoBehaviour
         if (Time.time > _lumberjackNextSpawn)
         {
             _lumberjackNextSpawn = Time.time + Mathf.Exp(Random.Range(_lumberjackRndDown, _lumberjackRndUp));
-            _lumberjackRndDown -= 0.3f;
+            _lumberjackRndDown -= 0.2f;
             if (_lumberjackRndDown <= 0)
                 _lumberjackRndDown = 2.2f;
-            _lumberjackRndUp -= 0.3f;
+            _lumberjackRndUp -= 0.2f;
             if (_lumberjackRndUp <= 0)
                 _lumberjackRndUp = 3.8f;
 
@@ -187,13 +187,13 @@ public class Map : MonoBehaviour
         #endregion
 
         #region NGO
-        if (Time.time > _NGONextSpawn)
+        if (Time.time > _NGONextSpawn && !NGO.isNGOWaiting)
         {
             _NGONextSpawn = Time.time + Mathf.Exp(Random.Range(_lumberjackRndDown, _lumberjackRndUp));
-            _NGORndDown -= 0.3f;
+            _NGORndDown -= 0.2f;
             if (_NGORndDown <= 0)
                 _NGORndDown = 2.2f;
-            _NGORndUp -= 0.3f;
+            _NGORndUp -= 0.2f;
             if (_NGORndUp <= 0)
                 _NGORndUp = 3.8f;
 
@@ -202,6 +202,8 @@ public class Map : MonoBehaviour
             ngo.transform.SetParent(_ngo);
             ngo.GetComponent<NGO>().Spawn();
         }
+        else if(NGO.isNGOWaiting)
+            _NGONextSpawn = Time.time + Mathf.Exp(Random.Range(_lumberjackRndDown, _lumberjackRndUp));
         #endregion
     }
 

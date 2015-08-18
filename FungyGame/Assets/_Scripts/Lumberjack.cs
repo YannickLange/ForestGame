@@ -119,7 +119,7 @@ public class Lumberjack : MonoBehaviour
         }
         #endregion
 
-        #region 4:Destroy the planter
+        #region 4:Destroy the lumberjack
         _targetHex.isTarget = false;
         _targetHex.HexagonRenderer.material = ResourcesManager.instance.HexNormalMaterial;
         Destroy(gameObject);
@@ -133,6 +133,7 @@ public class Lumberjack : MonoBehaviour
         if (_targetHex.Fungi != null)
             GameObject.Destroy(_targetHex.Fungi.gameObject);
         _targetHex.HexTree = null;
+        _targetHex.infected = false;
         GridManager.instance.Meter.Forest(2);
     }
 }
