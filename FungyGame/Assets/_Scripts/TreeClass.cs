@@ -2,7 +2,7 @@
 using System.Collections;
 
 public enum TreeState { Alive, Infected, Dead };
-public enum TreeType { Sapling = 0, SmallTree = 1, BigTree = 2, DeadTree = 3 }; //DEADTREE must be last!
+public enum TreeType { Sapling = 0, SmallTree = 1, BigTree = 2, DeadTree = 3, CutTree = 4 }; //DEADTREE must be last!
 
 public class TreeClass : MonoBehaviour
 {
@@ -42,7 +42,6 @@ public class TreeClass : MonoBehaviour
             if (_infection.stage == _infection.maxStage)
             {
                 Debug.Log("Tree should be dead");
-                occupiedHexagon.Fungi.stage = 0;
                 //Does not do anything, just here for completion sake
                 State = TreeState.Dead;
                 Type = TreeType.DeadTree;
@@ -60,10 +59,12 @@ public class TreeClass : MonoBehaviour
     private void GrowTree()
 	{
 		int typeValue = (int)Type;
-        if (typeValue >= (int)TreeType.DeadTree) //TODO: Change this back to deadtree when they exist
-			return;
+        /*if (typeValue >= (int)TreeType.DeadTree) //TODO: Change this back to deadtree when they exist
+			return;*/
 
 		int newType = typeValue + 1;
+        if (newType >= (int)TreeType.DeadTree)
+            return;
         _nextEventTime = Time.time + Random.Range(growTime, growTime + randomGrowTimeRange); //Set the next event time value
         ReplaceTree(newType);
     }
@@ -83,16 +84,19 @@ public class TreeClass : MonoBehaviour
 
     public void InfectTree()
     {
-        GameObject treeInfect = (GameObject)Instantiate(_treeInfectPrefab, transform.position + new Vector3(0f, 0f, 0.01f), transform.rotation);
+        GameObject treeInfect = Instantiate(_treeInfectPrefab, transform.position + new Vector3(0f, 0f, 0.01f), transform.rotation) as GameObject;
         treeInfect.transform.parent = transform;
+        occupiedHexagon.Fungi.stage = 0;
         _infection = treeInfect.GetComponent<Fungi>();
         State = TreeState.Infected;
+        
+        GridManager.instance.UserInteraction.updateView();
     }
 
     public void ReplaceTree(int newType)
     {
         //create the new tree
-        GameObject tree = (GameObject)Instantiate(ResourcesManager.instance.TreeTypes[newType], gameObject.transform.position, gameObject.transform.rotation);
+        GameObject tree = Instantiate(ResourcesManager.instance.TreeTypes[newType], gameObject.transform.position, gameObject.transform.rotation) as GameObject;
         TreeClass newTreeClassScript = tree.GetComponent<TreeClass>();
         //Make the forest the parent
         tree.transform.parent = GameObject.Find("Forest").transform;
@@ -103,5 +107,7 @@ public class TreeClass : MonoBehaviour
             GridManager.instance.Meter.Fungus(5);
         //destroy the original
         GameObject.Destroy(this.gameObject);
+
+        GridManager.instance.UserInteraction.updateView();
     }
 }

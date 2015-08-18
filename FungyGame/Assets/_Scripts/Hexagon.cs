@@ -35,6 +35,21 @@ public class Hexagon : MonoBehaviour
             var fungi = fungiHolder ? fungiHolder.GetComponent<Fungi>() : null;
             return fungi;
         }
+        set
+        {
+            if (Fungi != value)
+            {
+                if (Fungi)
+                { //remove from from old
+                    Fungi.occupiedHexagon = null;
+                }
+                Fungi = value;
+                if (Fungi)
+                { //add to new hexagon
+                    Fungi.occupiedHexagon = this;
+                }
+            }
+        }
     }
 
     public bool isAdjacentToSelectedHexagon()
@@ -71,7 +86,7 @@ public class Hexagon : MonoBehaviour
     
     public bool isAbleToMoveAwayFrom()
     {
-        return infected && Fungi.stage == Fungi.maxStage && adjacentAccessibleHexagonExists();
+        return infected && Fungi != null && Fungi.stage == Fungi.maxStage && adjacentAccessibleHexagonExists();
     }
 
     public void updateMaterial()
@@ -152,8 +167,28 @@ public class Hexagon : MonoBehaviour
 
     }
     #endregion
+    
+    private TreeClass _HexTree;
 
-    public TreeClass HexTree { get; set; }
+    public TreeClass HexTree
+    {
+        get{ return _HexTree;}
+        set
+        {
+            if (_HexTree != value)
+            {
+                if (_HexTree)
+                { //remove from from old
+                    _HexTree.occupiedHexagon = null;
+                }
+                _HexTree = value;
+                if (_HexTree)
+                { //add to new hexagon
+                    _HexTree.occupiedHexagon = this;
+                }
+            }
+        }
+    }
 
     public bool isTarget { get; set; }
 

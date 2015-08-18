@@ -90,17 +90,17 @@ public class UserInteraction : MonoBehaviour
     
     private bool isInfectButtonActive(Hexagon selectedHexagon)
     {
-        return selectedHexagon != null && userInteractionState == UserInteractionState.HexagonSelected && selectedHexagon.infected && selectedHexagon.HexTree.State == TreeState.Alive && selectedHexagon.HexTree.Type == TreeType.BigTree && selectedHexagon.HexTree && selectedHexagon.Fungi != null && selectedHexagon.Fungi.stage == selectedHexagon.Fungi.maxStage;
+        return selectedHexagon != null && userInteractionState == UserInteractionState.HexagonSelected && selectedHexagon.infected && selectedHexagon.HexTree.State == TreeState.Alive && (selectedHexagon.HexTree.Type == TreeType.BigTree || selectedHexagon.HexTree.Type == TreeType.DeadTree || selectedHexagon.HexTree.Type == TreeType.SmallTree) && selectedHexagon.HexTree && selectedHexagon.Fungi != null && selectedHexagon.Fungi.stage == selectedHexagon.Fungi.maxStage;
     }
     
     UserInteractionState _DEBUG_lastState = UserInteractionState.Idle;
     
-    private void updateView()
+    public void updateView()
     {
         updateView(false);
     }
 
-    private void updateView(bool updateAll)
+    public void updateView(bool updateAll)
     {
         if (_DEBUG_lastState != userInteractionState)
         {
@@ -262,10 +262,23 @@ public class UserInteraction : MonoBehaviour
         switch (userInteractionState)
         {
             case UserInteractionState.Idle:
-                userInteractionState = UserInteractionState.Idle;
+                if (hexagon.infected)
+                {
+                    selectDifferentHexagon(hexagon);
+                    userInteractionState = UserInteractionState.HexagonSelected;
+                    if (isMoveButtonActive(hexagon))
+                    {
+                        StartDrag(hexagon);
+                        userInteractionState = UserInteractionState.StartedDragging;
+                    }
+                }
+                else
+                {
+                    userInteractionState = UserInteractionState.Idle;
+                }
                 break;
             case UserInteractionState.HexagonSelected:
-                if (hexagon.isAbleToMoveAwayFrom() && hexagon == _prevHexagon)
+                if (isMoveButtonActive(hexagon) && hexagon == _prevHexagon)
                 {
                     StartDrag(hexagon);
                     userInteractionState = UserInteractionState.StartedDragging;
