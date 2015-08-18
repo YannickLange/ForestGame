@@ -126,10 +126,10 @@ public class Map : MonoBehaviour
         if(Time.time > _planterNextSpawn)
         {
             _planterNextSpawn = Time.time + Mathf.Exp(Random.Range(_planterRndDown, _planterRndUp));
-            _planterRndDown -= 0.1f;
+            _planterRndDown -= 0.2f;
             if (_planterRndDown <= 0)
                 _planterRndDown = 2.6f;
-            _planterRndUp -= 0.1f;
+            _planterRndUp -= 0.2f;
             if (_planterRndUp <= 0)
                 _planterRndUp = 4f;
 
@@ -144,12 +144,12 @@ public class Map : MonoBehaviour
         if (Time.time > _lumberjackNextSpawn)
         {
             _lumberjackNextSpawn = Time.time + Mathf.Exp(Random.Range(_lumberjackRndDown, _lumberjackRndUp));
-            _planterRndDown -= 0.12f;
-            if (_planterRndDown <= 0)
-                _planterRndDown = 2.2f;
-            _planterRndUp -= 0.12f;
-            if (_planterRndUp <= 0)
-                _planterRndUp = 3.8f;
+            _lumberjackRndDown -= 0.3f;
+            if (_lumberjackRndDown <= 0)
+                _lumberjackRndDown = 2.2f;
+            _lumberjackRndUp -= 0.3f;
+            if (_lumberjackRndUp <= 0)
+                _lumberjackRndUp = 3.8f;
 
 
             GameObject lumberjack = Instantiate(ResourcesManager.instance.Lumberjack) as GameObject;
