@@ -95,12 +95,12 @@ public class UserInteraction : MonoBehaviour
     
     UserInteractionState _DEBUG_lastState = UserInteractionState.Idle;
     
-    private void updateView()
+    public void updateView()
     {
         updateView(false);
     }
 
-    private void updateView(bool updateAll)
+    public void updateView(bool updateAll)
     {
         if (_DEBUG_lastState != userInteractionState)
         {
