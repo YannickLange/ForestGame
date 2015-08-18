@@ -8,21 +8,24 @@ public class GridManager : MonoBehaviour
     public GameObject Hex;
 
     //next two variables can also be instantiated using unity editor
-    public int gridWidthInHexes = 8;
-    public int gridHeightInHexes = 7;
+    public int gridWidthInHexes = 9;
+    public int gridHeightInHexes = 9;
 
     //Hexagon tile width and height in game world
     private float hexWidth;
     private float hexHeight;
-
     private Transform hexGridGO; //Parent object of all hex tiles
     
     public InfectButton InfectButton { get; set; }
+
     public MoveButton MoveButton { get; set; }
+
     public UserInteraction UserInteraction  { get; set; }
+    public Meter Meter  { get; set; }
 
     //GridManager singleton
     public static GridManager instance = null;
+
     void Awake()
     {
         //Check if instance already exists
@@ -55,9 +58,13 @@ public class GridManager : MonoBehaviour
     Vector3 calcInitPos()
     {
         Vector3 initPos;
+        var xCenter = (gridWidthInHexes) / 2f ;
+        var zCenter = (gridHeightInHexes) / 2f - 0.75f;
+        Debug.Log("centers: " + xCenter + " " + zCenter);
+        Debug.Log("widths: " + hexWidth + " " + hexHeight);
         //the initial position will be in the left upper corner
-        initPos = new Vector3(-hexWidth * gridWidthInHexes / 2f + hexWidth / 2, 0,
-                              gridHeightInHexes / 2f * hexHeight - hexHeight / 2);
+        initPos = new Vector3(xCenter * -hexWidth + (hexWidth / 2f), 0, zCenter * hexHeight - hexHeight / 2f);
+        Debug.Log(initPos);
 
         return initPos;
     }

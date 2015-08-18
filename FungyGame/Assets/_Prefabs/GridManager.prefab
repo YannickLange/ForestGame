@@ -40,7 +40,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Hex: {fileID: 162990, guid: 82675ede3519c2b418895be35e6097af, type: 2}
-  gridWidthInHexes: 8
+  gridWidthInHexes: 7
   gridHeightInHexes: 7
 --- !u!1001 &100100000
 Prefab:
@@ -51,7 +51,7 @@ Prefab:
     m_Modifications:
     - target: {fileID: 0}
       propertyPath: gridWidthInHexes
-      value: 8
+      value: 7
       objectReference: {fileID: 0}
     - target: {fileID: 0}
       propertyPath: gridHeightInHexes

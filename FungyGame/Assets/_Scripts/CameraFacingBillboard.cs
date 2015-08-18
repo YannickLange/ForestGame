@@ -5,6 +5,7 @@ public class CameraFacingBillboard : MonoBehaviour
 {
     public float fixedRotationAngle = 90f;
     public AngleDirection fixedRotationDirection;
+    public bool Important = false;
     public enum AngleDirection
     {
         none,
@@ -30,6 +31,22 @@ public class CameraFacingBillboard : MonoBehaviour
             case AngleDirection.z: transform.localEulerAngles = new Vector3(transform.localEulerAngles.x, transform.localEulerAngles.y, fixedRotationAngle); break;
             default: break;
         }
-        
+    }
+
+    void LateUpdate()
+    {
+        SpriteRenderer spriteRenderer = GetComponent<SpriteRenderer>();
+        SpriteRenderer parentSpriteRenderer = transform.parent.GetComponent<SpriteRenderer>();
+        if (spriteRenderer == null)
+        {
+            Debug.Log("Can not set sorting layer without the spriteRenderer component");
+            return;
+        }
+
+        spriteRenderer.sortingOrder = (int)Camera.main.WorldToScreenPoint (transform.position).y * -1;
+
+        if (Important)
+            spriteRenderer.sortingOrder = parentSpriteRenderer.sortingOrder + 1;
+
     }
 }
