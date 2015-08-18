@@ -182,6 +182,7 @@ MonoBehaviour:
   infectButton: {fileID: 2128808898}
   userInteraction: {fileID: 1552663117}
   meter: {fileID: 448677864}
+  resetButton: {fileID: 2005771341}
 --- !u!4 &298880043
 Transform:
   m_ObjectHideFlags: 0
@@ -1130,7 +1131,7 @@ GameObject:
   - 114: {fileID: 2005771344}
   - 114: {fileID: 2005771343}
   m_Layer: 5
-  m_Name: RotateRight (1)
+  m_Name: ResetButton
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
