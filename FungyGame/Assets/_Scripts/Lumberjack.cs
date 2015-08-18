@@ -26,8 +26,6 @@ public class Lumberjack : MonoBehaviour
     public void Spawn()
     {
         SelectTarget();   
-        //Highlight the hexgon
-        StartCoroutine(_targetHex.FlashHexagon(ResourcesManager.instance.HexLumberjackTargetMat));
 
         //2:Looking for the spawn hexagon
         _spawnHex = Map.instance.HexBorders[Random.Range(0, Map.instance.HexBorders.Length)];
@@ -133,6 +131,7 @@ public class Lumberjack : MonoBehaviour
         if (_targetHex.Fungi != null)
             GameObject.Destroy(_targetHex.Fungi.gameObject);
         _targetHex.HexTree = null;
+        _targetHex.infected = false;
         GridManager.instance.Meter.Forest(2);
     }
 }
