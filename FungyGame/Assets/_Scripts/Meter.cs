@@ -5,6 +5,8 @@ public class Meter : MonoBehaviour {
 
     private GameObject Indicator;
 
+    public Reset r = new Reset();
+
     // Use this for initialization
     void Start () {
         Indicator = this.gameObject.transform.GetChild(0).gameObject;
@@ -21,8 +23,27 @@ public class Meter : MonoBehaviour {
     }
 
     void Update () {
+        // GameOver
         if(Indicator.transform.position.x <= -100 && Indicator.transform.position.y >= 100) {
             //GameOver ();
+            r.PressReset();
         }
+
+        /*// worst ending
+        if(Indicator.transform.position.x > -100 && Indicator.transform.position.y < -80 || 
+           Indicator.transform.position.x > 80 && Indicator.transform.position.y < 100) {
+            
+        }
+
+        // semi ending
+        if(Indicator.transform.position.x > -80 && Indicator.transform.position.y < -10 || 
+           Indicator.transform.position.x > 10 && Indicator.transform.position.y < 80) {
+            
+        }
+
+        // good ending
+        if(Indicator.transform.position.x > -10 && Indicator.transform.position.y < 10) {
+            
+        }*/
     }
 }
