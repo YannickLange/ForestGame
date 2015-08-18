@@ -49,6 +49,13 @@ public class UserInteraction : MonoBehaviour
                 }
             }
         }
+        else
+        {
+            if (Input.GetMouseButton(0))
+            {
+                OnPressingNowhere();
+            }
+        }
     }
     
     private void moveButtonTo(MonoBehaviour button, Hexagon hexagon, Vector3 offset)
@@ -260,7 +267,22 @@ public class UserInteraction : MonoBehaviour
         }
         updateView();
     }
-    
+
+    void OnPressingNowhere()
+    {
+        switch (userInteractionState)
+        {
+            case UserInteractionState.Idle:
+            case UserInteractionState.HexagonSelected:
+            case UserInteractionState.StartedMoving:
+            case UserInteractionState.StartedDragging:
+                selectDifferentHexagon(null);
+                userInteractionState = UserInteractionState.Idle;
+                break;
+        }
+        updateView();
+    }
+
     void OnReleasingHexagon(Hexagon hexagon)
     {
         switch (userInteractionState)
