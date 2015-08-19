@@ -7,7 +7,19 @@ public delegate void HexagonEventHandler(object sender,EventArgs e,int clickID);
 
 public class Hexagon : MonoBehaviour
 {
+    public TreeState State;
+    public TreeType Type;
+
     public bool infected { get; set; }
+    public Fungi _infection;
+    
+    public float growTime = 10f;
+    public float randomGrowTimeRange = 5f;
+    public float _nextEventTime = 0f;
+    public bool _processStarted = false;
+
+    //cached components
+    public GameObject _treeInfectPrefab;
     private NGO _ngo;
     public NGO ngo
     {
@@ -18,6 +30,9 @@ public class Hexagon : MonoBehaviour
         set
         {
             _ngo = value;
+            HexagonRenderer.material = ResourcesManager.instance.HexNormalMaterial;
+        }
+    }
             HexagonRenderer.material = ResourcesManager.instance.HexNormalMaterial;
         }
     }
@@ -61,6 +76,119 @@ public class Hexagon : MonoBehaviour
                     Fungi.occupiedHexagon = this;
                 }
             }
+        }
+    }
+    
+    void Update()
+    {
+        if (_HexTree != null)
+        {
+            if (_processStarted)
+            {
+                CheckState();
+            }
+            if (_infection != null)
+            {
+                var infection = _infection;
+                if (infection.stage == _infection.maxStage)
+                {
+                    Debug.Log("Tree should be dead");
+                
+                    ReplaceTree(TreeType.DeadTree);
+                    //Does not do anything, just here for completion sake
+                    State = TreeState.Dead;
+                    //End of useless code
+                    Debug.Log(_HexTree);
+                    Debug.Log(infection);
+                    Debug.Log(infection.gameObject);
+                    Destroy(infection.gameObject);
+                }
+            }
+        }
+    }
+    
+    public void CheckState()
+    {
+        if (_HexTree != null)
+        {
+            switch (State)
+            {
+                case TreeState.Alive:
+                    if (Time.time >= _nextEventTime)
+                    {
+                        GrowTree();
+                    }
+                    break;
+            }
+        } else
+        {
+            Debug.Log("should not get here");
+        }
+    }
+    
+    /// <summary>
+    /// Set the next state of the tree
+    /// </summary>
+    public void GrowTree()
+    {
+        if (_HexTree != null)
+        {
+            int typeValue = (int)Type;
+            /*if (typeValue >= (int)TreeType.DeadTree) //TODO: Change this back to deadtree when they exist
+            return;*/
+        
+            int newType = typeValue + 1;
+            if (newType >= (int)TreeType.DeadTree)
+                return;
+            _nextEventTime = Time.time + UnityEngine.Random.Range(growTime, growTime + randomGrowTimeRange); //Set the next event time value
+            ReplaceTree((TreeType)newType);
+        } else
+        {
+            Debug.Log("should not get here");
+        }
+    }
+    
+    public void InfectTree()
+    {
+        if (_HexTree != null)
+        {
+            GameObject treeInfect = Instantiate(_treeInfectPrefab, _HexTree.transform.position + new Vector3(0f, 0f, 0.01f), _HexTree.transform.rotation) as GameObject;
+            treeInfect.transform.parent = _HexTree.transform;
+            _HexTree.occupiedHexagon.Fungi.stage = 0;
+            _infection = treeInfect.GetComponent<Fungi>();
+            State = TreeState.Infected;
+        
+            GridManager.instance.UserInteraction.updateView();
+        } else
+        {
+            Debug.Log("should not get here");
+        }
+    }
+    
+    public void ReplaceTree(TreeType newType)
+    {
+        if (_HexTree != null)
+        {
+            //create the new tree
+            GameObject tree = Instantiate(ResourcesManager.instance.TreeTypes [(int)newType], _HexTree.gameObject.transform.position, _HexTree.gameObject.transform.rotation) as GameObject;
+            TreeClass newTreeClassScript = tree.GetComponent<TreeClass>();
+            //Make the forest the parent
+            tree.transform.parent = GameObject.Find("Forest").transform;
+            //Make sure the hexagon and the tree now know their significant other
+            newTreeClassScript.occupiedHexagon = this;
+            var oldTree = _HexTree;
+            _HexTree = newTreeClassScript;
+            State = TreeState.Alive;
+            Type = newType;
+            if (newType == TreeType.DeadTree)
+                GridManager.instance.Meter.Fungus(5);
+            //destroy the original
+            GameObject.Destroy(oldTree.gameObject);
+        
+            GridManager.instance.UserInteraction.updateView();
+        } else
+        {
+            Debug.Log("should not get here");
         }
     }
 
@@ -107,19 +235,17 @@ public class Hexagon : MonoBehaviour
         if (CurrentSelectionState == SelectionState.IsSelected)
         {
             _renderer.material = ResourcesManager.instance.HexSelectedMaterial;
-        }
-        else if (adjacentSelectedHexagon != null)
+        } else if (adjacentSelectedHexagon != null)
         {
             if (adjacentSelectedHexagon.isAbleToMoveAwayFrom() && isAccessible())
             {
                 _renderer.material = ResourcesManager.instance.HexValidSurroundingMaterial;
-            }
+            } else
             /*else
             {
                 _renderer.material = ResourcesManager.instance.HexInvalidSurroundingMaterial;
             }*/
-        }
-        else
+        } else
         {
             _renderer.material = ResourcesManager.instance.HexNormalMaterial;
         }
@@ -134,8 +260,7 @@ public class Hexagon : MonoBehaviour
             {
                 HexagonRenderer.material = ResourcesManager.instance.HexNormalMaterial;
                 tmp = false;
-            }
-            else
+            } else
             {
                 HexagonRenderer.material = flashMat;
                 tmp = true;
@@ -208,8 +333,11 @@ public class Hexagon : MonoBehaviour
 
     void Awake()
     {
+        _treeInfectPrefab = (GameObject)Resources.Load("InfectLoadingBar");
         _renderer = GetComponent<Renderer>();
         isTarget = false;
+        _nextEventTime = Time.time + UnityEngine.Random.Range(growTime, growTime + randomGrowTimeRange);
+        _processStarted = true;
     }
 
     private int _posX = -1;

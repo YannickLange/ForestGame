@@ -75,8 +75,13 @@ public class Map : MonoBehaviour
     {
         BuildMap();
         int rand = UnityEngine.Random.Range(0, _hexagons.Length - 1);
-        while (_hexagons[rand].HexTree == null || _hexagons[rand].HexTree.Type == TreeType.Sapling)
+        int maxTries = 1000;
+        while (_hexagons[rand].HexTree == null || _hexagons[rand].Type == TreeType.Sapling)
         {
+            --maxTries;
+            Debug.Assert(maxTries > 0);
+            if (maxTries == 0)
+                return;
             rand = UnityEngine.Random.Range(0, _hexagons.Length - 1);
         }
         _hexagons[rand].infected = true;
