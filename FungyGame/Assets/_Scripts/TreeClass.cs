@@ -12,15 +12,15 @@ public class TreeClass : MonoBehaviour
     public TreeState State;
     public TreeType Type;
 
-    private float _nextEventTime = 0f;
-    private bool _processStarted = false;
+	public float _nextEventTime = 0f;
+    public bool _processStarted = false;
     public Hexagon occupiedHexagon {get; set;}
     private GameObject _treeInfectPrefab;
 
     //Cached components
     private SpriteRenderer _spriteRenderer;
     private TreeClass _treeClassScript;
-    private Fungi _infection;
+    public Fungi _infection;
 
     void Awake()
     {
@@ -29,28 +29,6 @@ public class TreeClass : MonoBehaviour
         _treeInfectPrefab = (GameObject)Resources.Load("InfectLoadingBar");
         _nextEventTime = Time.time + Random.Range(growTime, growTime + randomGrowTimeRange);
         _processStarted = true;
-    }
-
-    void Update()
-    {
-        if(_processStarted)
-        {
-            CheckState();
-        }
-        if(_infection != null)
-        {
-            if (_infection.stage == _infection.maxStage)
-            {
-                Debug.Log("Tree should be dead");
-                //Does not do anything, just here for completion sake
-                State = TreeState.Dead;
-                Type = TreeType.DeadTree;
-                //End of useless code
-
-                ReplaceTree((int)TreeType.DeadTree);
-                Destroy(_infection.gameObject);
-            }
-        }
     }
 
     /// <summary>
@@ -69,7 +47,7 @@ public class TreeClass : MonoBehaviour
         ReplaceTree(newType);
     }
     
-	private void CheckState()
+	public void CheckState()
 	{
         switch (State)
         {
