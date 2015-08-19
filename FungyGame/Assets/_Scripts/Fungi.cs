@@ -28,6 +28,7 @@ public class Fungi : MonoBehaviour
 
     public void reset()
     {
+        stage = 0;
         timer = 0f;
     }
 
