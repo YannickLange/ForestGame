@@ -5,7 +5,7 @@ using System.Collections.Generic;
 public class Fungi : MonoBehaviour
 {
     public string tileSheetName = "fungusTest";
-    public float timer = 0f;
+    private float timer = 0f;
     public float timerSpeedMultiplier = 1f;
     public float maxTimer = 10f;
     private int lastStage = -1;
@@ -34,4 +34,19 @@ public class Fungi : MonoBehaviour
             GridManager.instance.UserInteraction.updateView();
         }
     }
+
+    public void advanceGrowth(float speed)
+    {
+        if (!IsAtMaxStage)
+        {
+            timer += 1f * Time.deltaTime * speed;
+            
+            if (timer >= maxTimer)
+            {
+                stage++;
+                timer = 0f;
+            }
+        }
+    }
+
 }

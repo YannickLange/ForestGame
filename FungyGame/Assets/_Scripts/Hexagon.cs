@@ -116,16 +116,7 @@ public class Hexagon : MonoBehaviour
         {
             fungi.timerSpeedMultiplier = 1 + 0.5f + (UnityEngine.Random.value / 2);
         }
-        if (!fungi.IsAtMaxStage)
-        {
-            fungi.timer += 1f * Time.deltaTime * fungi.timerSpeedMultiplier;
-            
-            if (fungi.timer >= fungi.maxTimer)
-            {
-                fungi.stage++;
-                fungi.timer = 0f;
-            }
-        }
+        fungi.advanceGrowth(fungi.timerSpeedMultiplier);
     }
     
     public void CheckState()
