@@ -73,7 +73,7 @@ public class Map : MonoBehaviour
         BuildMap();
         int rand = UnityEngine.Random.Range(0, _hexagons.Length - 1);
         int maxTries = 1000;
-        while (_hexagons[rand].HexState != HexagonState.WithTree)
+        while (_hexagons[rand].HexState != HexagonState.Tree)
         {
             --maxTries;
             Debug.Assert(maxTries > 0);

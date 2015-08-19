@@ -13,19 +13,18 @@ public enum TreeType
     DeadTree = 3,
     CutTree = 4
 }
-//DEADTREE must be last!
 
 public enum HexagonState
 {
     Empty,
-    WithCutTree,
-    WithSapling,
-    WithTree,
-    WithDeadWood,
-    WithSaplingAndFungi,
-    WithTreeAndFungi,
-    WithCurrentlyInfectingTreeAndFungi,
-    WithDeadWoodAndFungi
+    CutTree,
+    Sapling,
+    Tree,
+    DeadWood,
+    SaplingAndFungi,
+    TreeAndFungi,
+    CurrentlyInfectingTreeAndFungi,
+    DeadWoodAndFungi
 }
 
 public class Hexagon : MonoBehaviour
@@ -91,15 +90,15 @@ public class Hexagon : MonoBehaviour
         {
             switch (HexState)
             {
-                case HexagonState.WithSapling:
-                case HexagonState.WithTree:
-                case HexagonState.WithSaplingAndFungi:
-                case HexagonState.WithTreeAndFungi:
-                case HexagonState.WithCurrentlyInfectingTreeAndFungi:
+                case HexagonState.Sapling:
+                case HexagonState.Tree:
+                case HexagonState.SaplingAndFungi:
+                case HexagonState.TreeAndFungi:
+                case HexagonState.CurrentlyInfectingTreeAndFungi:
                     return true;
-                case HexagonState.WithDeadWood:
-                case HexagonState.WithCutTree:
-                case HexagonState.WithDeadWoodAndFungi:
+                case HexagonState.DeadWood:
+                case HexagonState.CutTree:
+                case HexagonState.DeadWoodAndFungi:
                 case HexagonState.Empty:
                     return false;
                 default:
@@ -114,16 +113,16 @@ public class Hexagon : MonoBehaviour
         switch (HexState)
         {
             case HexagonState.Empty:
-            case HexagonState.WithSapling:
-            case HexagonState.WithTree:
-            case HexagonState.WithSaplingAndFungi:
-            case HexagonState.WithDeadWoodAndFungi:
-            case HexagonState.WithTreeAndFungi:
-            case HexagonState.WithCutTree:
-            case HexagonState.WithDeadWood:
+            case HexagonState.Sapling:
+            case HexagonState.Tree:
+            case HexagonState.SaplingAndFungi:
+            case HexagonState.DeadWoodAndFungi:
+            case HexagonState.TreeAndFungi:
+            case HexagonState.CutTree:
+            case HexagonState.DeadWood:
                 Debug.Assert(false, "unexpected state");
                 break;
-            case HexagonState.WithCurrentlyInfectingTreeAndFungi:
+            case HexagonState.CurrentlyInfectingTreeAndFungi:
                 ReplaceTree(TreeType.DeadTree);
                 break;
         }
@@ -185,19 +184,19 @@ public class Hexagon : MonoBehaviour
                 removeTileInfection();
                 removeTreeInfection();
                 break;
-            case HexagonState.WithSapling:
-            case HexagonState.WithTree:
-            case HexagonState.WithCutTree:
-            case HexagonState.WithDeadWood:
+            case HexagonState.Sapling:
+            case HexagonState.Tree:
+            case HexagonState.CutTree:
+            case HexagonState.DeadWood:
                 removeTileInfection();
                 removeTreeInfection();
                 break;
-            case HexagonState.WithSaplingAndFungi:
-            case HexagonState.WithDeadWoodAndFungi:
-            case HexagonState.WithTreeAndFungi:
+            case HexagonState.SaplingAndFungi:
+            case HexagonState.DeadWoodAndFungi:
+            case HexagonState.TreeAndFungi:
                 removeTreeInfection();
                 break;
-            case HexagonState.WithCurrentlyInfectingTreeAndFungi:
+            case HexagonState.CurrentlyInfectingTreeAndFungi:
                 break;
         }
     }
@@ -224,11 +223,9 @@ public class Hexagon : MonoBehaviour
         if (_HexTree != null)
         {
             int typeValue = (int)Type;
-            /*if (typeValue >= (int)TreeType.DeadTree) //TODO: Change this back to deadtree when they exist
-            return;*/
         
             int newType = typeValue + 1;
-            if (newType >= (int)TreeType.DeadTree)
+            if (newType > (int)TreeType.CutTree)
                 return;
             _nextEventTime = Time.time + UnityEngine.Random.Range(growTime, growTime + randomGrowTimeRange); //Set the next event time value
             ReplaceTree((TreeType)newType);
@@ -242,22 +239,22 @@ public class Hexagon : MonoBehaviour
     {
         switch (HexState)
         {
-            case HexagonState.WithCutTree:
+            case HexagonState.CutTree:
             case HexagonState.Empty:
-            case HexagonState.WithSapling:
-            case HexagonState.WithTree:
-            case HexagonState.WithSaplingAndFungi:
-            case HexagonState.WithDeadWoodAndFungi:
-            case HexagonState.WithCurrentlyInfectingTreeAndFungi:
-            case HexagonState.WithDeadWood:
+            case HexagonState.Sapling:
+            case HexagonState.Tree:
+            case HexagonState.SaplingAndFungi:
+            case HexagonState.DeadWoodAndFungi:
+            case HexagonState.CurrentlyInfectingTreeAndFungi:
+            case HexagonState.DeadWood:
                 Debug.Assert(false, "unexpected state");
                 break;
-            case HexagonState.WithTreeAndFungi:
+            case HexagonState.TreeAndFungi:
                 addTreeInfectingFungi();
                 TileInfection.reset();
 
                 GridManager.instance.UserInteraction.updateView();
-                _HexState = HexagonState.WithCurrentlyInfectingTreeAndFungi;
+                _HexState = HexagonState.CurrentlyInfectingTreeAndFungi;
                 break;
         }
     }
@@ -285,47 +282,47 @@ public class Hexagon : MonoBehaviour
         switch (HexState)
         {
             case HexagonState.Empty:
-            case HexagonState.WithCutTree:
-            case HexagonState.WithSapling:
-            case HexagonState.WithTree:
-            case HexagonState.WithDeadWood:
+            case HexagonState.CutTree:
+            case HexagonState.Sapling:
+            case HexagonState.Tree:
+            case HexagonState.DeadWood:
                 switch (newType)
                 {
                     case TreeType.Sapling:
-                        _HexState = HexagonState.WithSapling;
+                        _HexState = HexagonState.Sapling;
                         break;
                     case TreeType.SmallTree:
                     case TreeType.BigTree:
-                        _HexState = HexagonState.WithTree;
+                        _HexState = HexagonState.Tree;
                         break;
                     case TreeType.DeadTree:
-                        _HexState = HexagonState.WithDeadWood;
+                        _HexState = HexagonState.DeadWood;
                         GridManager.instance.Meter.Fungus(5);
                         break;
                     case TreeType.CutTree:
-                        _HexState = HexagonState.WithCutTree;
+                        _HexState = HexagonState.CutTree;
                         break;
                 }
                 break;
-            case HexagonState.WithSaplingAndFungi:
-            case HexagonState.WithDeadWoodAndFungi:
-            case HexagonState.WithCurrentlyInfectingTreeAndFungi:
-            case HexagonState.WithTreeAndFungi:
+            case HexagonState.SaplingAndFungi:
+            case HexagonState.DeadWoodAndFungi:
+            case HexagonState.CurrentlyInfectingTreeAndFungi:
+            case HexagonState.TreeAndFungi:
                 switch (newType)
                 {
                     case TreeType.Sapling:
-                        _HexState = HexagonState.WithSaplingAndFungi;
+                        _HexState = HexagonState.SaplingAndFungi;
                         break;
                     case TreeType.SmallTree:
                     case TreeType.BigTree:
-                        _HexState = HexagonState.WithTreeAndFungi;
+                        _HexState = HexagonState.TreeAndFungi;
                         break;
                     case TreeType.DeadTree:
-                        _HexState = HexagonState.WithDeadWoodAndFungi;
+                        _HexState = HexagonState.DeadWoodAndFungi;
                         GridManager.instance.Meter.Fungus(5);
                         break;
                     case TreeType.CutTree:
-                        _HexState = HexagonState.WithCutTree;
+                        _HexState = HexagonState.CutTree;
                         break;
                 }
                 break;
@@ -352,7 +349,7 @@ public class Hexagon : MonoBehaviour
     
     public bool isAccessible()
     {
-        return isAdjacentToSelectedHexagon() && HexTree != null && !HexagonContainsFungus && HexState != HexagonState.WithCutTree;
+        return isAdjacentToSelectedHexagon() && HexTree != null && !HexagonContainsFungus && HexState != HexagonState.CutTree;
     }
     
     public bool adjacentAccessibleHexagonExists()
@@ -473,20 +470,22 @@ public class Hexagon : MonoBehaviour
         
         switch (HexState)
         {
-            case HexagonState.WithCutTree:
+            case HexagonState.CutTree:
             case HexagonState.Empty:
-            case HexagonState.WithCurrentlyInfectingTreeAndFungi:
-            case HexagonState.WithDeadWood:
-            case HexagonState.WithSaplingAndFungi:
-            case HexagonState.WithDeadWoodAndFungi:
-            case HexagonState.WithTreeAndFungi:
+            case HexagonState.CurrentlyInfectingTreeAndFungi:
+            case HexagonState.SaplingAndFungi:
+            case HexagonState.DeadWoodAndFungi:
+            case HexagonState.TreeAndFungi:
                 Debug.Assert(false, "unexpected state: " + HexState);
                 break;
-            case HexagonState.WithSapling:
-                _HexState = HexagonState.WithSaplingAndFungi;
+            case HexagonState.Sapling:
+                _HexState = HexagonState.SaplingAndFungi;
                 break;
-            case HexagonState.WithTree:
-                _HexState = HexagonState.WithTreeAndFungi;
+            case HexagonState.Tree:
+                _HexState = HexagonState.TreeAndFungi;
+                break;
+            case HexagonState.DeadWood:
+                _HexState = HexagonState.DeadWoodAndFungi;
                 break;
         }
     }
