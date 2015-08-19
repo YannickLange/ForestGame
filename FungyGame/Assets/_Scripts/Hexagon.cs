@@ -37,6 +37,7 @@ public class Hexagon : MonoBehaviour
     //cached components
     public GameObject _treeInfectPrefab;
     private NGO _ngo;
+
     public NGO ngo
     {
         get
@@ -146,8 +147,6 @@ public class Hexagon : MonoBehaviour
             {
                 fungi.stage++;
                 fungi.timer = 0f;
-                
-                fungi.UpdateSprite();
             }
         }
     }
@@ -215,7 +214,7 @@ public class Hexagon : MonoBehaviour
         if (_HexTree != null)
         {
             //create the new tree
-            GameObject tree = Instantiate(ResourcesManager.instance.TreeTypes [(int)newType], _HexTree.gameObject.transform.position, _HexTree.gameObject.transform.rotation) as GameObject;
+            GameObject tree = Instantiate(ResourcesManager.instance.TreeTypes[(int)newType], _HexTree.gameObject.transform.position, _HexTree.gameObject.transform.rotation) as GameObject;
             TreeClass newTreeClassScript = tree.GetComponent<TreeClass>();
             //Make the forest the parent
             tree.transform.parent = GameObject.Find("Forest").transform;

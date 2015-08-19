@@ -2,19 +2,19 @@
 using System.Collections;
 using System.Collections.Generic;
 
-public class Fungi : MonoBehaviour {
+public class Fungi : MonoBehaviour
+{
     public string tileSheetName = "fungusTest";
-
     public float timer = 0f;
     public float timerSpeedMultiplier = 1f;
     public float maxTimer = 10f;
-
+    private int lastStage = -1;
     public int stage = 0;
     public int maxStage = 6;
-
     public SpriteRenderer spriteRenderer;
     public Sprite[] stageSprites;
     public Hexagon startHexagon, endHexagon;
+
     public Hexagon occupiedHexagon { get; set; }
 
     void Awake()
@@ -31,10 +31,14 @@ public class Fungi : MonoBehaviour {
         occupiedHexagon = transform.parent.GetComponent<Hexagon>();
     }
 
-    public void UpdateSprite()
+    public void Update()
     {
-        //Update the stage sprite
-        spriteRenderer.sprite = stageSprites[stage];
-        GridManager.instance.UserInteraction.updateView();
+        if (lastStage != stage)
+        {
+            lastStage = stage;
+            //Update the stage sprite
+            spriteRenderer.sprite = stageSprites[stage];
+            GridManager.instance.UserInteraction.updateView();
+        }
     }
 }
