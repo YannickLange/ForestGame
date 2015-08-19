@@ -6,7 +6,6 @@ public class Fungi : MonoBehaviour
 {
     public string tileSheetName = "fungusTest";
     private float timer = 0f;
-    public float timerSpeedMultiplier = 1f;
     public float maxTimer = 10f;
     private int lastStage = -1;
     public int stage = 0;

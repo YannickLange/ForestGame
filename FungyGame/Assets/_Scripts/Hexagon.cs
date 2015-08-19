@@ -108,15 +108,16 @@ public class Hexagon : MonoBehaviour
 
     public void updateFungi(Fungi fungi)
     {
+        float speed = 1;
         //Should adjust it for multiple types, not extendable code! TODO
         if (Type == TreeType.SmallTree)
         {
-            fungi.timerSpeedMultiplier = 1 + 0.3f + (UnityEngine.Random.value / 4);
+            speed = 1 + 0.3f + (UnityEngine.Random.value / 4);
         } else if (Type == TreeType.BigTree)
         {
-            fungi.timerSpeedMultiplier = 1 + 0.5f + (UnityEngine.Random.value / 2);
+            speed = 1 + 0.5f + (UnityEngine.Random.value / 2);
         }
-        fungi.advanceGrowth(fungi.timerSpeedMultiplier);
+        fungi.advanceGrowth(speed);
     }
     
     public void CheckState()
