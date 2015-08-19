@@ -30,9 +30,10 @@ public class Meter : MonoBehaviour
 
     void Update ()
     {
-        float aliveTrees = 0;
+        float treesKilledByFungi = 0;
         float totalTrees = 0; 
         float totalFungi = 0;
+        float aliveTrees = 0;
 
         foreach (var hexagon in Map.instance.Hexagons)
         {
@@ -40,40 +41,37 @@ public class Meter : MonoBehaviour
             if (hexagon.HexState != HexagonState.Empty)
             {
                 ++totalTrees;
-                if (hexagon.Type != TreeType.DeadTree && hexagon.Type != TreeType.CutTree)
+                if (hexagon.IsTreeKilledByFungi)
                 {
-                    ++aliveTrees;
+                    ++treesKilledByFungi;
                 }
 
-                if(hexagon.HexState == HexagonState.CurrentlyInfectingTreeAndFungi ||
-                   hexagon.HexState == HexagonState.DeadWoodAndFungi ||
-                   hexagon.HexState == HexagonState.SaplingAndFungi ||
-                   hexagon.HexState == HexagonState.TreeAndFungi)
+                if(hexagon.HasFungi)
                 {
                     ++totalFungi;
+                }
+
+                if(hexagon.IsTreeAlive)
+                {
+                    ++aliveTrees;
                 }
             }
         }
        
         float unitSize = 200f / totalTrees; // divides by 200
-        float aliveTreesSize = aliveTrees * unitSize;
-        Indicator.transform.localPosition = new Vector2(-100 + aliveTreesSize, 0);
+        float treesSize = treesKilledByFungi * unitSize;
+        Indicator.transform.localPosition = new Vector2(100 - treesSize, 0);
 
         //calculate scores 
-        float aliveTreesPercentage = (aliveTrees) / totalTrees;
-        float addedScore = 0.5f - aliveTreesPercentage;
+        float deadFungiTreesPercentage = (treesKilledByFungi) / totalTrees;
+        float addedScore = 0.5f - deadFungiTreesPercentage;
         addedScore = Mathf.Abs(addedScore);
         addedScore = MaxScore - addedScore;
         addedScore *= Time.deltaTime;
         Score += addedScore;
-
-        Debug.Log("Highscore: " + Score + " added score: " + addedScore);
-
       
         if(aliveTrees <= MaxLivingTrees || totalFungi <= 0) {
-            //GameOver();
-            Debug.Log("GAMEOVER!!!!!!!!!!!!!!!!!!");
-            //HighScores.SaveHighScore("This Is You", Score);
+            HighScores.SaveHighScore("You lost with score: ", (int)Score);
             Application.LoadLevel(1);
         }
     }

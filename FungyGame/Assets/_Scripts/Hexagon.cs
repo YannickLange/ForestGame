@@ -118,7 +118,75 @@ public class Hexagon : MonoBehaviour
             }
         }
     }
-    
+
+    public bool HasFungi
+    {
+        get
+        {
+            switch (HexState)
+            {
+                case HexagonState.InfectingSapling:
+                case HexagonState.InfectingDeadWood:
+                case HexagonState.InfectingTree:
+                case HexagonState.InfectedSapling:
+                case HexagonState.InfectedTree:
+                case HexagonState.KillingInfectedTree:
+                case HexagonState.KillingInfectedDeadWood:
+                case HexagonState.KilledInfectedDeadWood:
+                case HexagonState.InfectedDeadWood:
+                    return true;
+                case HexagonState.DeadWood:
+                case HexagonState.CutTree:
+                case HexagonState.Empty:
+                case HexagonState.Sapling:
+                case HexagonState.Tree:
+                    return false;
+                default:
+                    Debug.Assert(false);
+                    return false;
+            }
+        }
+    }
+
+    public bool IsTreeKilledByFungi
+    {
+        get
+        {
+            if(HexState == HexagonState.KilledInfectedDeadWood)
+                return true;
+            return false;
+        }
+    }
+
+    public bool IsTreeAlive
+    {
+        get
+        {
+            switch (HexState)
+            {
+                case HexagonState.InfectingSapling:
+                case HexagonState.InfectingTree:
+                case HexagonState.Sapling:
+                case HexagonState.Tree:
+                case HexagonState.InfectedSapling:
+                case HexagonState.InfectedTree:
+                case HexagonState.KillingInfectedTree:
+                    return true;
+                case HexagonState.InfectingDeadWood:
+                case HexagonState.KillingInfectedDeadWood:
+                case HexagonState.KilledInfectedDeadWood:
+                case HexagonState.InfectedDeadWood:
+                case HexagonState.DeadWood:
+                case HexagonState.CutTree:
+                case HexagonState.Empty:
+                    return false;
+                default:
+                    Debug.Assert(false);
+                    return false;
+            }
+        }
+    }
+
     public bool TreeIsInfectable
     {
         get
