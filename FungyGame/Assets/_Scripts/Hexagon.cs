@@ -16,17 +16,21 @@ public enum TreeType
 
 public enum HexagonState
 {
+    //Non-infected states
     Empty,
     CutTree,
     Sapling,
     Tree,
     DeadWood,
+    //During-infection states
     InfectingSapling,
     InfectingTree,
     InfectingDeadWood,
+    //Infected states
     InfectedSapling,
     InfectedTree,
     InfectedDeadWood,
+    //Killed states
     KillingInfectedTree,
     KillingInfectedDeadWood,
     KilledInfectedDeadWood,
@@ -447,7 +451,7 @@ public class Hexagon : MonoBehaviour
                     case HexagonState.KillingInfectedTree:
                     case HexagonState.KillingInfectedDeadWood:
                     case HexagonState.InfectingDeadWood:
-                        _HexState = HexagonState.Empty;
+                        _HexState = HexagonState.Sapling;
                         break;
                 }
                 break;
