@@ -104,7 +104,7 @@ public class UserInteraction : MonoBehaviour
     
     private bool isInfectButtonActive(Hexagon selectedHexagon)
     {
-        return selectedHexagon != null && userInteractionState == UserInteractionState.HexagonSelected && selectedHexagon.infected && selectedHexagon.State == TreeState.Alive && (selectedHexagon.Type == TreeType.BigTree || selectedHexagon.Type == TreeType.DeadTree || selectedHexagon.Type == TreeType.SmallTree) && selectedHexagon.HexTree && selectedHexagon.Fungi != null && selectedHexagon.Fungi.stage == selectedHexagon.Fungi.maxStage;
+        return selectedHexagon != null && userInteractionState == UserInteractionState.HexagonSelected && selectedHexagon.infected && selectedHexagon.State == TreeState.Alive && (selectedHexagon.Type == TreeType.BigTree || selectedHexagon.Type == TreeType.DeadTree || selectedHexagon.Type == TreeType.SmallTree) && selectedHexagon.HexTree && selectedHexagon.Fungi != null && selectedHexagon.Fungi.IsAtMaxStage;
     }
     
     UserInteractionState _DEBUG_lastState = UserInteractionState.Idle;

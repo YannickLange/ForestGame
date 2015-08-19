@@ -81,7 +81,7 @@ public class Hexagon : MonoBehaviour
             if (_infection != null)
             {
                 var infection = _infection;
-                if (infection.stage == _infection.maxStage)
+                if (infection.IsAtMaxStage)
                 {
                     Debug.Log("Tree should be dead");
                 
@@ -116,7 +116,7 @@ public class Hexagon : MonoBehaviour
         {
             fungi.timerSpeedMultiplier = 1 + 0.5f + (UnityEngine.Random.value / 2);
         }
-        if (fungi.stage < fungi.maxStage)
+        if (!fungi.IsAtMaxStage)
         {
             fungi.timer += 1f * Time.deltaTime * fungi.timerSpeedMultiplier;
             
@@ -247,7 +247,7 @@ public class Hexagon : MonoBehaviour
     
     public bool isAbleToMoveAwayFrom()
     {
-        return infected && Fungi != null && Fungi.stage == Fungi.maxStage && adjacentAccessibleHexagonExists();
+        return infected && Fungi != null && Fungi.IsAtMaxStage && adjacentAccessibleHexagonExists();
     }
 
     public void updateMaterial()

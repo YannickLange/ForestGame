@@ -24,9 +24,7 @@ public class Fungi : MonoBehaviour
         maxStage = maxStage - 1;
     }
 
-    void Start()
-    {
-    }
+    public bool IsAtMaxStage{ get { return stage == maxStage; } }
 
     public void Update()
     {
