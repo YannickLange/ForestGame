@@ -12,7 +12,6 @@ public class Meter : MonoBehaviour
     {
         r = GetComponent<Reset>();
     }
-
     // Use this for initialization
     void Start ()
     {
@@ -36,7 +35,7 @@ public class Meter : MonoBehaviour
         // GameOver
         if(Indicator.transform.position.x <= -100 && Indicator.transform.position.y >= 100) {
             //GameOver ();
-            r.PressReset();
+            GridManager.instance.ResetButton.PressReset();
         }
 
         /*// worst ending

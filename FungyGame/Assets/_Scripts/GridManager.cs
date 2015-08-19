@@ -22,6 +22,7 @@ public class GridManager : MonoBehaviour
 
     public UserInteraction UserInteraction  { get; set; }
     public Meter Meter  { get; set; }
+    public Reset ResetButton  { get; set; }
 
     //GridManager singleton
     public static GridManager instance = null;
