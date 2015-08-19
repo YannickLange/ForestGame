@@ -12,9 +12,9 @@ public class Fungi : MonoBehaviour {
     public int stage = 0;
     public int maxStage = 6;
 
-    private SpriteRenderer spriteRenderer;
-    private Sprite[] stageSprites;
-    private Hexagon startHexagon, endHexagon;
+    public SpriteRenderer spriteRenderer;
+    public Sprite[] stageSprites;
+    public Hexagon startHexagon, endHexagon;
     public Hexagon occupiedHexagon { get; set; }
 
     void Awake()
@@ -30,36 +30,6 @@ public class Fungi : MonoBehaviour {
         //Hacky code here, causes bugs with the infectionbar!
         occupiedHexagon = transform.parent.GetComponent<Hexagon>();
     }
-	
-	// Update is called once per frame
-	void Update () {
-        //Only works for fungi on the ground Hacky, need to work around
-        if (occupiedHexagon != null)
-        {
-            Debug.Assert(occupiedHexagon.HexTree != null);
-            //Should adjust it for multiple types, not extendable code! TODO
-            if (occupiedHexagon.Type == TreeType.SmallTree)
-            {
-                timerSpeedMultiplier = 1 + 0.3f + (Random.value / 4);
-            }
-            else if (occupiedHexagon.Type == TreeType.BigTree)
-            {
-                timerSpeedMultiplier = 1 + 0.5f + (Random.value / 2);
-            }
-        }
-        if (stage < maxStage)
-        {
-            timer += 1f * Time.deltaTime * timerSpeedMultiplier;
-
-            if (timer >= maxTimer)
-            {
-                stage++;
-                timer = 0f;
-
-                UpdateSprite();
-            }
-        }
-	}
 
     public void UpdateSprite()
     {

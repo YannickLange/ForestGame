@@ -5,8 +5,21 @@ using System;
 
 public delegate void HexagonEventHandler(object sender,EventArgs e,int clickID);
 
-public enum TreeState { Alive, Infected, Dead };
-public enum TreeType { Sapling = 0, SmallTree = 1, BigTree = 2, DeadTree = 3, CutTree = 4 }; //DEADTREE must be last!
+public enum TreeState
+{
+    Alive,
+    Infected,
+    Dead }
+;
+
+public enum TreeType
+{
+    Sapling = 0,
+    SmallTree = 1,
+    BigTree = 2,
+    DeadTree = 3,
+    CutTree = 4 }
+; //DEADTREE must be last!
 
 public class Hexagon : MonoBehaviour
 {
@@ -14,8 +27,8 @@ public class Hexagon : MonoBehaviour
     public TreeType Type;
 
     public bool infected { get; set; }
+
     public Fungi _infection;
-    
     public float growTime = 10f;
     public float randomGrowTimeRange = 5f;
     public float _nextEventTime = 0f;
@@ -103,6 +116,38 @@ public class Hexagon : MonoBehaviour
                     Debug.Log(infection.gameObject);
                     Destroy(infection.gameObject);
                 }
+            }
+        }
+        if (Fungi != null && _HexTree != null)
+        {
+            updateFungi(Fungi);
+        }
+        if (_infection)
+        {
+            updateFungi(_infection);
+        }
+    }
+
+    public void updateFungi(Fungi fungi)
+    {
+        //Should adjust it for multiple types, not extendable code! TODO
+        if (Type == TreeType.SmallTree)
+        {
+            fungi.timerSpeedMultiplier = 1 + 0.3f + (UnityEngine.Random.value / 4);
+        } else if (Type == TreeType.BigTree)
+        {
+            fungi.timerSpeedMultiplier = 1 + 0.5f + (UnityEngine.Random.value / 2);
+        }
+        if (fungi.stage < fungi.maxStage)
+        {
+            fungi.timer += 1f * Time.deltaTime * fungi.timerSpeedMultiplier;
+            
+            if (fungi.timer >= fungi.maxTimer)
+            {
+                fungi.stage++;
+                fungi.timer = 0f;
+                
+                fungi.UpdateSprite();
             }
         }
     }

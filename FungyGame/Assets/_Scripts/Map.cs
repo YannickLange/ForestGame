@@ -92,6 +92,7 @@ public class Map : MonoBehaviour
     {
         GameObject fungiObject = Instantiate(fungi, hex.transform.position + new Vector3(0, 0.001f, 0), Quaternion.LookRotation(Vector3.up * 90)) as GameObject;
         fungiObject.transform.parent = hex.gameObject.transform;
+        Debug.Log(hex.Fungi);
         //NGO checking
         if (hex.ngo != null)
             StartCoroutine(hex.ngo.PickupNGO());
