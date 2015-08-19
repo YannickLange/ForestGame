@@ -61,11 +61,11 @@ public class GridManager : MonoBehaviour
         Vector3 initPos;
         var xCenter = (gridWidthInHexes) / 2f ;
         var zCenter = (gridHeightInHexes) / 2f - 0.75f;
-        Debug.Log("centers: " + xCenter + " " + zCenter);
-        Debug.Log("widths: " + hexWidth + " " + hexHeight);
+        //Debug.Log("centers: " + xCenter + " " + zCenter);
+        //Debug.Log("widths: " + hexWidth + " " + hexHeight);
         //the initial position will be in the left upper corner
         initPos = new Vector3(xCenter * -hexWidth + (hexWidth / 2f), 0, zCenter * hexHeight - hexHeight / 2f);
-        Debug.Log(initPos);
+        //Debug.Log(initPos);
 
         return initPos;
     }
