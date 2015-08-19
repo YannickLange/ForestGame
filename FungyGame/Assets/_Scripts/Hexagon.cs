@@ -266,6 +266,7 @@ public class Hexagon : MonoBehaviour
     {
         //create the new tree
         TreeClass tree = (Instantiate(ResourcesManager.instance.TreeTypes [(int)newType], transform.position, transform.rotation) as GameObject).GetComponent<TreeClass>();
+
         //Make the forest the parent
         tree.transform.parent = GameObject.Find("Forest").transform;
         //Make sure the hexagon and the tree now know their significant other
@@ -279,6 +280,8 @@ public class Hexagon : MonoBehaviour
             Debug.Log("destroy old tree: " + oldTree);
             Destroy(oldTree.gameObject);
         }
+
+        tree.GetComponent<CameraFacingBillboard>().Update();
 
         switch (HexState)
         {
@@ -458,7 +461,9 @@ public class Hexagon : MonoBehaviour
         //NGO checking
         if (ngo != null)
             StartCoroutine(ngo.PickupNGO());
-        
+
+        fungiObject.GetComponent<CameraFacingBillboard>().Update();
+
         return fungiObject.GetComponent<Fungi>();
     }
 
