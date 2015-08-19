@@ -63,7 +63,8 @@ public class Hexagon : MonoBehaviour
             }
             if (_HexTree._infection != null)
             {
-                if (_HexTree._infection.stage == _HexTree._infection.maxStage)
+                var infection = _HexTree._infection;
+                if (infection.stage == _HexTree._infection.maxStage)
                 {
                     Debug.Log("Tree should be dead");
                     //Does not do anything, just here for completion sake
@@ -72,7 +73,10 @@ public class Hexagon : MonoBehaviour
                     //End of useless code
                 
                     _HexTree.ReplaceTree((int)TreeType.DeadTree);
-                    Destroy(_HexTree._infection.gameObject);
+                    Debug.Log(_HexTree);
+                    Debug.Log(infection);
+                    Debug.Log(infection.gameObject);
+                    Destroy(infection.gameObject);
                 }
             }
         }
@@ -91,6 +95,9 @@ public class Hexagon : MonoBehaviour
                     }
                     break;
             }
+        } else
+        {
+            Debug.Log("should not get here");
         }
     }
     
@@ -110,6 +117,26 @@ public class Hexagon : MonoBehaviour
                 return;
             _HexTree._nextEventTime = Time.time + UnityEngine.Random.Range(_HexTree.growTime, _HexTree.growTime + _HexTree.randomGrowTimeRange); //Set the next event time value
             _HexTree.ReplaceTree(newType);
+        } else
+        {
+            Debug.Log("should not get here");
+        }
+    }
+    
+    public void InfectTree()
+    {
+        if (_HexTree != null)
+        {
+            GameObject treeInfect = Instantiate(_HexTree._treeInfectPrefab, _HexTree.transform.position + new Vector3(0f, 0f, 0.01f), _HexTree.transform.rotation) as GameObject;
+            treeInfect.transform.parent = _HexTree.transform;
+            _HexTree.occupiedHexagon.Fungi.stage = 0;
+            _HexTree._infection = treeInfect.GetComponent<Fungi>();
+            _HexTree.State = TreeState.Infected;
+        
+            GridManager.instance.UserInteraction.updateView();
+        } else
+        {
+            Debug.Log("should not get here");
         }
     }
 

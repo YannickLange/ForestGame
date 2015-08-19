@@ -15,7 +15,7 @@ public class TreeClass : MonoBehaviour
 	public float _nextEventTime = 0f;
     public bool _processStarted = false;
     public Hexagon occupiedHexagon {get; set;}
-    private GameObject _treeInfectPrefab;
+    public GameObject _treeInfectPrefab;
 
     //Cached components
     private SpriteRenderer _spriteRenderer;
@@ -29,17 +29,6 @@ public class TreeClass : MonoBehaviour
         _treeInfectPrefab = (GameObject)Resources.Load("InfectLoadingBar");
         _nextEventTime = Time.time + Random.Range(growTime, growTime + randomGrowTimeRange);
         _processStarted = true;
-    }
-
-    public void InfectTree()
-    {
-        GameObject treeInfect = Instantiate(_treeInfectPrefab, transform.position + new Vector3(0f, 0f, 0.01f), transform.rotation) as GameObject;
-        treeInfect.transform.parent = transform;
-        occupiedHexagon.Fungi.stage = 0;
-        _infection = treeInfect.GetComponent<Fungi>();
-        State = TreeState.Infected;
-        
-        GridManager.instance.UserInteraction.updateView();
     }
 
     public void ReplaceTree(int newType)

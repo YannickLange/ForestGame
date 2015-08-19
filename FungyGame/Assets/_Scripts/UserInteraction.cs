@@ -179,7 +179,7 @@ public class UserInteraction : MonoBehaviour
             case UserInteractionState.HexagonSelected:
                 if (isInfectButtonActive(_prevHexagon))
                 {
-                    _prevHexagon.HexTree.InfectTree();
+                    _prevHexagon.InfectTree();
                     selectDifferentHexagon(null);
                     userInteractionState = UserInteractionState.Idle;
                 }
