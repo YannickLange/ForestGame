@@ -31,22 +31,6 @@ public class TreeClass : MonoBehaviour
         _processStarted = true;
     }
 
-    /// <summary>
-    /// Set the next state of the tree
-    /// </summary>
-    public void GrowTree()
-	{
-		int typeValue = (int)Type;
-        /*if (typeValue >= (int)TreeType.DeadTree) //TODO: Change this back to deadtree when they exist
-			return;*/
-
-		int newType = typeValue + 1;
-        if (newType >= (int)TreeType.DeadTree)
-            return;
-        _nextEventTime = Time.time + Random.Range(growTime, growTime + randomGrowTimeRange); //Set the next event time value
-        ReplaceTree(newType);
-    }
-
     public void InfectTree()
     {
         GameObject treeInfect = Instantiate(_treeInfectPrefab, transform.position + new Vector3(0f, 0f, 0.01f), transform.rotation) as GameObject;
