@@ -32,15 +32,15 @@ public static class HighScores {
                 newScore.Name = "";
             }
         }
-    }
+    } 
 
     public static Highscore[] GetHighScores()
     {
         Highscore[] scores = new Highscore[10];
         for (int i = 0; i < 10; i++)
         {
-           scores[i].Score = PlayerPrefs.GetInt(i + "Hscore");
-           scores[i].Name = PlayerPrefs.GetString(i + "Hscore");
+            scores[i].Score = PlayerPrefs.GetInt(i + "HScore");
+           scores[i].Name = PlayerPrefs.GetString(i + "HScoreName");
         }
         return scores;
     }

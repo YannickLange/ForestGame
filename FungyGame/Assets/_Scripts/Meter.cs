@@ -1,11 +1,11 @@
-using UnityEngine;
+﻿using UnityEngine;
 using System.Collections;
 
 public class Meter : MonoBehaviour
 {
     public int MaxLivingTrees = 5;
     public int MaxScore = 1;
-    private float Score = 0;
+    public float Score = 0;
 
     private GameObject Indicator;
 

@@ -6,7 +6,7 @@ public class MenuScript : MonoBehaviour {
 
     void OnLevelWasLoaded(int level)
     {
-
+        Debug.Log("level was loaded");
         //Highscorescene
         if (level == 1)
         {
