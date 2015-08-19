@@ -10,6 +10,9 @@ public class Hexagon : MonoBehaviour
     public bool infected { get; set; }
     public Fungi _infection;
 
+    //cached components
+    public GameObject _treeInfectPrefab;
+
     public NGO ngo { get; set; }
     public enum SelectionState
     {
@@ -128,7 +131,7 @@ public class Hexagon : MonoBehaviour
     {
         if (_HexTree != null)
         {
-            GameObject treeInfect = Instantiate(_HexTree._treeInfectPrefab, _HexTree.transform.position + new Vector3(0f, 0f, 0.01f), _HexTree.transform.rotation) as GameObject;
+            GameObject treeInfect = Instantiate(_treeInfectPrefab, _HexTree.transform.position + new Vector3(0f, 0f, 0.01f), _HexTree.transform.rotation) as GameObject;
             treeInfect.transform.parent = _HexTree.transform;
             _HexTree.occupiedHexagon.Fungi.stage = 0;
             _infection = treeInfect.GetComponent<Fungi>();
@@ -306,6 +309,7 @@ public class Hexagon : MonoBehaviour
 
     void Awake()
     {
+        _treeInfectPrefab = (GameObject)Resources.Load("InfectLoadingBar");
         _renderer = GetComponent<Renderer>();
         isTarget = false;
     }

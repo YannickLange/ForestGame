@@ -15,12 +15,10 @@ public class TreeClass : MonoBehaviour
 	public float _nextEventTime = 0f;
     public bool _processStarted = false;
     public Hexagon occupiedHexagon {get; set;}
-    public GameObject _treeInfectPrefab;
 
 
     void Awake()
     {
-        _treeInfectPrefab = (GameObject)Resources.Load("InfectLoadingBar");
         _nextEventTime = Time.time + Random.Range(growTime, growTime + randomGrowTimeRange);
         _processStarted = true;
     }
