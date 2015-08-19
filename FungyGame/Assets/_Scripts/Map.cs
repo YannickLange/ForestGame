@@ -103,7 +103,7 @@ public class Map : MonoBehaviour
         //If there's one or more tile with a tree on it
         if (treesTiles.Count > MinimumSpawnTrees)
         {
-            hex.Fungi = CreateFungiOn(hex);
+            hex.TileInfection = CreateFungiOn(hex);
         } else
         {
             //remove the spawned one
@@ -115,13 +115,13 @@ public class Map : MonoBehaviour
                 treesTiles = GetAccessibleTiles(Hexagons[i]);
                 if (treesTiles.Count > MinimumSpawnTrees)
                 {
-                    Hexagons[i].Fungi = CreateFungiOn(Hexagons[i]);
+                    Hexagons[i].TileInfection = CreateFungiOn(Hexagons[i]);
                     return;
                 }
             }
             //Spawn a new tree
             List<Hexagon> surroundingTiles = GetSurroundingTiles(hex);
-            hex.Fungi = CreateFungiOn(hex);
+            hex.TileInfection = CreateFungiOn(hex);
             int count = MinimumSpawnTrees - treesTiles.Count;
             for (int i = 0; i < surroundingTiles.Count; i ++)
             {

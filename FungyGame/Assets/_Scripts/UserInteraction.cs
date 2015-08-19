@@ -37,7 +37,7 @@ public class UserInteraction : MonoBehaviour
                 Hexagon hoveredHexagon = hit.collider.gameObject.GetComponent<Hexagon>();
                 if (NGO.ProtectionSelection)
                 {
-                    if (hoveredHexagon.Fungi != null)
+                    if (hoveredHexagon.TileInfection != null)
                         hoveredHexagon.HexagonRenderer.material = ResourcesManager.instance.HexWhiteBorders;
                     if (previousHexagon != null && previousHexagon != hoveredHexagon)
                         previousHexagon.HexagonRenderer.material = ResourcesManager.instance.HexNormalMaterial;
@@ -360,12 +360,12 @@ public class UserInteraction : MonoBehaviour
     public void StartDrag(Hexagon startHexagon)
     {
         this.startHexagon = startHexagon;
-        startHexChildScript = startHexagon.Fungi;
+        startHexChildScript = startHexagon.TileInfection;
     }
     
     public void EndDrag(Hexagon endHexagon)
     {
-        endHexagon.Fungi = Map.instance.CreateFungiOn(endHexagon);
+        endHexagon.TileInfection = Map.instance.CreateFungiOn(endHexagon);
         startHexChildScript.reset();
     }
 }

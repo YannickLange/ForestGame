@@ -41,7 +41,7 @@ public class Hexagon : MonoBehaviour
     private TreeState State;
     public TreeType Type;
     public Fungi TreeInfection; // tree infection
-    public Fungi Fungi; // hexagon infection
+    public Fungi TileInfection; // hexagon infection
     public float growTime = 10f;
     public float randomGrowTimeRange = 5f;
     public float _nextEventTime = 0f;
@@ -53,10 +53,10 @@ public class Hexagon : MonoBehaviour
 
     public bool canInfectTree()
     {
-        return HexagonContainsFungus && State == TreeState.Alive && (Type == TreeType.BigTree || Type == TreeType.DeadTree || Type == TreeType.SmallTree) && HexTree != null && Fungi.IsAtMaxStage;
+        return HexagonContainsFungus && State == TreeState.Alive && (Type == TreeType.BigTree || Type == TreeType.DeadTree || Type == TreeType.SmallTree) && HexTree != null && TileInfection.IsAtMaxStage;
     }
 
-    public bool HexagonContainsFungus    { get { return (Fungi != null); } }
+    public bool HexagonContainsFungus    { get { return (TileInfection != null); } }
 
     public NGO ngo
     {
@@ -116,7 +116,7 @@ public class Hexagon : MonoBehaviour
         }
         if (HexagonContainsFungus && _HexTree != null)
         {
-            updateFungi(Fungi);
+            updateFungi(TileInfection);
         }
         if (TreeInfection)
         {
@@ -185,7 +185,7 @@ public class Hexagon : MonoBehaviour
         {
             GameObject treeInfect = Instantiate(_treeInfectPrefab, _HexTree.transform.position + new Vector3(0f, 0f, 0.01f), _HexTree.transform.rotation) as GameObject;
             treeInfect.transform.parent = _HexTree.transform;
-            _HexTree.occupiedHexagon.Fungi.reset();
+            _HexTree.occupiedHexagon.TileInfection.reset();
             TreeInfection = treeInfect.GetComponent<Fungi>();
             State = TreeState.Infected;
         
@@ -257,7 +257,7 @@ public class Hexagon : MonoBehaviour
     
     public bool isAbleToMoveAwayFrom()
     {
-        return HexagonContainsFungus && Fungi.IsAtMaxStage && adjacentAccessibleHexagonExists();
+        return HexagonContainsFungus && TileInfection.IsAtMaxStage && adjacentAccessibleHexagonExists();
     }
 
     public void updateMaterial()

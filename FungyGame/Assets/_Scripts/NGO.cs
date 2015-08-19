@@ -42,7 +42,7 @@ public class NGO : MonoBehaviour
         //1:Looking for a spot:
         for (int i = 0; i < Map.instance.Hexagons.Length; i++)
         {
-            if (Map.instance.Hexagons[i].Fungi == null && Map.instance.Hexagons[i].HexTree != null && !Map.instance.Hexagons[i].isTarget)
+            if (Map.instance.Hexagons[i].TileInfection == null && Map.instance.Hexagons[i].HexTree != null && !Map.instance.Hexagons[i].isTarget)
                 ngoHex.Add(Map.instance.Hexagons[i]);
         }
         if (ngoHex.Count == 0)

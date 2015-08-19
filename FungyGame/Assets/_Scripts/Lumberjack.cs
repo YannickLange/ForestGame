@@ -131,14 +131,14 @@ public class Lumberjack : MonoBehaviour
 
     private void ChopDownTree()
     {
-        if (_targetHex.Fungi != null)
-            Destroy(_targetHex.Fungi.gameObject);
+        if (_targetHex.TileInfection != null)
+            Destroy(_targetHex.TileInfection.gameObject);
         if (_targetHex.TreeInfection != null)
             Destroy(_targetHex.TreeInfection.gameObject);
         if (_targetHex.HexTree != null)
             Destroy(_targetHex.HexTree.gameObject);
 
-        _targetHex.Fungi = null;
+        _targetHex.TileInfection = null;
         _targetHex.HexTree = null;
         GridManager.instance.Meter.Forest(5);
     }
