@@ -6,6 +6,7 @@ public class CameraFacingBillboard : MonoBehaviour
     public float fixedRotationAngle = 90f;
     public AngleDirection fixedRotationDirection;
     public bool Important = false;
+    public SpriteRenderer parRen;
     public enum AngleDirection
     {
         none,
@@ -36,7 +37,6 @@ public class CameraFacingBillboard : MonoBehaviour
     void LateUpdate()
     {
         SpriteRenderer spriteRenderer = GetComponent<SpriteRenderer>();
-        SpriteRenderer parentSpriteRenderer = transform.parent.GetComponent<SpriteRenderer>();
         if (spriteRenderer == null)
         {
             Debug.Log("Can not set sorting layer without the spriteRenderer component");
@@ -44,15 +44,13 @@ public class CameraFacingBillboard : MonoBehaviour
         }
 
         spriteRenderer.sortingOrder = (int)Camera.main.WorldToScreenPoint (transform.position).y * -1;
-        
-        if (parentSpriteRenderer == null)
-        {
-            //Debug.Log("Can not set sorting layer without the spriteRenderer component: " + spriteRenderer);
-            //TODO. find out why this happens
-            return;
-        }
         if (Important)
+        {
+            Hexagon hex = transform.parent.GetComponent<Hexagon>();
+            SpriteRenderer parentSpriteRenderer = hex.HexTree.GetComponent<SpriteRenderer>();
+            parRen = hex.HexTree.GetComponent<SpriteRenderer>();
             spriteRenderer.sortingOrder = parentSpriteRenderer.sortingOrder + 1;
+        }
 
     }
 }

@@ -336,6 +336,7 @@ public class Hexagon : MonoBehaviour
                 case HexagonState.KilledInfectedDeadWood:
                 case HexagonState.InfectingDeadWood:
                 case HexagonState.KillingInfectedDeadWood:
+
                     ReplaceTree(TreeType.DeadTree);
                     break;
             }
@@ -701,7 +702,7 @@ public class Hexagon : MonoBehaviour
 
     private Fungi CreateFungi(GameObject prefab)
     {
-        GameObject fungiObject = Instantiate(prefab, transform.position + new Vector3(0, 0.001f, 0), Quaternion.LookRotation(Vector3.up * 90)) as GameObject;
+        GameObject fungiObject = Instantiate(prefab, transform.position + new Vector3(0, 0.001f,0), Quaternion.LookRotation(Vector3.up * 90)) as GameObject;
         fungiObject.transform.parent = gameObject.transform;
         //NGO checking
         if (ngo != null)
