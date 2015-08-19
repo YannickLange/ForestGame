@@ -43,12 +43,12 @@ public class Hexagon : MonoBehaviour
     public Fungi TileInfection; // hexagon infection
 
     private TreeState State;
-    public float growTime = 10f;
-    public float randomGrowTimeRange = 5f;
-    public float _nextEventTime = 0f;
+    private float growTime = 10f;
+    private float randomGrowTimeRange = 5f;
+    private float _nextEventTime = 0f;
 
     //cached components
-    public GameObject _treeInfectPrefab;
+    private GameObject _treeInfectPrefab;
     private NGO _ngo;
 
     public bool canInfectTree()
