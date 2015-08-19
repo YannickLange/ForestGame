@@ -57,10 +57,8 @@ public class Lumberjack : MonoBehaviour
                 fullHex.Add(Map.instance.Hexagons[i]);
         }
         if (fullHex.Count == 0)
-        {
             Destroy(gameObject);
-            return;
-        }
+
         _targetHex = fullHex[Random.Range(0, fullHex.Count)];
         _targetHex.isTarget = true;
         _targetTr = _targetHex.transform;

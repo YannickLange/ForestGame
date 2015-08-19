@@ -194,9 +194,8 @@ public class Map : MonoBehaviour
         } else if (Lumberjack.isLumberjackWaiting)
             Lumberjacktimer = 0f;
         #endregion
-
         #region NGO
-        if (NGOtimer > _NGOSpawn && !NGO.isNGOWaiting)
+        if (NGOtimer >= _NGOSpawn && !NGO.isNGOWaiting)
         {
             _NGOSpawn = Random.Range(_NGORndDown, _NGORndUp);
 

@@ -80,16 +80,20 @@ public class NGO : MonoBehaviour
         StartCoroutine(hex.FlashHexagon(ResourcesManager.instance.HexNGOTargetMat));
 
         #region 1:Moving
-        float sqrRemainingDistance = (_thisTransform.position - hex.transform.position).sqrMagnitude;
         Vector3 newPosition;
-        while (sqrRemainingDistance > 1e-6)
+        float sqrRemainingDistance;
+        if (hex != _targetHex)
         {
-            newPosition = Vector3.MoveTowards(_rb.position, hex.transform.position, MoveTime * Time.deltaTime);
-            _rb.MovePosition(newPosition);
-
-
             sqrRemainingDistance = (_thisTransform.position - hex.transform.position).sqrMagnitude;
-            yield return null;
+            while (sqrRemainingDistance > 1e-6)
+            {
+                newPosition = Vector3.MoveTowards(_rb.position, hex.transform.position, MoveTime * Time.deltaTime);
+                _rb.MovePosition(newPosition);
+
+
+                sqrRemainingDistance = (_thisTransform.position - hex.transform.position).sqrMagnitude;
+                yield return null;
+            }
         }
         #endregion
 
