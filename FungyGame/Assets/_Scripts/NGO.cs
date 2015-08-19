@@ -59,7 +59,7 @@ public class NGO : MonoBehaviour
         //4:Enable the movement
         transform.position = _spawnHex.transform.position;
 
-        StartCoroutine(MoveNGO());
+        _targetHex.StartCoroutine(MoveNGO());
     }
 
     public IEnumerator PickupNGO()
@@ -77,7 +77,7 @@ public class NGO : MonoBehaviour
         hex.ngo = this;
         isNGOWaiting = false;
         ProtectionSelection = false;
-        StartCoroutine(hex.FlashHexagon(new Color32(100,116,0,255)));
+        _targetHex.StartCoroutine(hex.FlashHexagon(new Color32(100, 116, 0, 255)));
 
         #region 1:Moving
         Vector3 newPosition;

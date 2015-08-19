@@ -47,8 +47,8 @@ public class Hexagon : MonoBehaviour
     public Fungi TileInfection; // hexagon infection
     public GameObject OverTile; //Tile with borders
 
-    private float growTime = 10f;
-    private float randomGrowTimeRange = 5f;
+    private float growTime = 25f;
+    private float randomGrowTimeRange = 125f;
     private float _nextEventTime = 0f;
 
     //Updating
@@ -724,6 +724,7 @@ public class Hexagon : MonoBehaviour
             yield return new WaitForSeconds(.4f);
         } while (isTarget);
 
+        ShowOverTile(false, color);
         yield return null;
     }
 
