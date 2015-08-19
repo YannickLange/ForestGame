@@ -142,7 +142,6 @@ public class Hexagon : MonoBehaviour
     {
         if (TreeInfection != null)
         {
-            Debug.Log("removeTreeInfection: " + HexState);
             Destroy(TreeInfection.gameObject);
             TreeInfection = null;
         }
@@ -255,6 +254,8 @@ public class Hexagon : MonoBehaviour
                 break;
             case HexagonState.WithTreeAndFungi:
                 addTreeInfectingFungi();
+                TileInfection.reset();
+
 
                 GridManager.instance.UserInteraction.updateView();
                 _HexState = HexagonState.WithCurrentlyInfectingTreeAndFungi;
@@ -277,7 +278,6 @@ public class Hexagon : MonoBehaviour
         //destroy the original
         if (oldTree != null)
         {
-            Debug.Log("destroy old tree: " + oldTree);
             Destroy(oldTree.gameObject);
         }
 
