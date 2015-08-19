@@ -88,9 +88,9 @@ public class Lumberjack : MonoBehaviour
         #region 2:ChopTree
         //Change the sprite of the tree:
         yield return new WaitForSeconds(ChopActionTime / 2f);
-        _targetHex.ReplaceTree(TreeType.CutTree);
+        _targetHex.ChopTree();
         yield return new WaitForSeconds(ChopActionTime / 2f);
-        ChopDownTree();
+        _targetHex.TakeDeadWoodAway();
         GetComponent<SpriteRenderer>().sprite = LumberjackWithLog;
         #endregion
 
@@ -127,11 +127,5 @@ public class Lumberjack : MonoBehaviour
         isLumberjackWaiting = false;
         Destroy(gameObject);
         #endregion
-    }
-
-    private void ChopDownTree()
-    {
-        _targetHex.ReplaceTree(TreeType.CutTree);
-        GridManager.instance.Meter.Forest(5);
     }
 }

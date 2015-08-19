@@ -21,7 +21,7 @@ public class TreeGenerator
             if (Random.value <= density)
             {
                 int treetype = Random.Range(0, ResourcesManager.instance.TreeTypes.Length - 2);
-                Map.instance.Hexagons[i].ReplaceTree((TreeType)treetype);
+                Map.instance.Hexagons[i].PlantTree((TreeType)treetype);
             }
         }
         //TODO: minimum amount of trees
@@ -29,7 +29,7 @@ public class TreeGenerator
 
     public static void SpawnSapling(Hexagon hex)
     {
-        hex.ReplaceTree(TreeType.Sapling);
+        hex.PlantTree(TreeType.Sapling);
     }
 
 

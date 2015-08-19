@@ -42,6 +42,9 @@ public class Hexagon : MonoBehaviour
     private float randomGrowTimeRange = 5f;
     private float _nextEventTime = 0f;
 
+    //Updating
+    HexagonState lastTreeUpdate;
+
     //cached components
     private GameObject _tileInfectPrefab;
     private GameObject _treeInfectPrefab;
@@ -124,7 +127,7 @@ public class Hexagon : MonoBehaviour
                 Debug.Assert(false, "unexpected state");
                 break;
             case HexagonState.CurrentlyInfectingTreeAndFungi:
-                ReplaceTree(TreeType.DeadTree);
+                _HexState = HexagonState.DeadWoodAndFungi;
                 break;
         }
     }
@@ -200,6 +203,35 @@ public class Hexagon : MonoBehaviour
             case HexagonState.CurrentlyInfectingTreeAndFungi:
                 break;
         }
+
+        updateTree();
+    }
+
+    private void updateTree()
+    {
+        if (lastTreeUpdate != HexState)
+        {
+            lastTreeUpdate = HexState;
+            switch (HexState)
+            {
+                case HexagonState.SaplingAndFungi:
+                case HexagonState.Sapling:
+                    ReplaceTree(TreeType.Sapling);
+                    break;
+                case HexagonState.Tree:
+                case HexagonState.TreeAndFungi:
+                case HexagonState.CurrentlyInfectingTreeAndFungi:
+                    ReplaceTree(Type);
+                    break;
+                case HexagonState.CutTree:
+                    ReplaceTree(TreeType.CutTree);
+                    break;
+                case HexagonState.DeadWood:
+                case HexagonState.DeadWoodAndFungi:
+                    ReplaceTree(TreeType.DeadTree);
+                    break;
+            }
+        }
     }
     public void ShowOverTile(bool state, Color color)
     {
@@ -265,7 +297,69 @@ public class Hexagon : MonoBehaviour
         }
     }
     
-    public void ReplaceTree(TreeType newType)
+    public void TakeDeadWoodAway()
+    {
+        switch (HexState)
+        {
+            case HexagonState.Empty:
+            case HexagonState.Sapling:
+            case HexagonState.Tree:
+            case HexagonState.SaplingAndFungi:
+            case HexagonState.DeadWoodAndFungi:
+            case HexagonState.CurrentlyInfectingTreeAndFungi:
+            case HexagonState.TreeAndFungi:
+                Debug.Assert(false, "unexpected state");
+                break;
+            case HexagonState.CutTree:
+            case HexagonState.DeadWood:
+                _HexState = HexagonState.Empty;
+                break;
+        }
+    }
+
+    public void ChopTree()
+    {
+        switch (HexState)
+        {
+            case HexagonState.CutTree:
+            case HexagonState.Empty:
+            case HexagonState.DeadWood:
+                Debug.Assert(false, "unexpected state");
+                break;
+            case HexagonState.Sapling:
+            case HexagonState.Tree:
+            case HexagonState.SaplingAndFungi:
+            case HexagonState.DeadWoodAndFungi:
+            case HexagonState.CurrentlyInfectingTreeAndFungi:
+            case HexagonState.TreeAndFungi:
+                _HexState = HexagonState.CutTree;
+                break;
+        }
+    }
+
+    public void PlantTree(TreeType type)
+    {
+        Debug.Assert(!HexagonContainsFungus, "Trees can only be planted when no fungus is on it");
+        Type = type;
+        switch (type)
+        {
+            case TreeType.Sapling:
+                _HexState = HexagonState.Sapling;
+                break;
+            case TreeType.SmallTree:
+            case TreeType.BigTree:
+                _HexState = HexagonState.Tree;
+                break;
+            case TreeType.DeadTree:
+                _HexState = HexagonState.DeadWood;
+                break;
+            case TreeType.CutTree:
+                _HexState = HexagonState.CutTree;
+                break;
+        }
+    }
+    
+    private void ReplaceTree(TreeType newType)
     {
         //create the new tree
         TreeClass tree = (Instantiate(ResourcesManager.instance.TreeTypes [(int)newType], transform.position, transform.rotation) as GameObject).GetComponent<TreeClass>();
@@ -284,55 +378,6 @@ public class Hexagon : MonoBehaviour
         }
 
         tree.GetComponent<CameraFacingBillboard>().Update();
-
-        switch (HexState)
-        {
-            case HexagonState.Empty:
-            case HexagonState.CutTree:
-            case HexagonState.Sapling:
-            case HexagonState.Tree:
-            case HexagonState.DeadWood:
-                switch (newType)
-                {
-                    case TreeType.Sapling:
-                        _HexState = HexagonState.Sapling;
-                        break;
-                    case TreeType.SmallTree:
-                    case TreeType.BigTree:
-                        _HexState = HexagonState.Tree;
-                        break;
-                    case TreeType.DeadTree:
-                        _HexState = HexagonState.DeadWood;
-                        GridManager.instance.Meter.Fungus(5);
-                        break;
-                    case TreeType.CutTree:
-                        _HexState = HexagonState.CutTree;
-                        break;
-                }
-                break;
-            case HexagonState.SaplingAndFungi:
-            case HexagonState.DeadWoodAndFungi:
-            case HexagonState.CurrentlyInfectingTreeAndFungi:
-            case HexagonState.TreeAndFungi:
-                switch (newType)
-                {
-                    case TreeType.Sapling:
-                        _HexState = HexagonState.SaplingAndFungi;
-                        break;
-                    case TreeType.SmallTree:
-                    case TreeType.BigTree:
-                        _HexState = HexagonState.TreeAndFungi;
-                        break;
-                    case TreeType.DeadTree:
-                        _HexState = HexagonState.DeadWoodAndFungi;
-                        GridManager.instance.Meter.Fungus(5);
-                        break;
-                    case TreeType.CutTree:
-                        _HexState = HexagonState.CutTree;
-                        break;
-                }
-                break;
-        }
         GridManager.instance.UserInteraction.updateView();
     }
 
