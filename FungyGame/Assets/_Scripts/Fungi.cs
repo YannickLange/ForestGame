@@ -10,7 +10,6 @@ public class Fungi : MonoBehaviour
     public float maxTimer = 10f;
     private int lastStage = -1;
     public int stage = 0;
-    public int maxStage = 6;
     public Sprite[] stageSprites;
 
     //Cached components
@@ -21,10 +20,9 @@ public class Fungi : MonoBehaviour
         // load all frames in fruitsSprites array
         spriteRenderer = GetComponent<SpriteRenderer>();
         stageSprites = Resources.LoadAll<Sprite>(tileSheetName);
-        maxStage = maxStage - 1;
     }
 
-    public bool IsAtMaxStage{ get { return stage == maxStage; } }
+    public bool IsAtMaxStage{ get { return stage == stageSprites.Length - 1; } }
 
     public void Update()
     {
