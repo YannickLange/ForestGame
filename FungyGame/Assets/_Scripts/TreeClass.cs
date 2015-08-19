@@ -19,7 +19,7 @@ public class TreeClass : MonoBehaviour
 
     //Cached components
     private SpriteRenderer _spriteRenderer;
-    private TreeClass _treeClassScript;
+    public TreeClass _treeClassScript;
     public Fungi _infection;
 
     void Awake()
@@ -29,23 +29,5 @@ public class TreeClass : MonoBehaviour
         _treeInfectPrefab = (GameObject)Resources.Load("InfectLoadingBar");
         _nextEventTime = Time.time + Random.Range(growTime, growTime + randomGrowTimeRange);
         _processStarted = true;
-    }
-
-    public void ReplaceTree(int newType)
-    {
-        //create the new tree
-        GameObject tree = Instantiate(ResourcesManager.instance.TreeTypes[newType], gameObject.transform.position, gameObject.transform.rotation) as GameObject;
-        TreeClass newTreeClassScript = tree.GetComponent<TreeClass>();
-        //Make the forest the parent
-        tree.transform.parent = GameObject.Find("Forest").transform;
-        //Make sure the hexagon and the tree now know their significant other
-        newTreeClassScript.occupiedHexagon = _treeClassScript.occupiedHexagon;
-        newTreeClassScript.occupiedHexagon.HexTree = newTreeClassScript;
-        if (newTreeClassScript.Type == TreeType.DeadTree)
-            GridManager.instance.Meter.Fungus(5);
-        //destroy the original
-        GameObject.Destroy(this.gameObject);
-
-        GridManager.instance.UserInteraction.updateView();
     }
 }

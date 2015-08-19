@@ -83,7 +83,7 @@ public class Lumberjack : MonoBehaviour
         #region 2:ChopTree
         //Change the sprite of the tree:
         yield return new WaitForSeconds(ChopActionTime / 2f);
-        _targetHex.HexTree.ReplaceTree(4);
+        _targetHex.ReplaceTree(4);
         yield return new WaitForSeconds(ChopActionTime / 2f);
         ChopDownTree();
             

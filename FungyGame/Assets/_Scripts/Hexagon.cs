@@ -72,7 +72,7 @@ public class Hexagon : MonoBehaviour
                     _HexTree.Type = TreeType.DeadTree;
                     //End of useless code
                 
-                    _HexTree.ReplaceTree((int)TreeType.DeadTree);
+                    ReplaceTree((int)TreeType.DeadTree);
                     Debug.Log(_HexTree);
                     Debug.Log(infection);
                     Debug.Log(infection.gameObject);
@@ -116,7 +116,7 @@ public class Hexagon : MonoBehaviour
             if (newType >= (int)TreeType.DeadTree)
                 return;
             _HexTree._nextEventTime = Time.time + UnityEngine.Random.Range(_HexTree.growTime, _HexTree.growTime + _HexTree.randomGrowTimeRange); //Set the next event time value
-            _HexTree.ReplaceTree(newType);
+            ReplaceTree(newType);
         } else
         {
             Debug.Log("should not get here");
@@ -132,6 +132,31 @@ public class Hexagon : MonoBehaviour
             _HexTree.occupiedHexagon.Fungi.stage = 0;
             _HexTree._infection = treeInfect.GetComponent<Fungi>();
             _HexTree.State = TreeState.Infected;
+        
+            GridManager.instance.UserInteraction.updateView();
+        } else
+        {
+            Debug.Log("should not get here");
+        }
+    }
+    
+    public void ReplaceTree(int newType)
+    {
+        if (_HexTree != null)
+        {
+            //create the new tree
+            GameObject tree = Instantiate(ResourcesManager.instance.TreeTypes [newType], _HexTree.gameObject.transform.position, _HexTree.gameObject.transform.rotation) as GameObject;
+            TreeClass newTreeClassScript = tree.GetComponent<TreeClass>();
+            //Make the forest the parent
+            tree.transform.parent = GameObject.Find("Forest").transform;
+            //Make sure the hexagon and the tree now know their significant other
+            newTreeClassScript.occupiedHexagon = this;
+            var oldTree = _HexTree;
+            _HexTree = newTreeClassScript;
+            if (newTreeClassScript.Type == TreeType.DeadTree)
+                GridManager.instance.Meter.Fungus(5);
+            //destroy the original
+            GameObject.Destroy(oldTree.gameObject);
         
             GridManager.instance.UserInteraction.updateView();
         } else
