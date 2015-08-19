@@ -77,7 +77,7 @@ public class NGO : MonoBehaviour
         hex.ngo = this;
         isNGOWaiting = false;
         ProtectionSelection = false;
-        StartCoroutine(hex.FlashHexagon(ResourcesManager.instance.HexNGOTargetMat));
+        StartCoroutine(hex.FlashHexagon(new Color32(100,116,0,255)));
 
         #region 1:Moving
         Vector3 newPosition;

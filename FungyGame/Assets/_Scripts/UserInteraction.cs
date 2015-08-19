@@ -35,12 +35,13 @@ public class UserInteraction : MonoBehaviour
             if (hit.collider.tag == "Hexagon")
             {
                 Hexagon hoveredHexagon = hit.collider.gameObject.GetComponent<Hexagon>();
+                //NGO selection when we qre zqiting for q tile protection
                 if (NGO.ProtectionSelection)
                 {
                     if (hoveredHexagon.TileInfection != null)
-                        hoveredHexagon.HexagonRenderer.material = ResourcesManager.instance.HexWhiteBorders;
+                        hoveredHexagon.ShowOverTile(true, Color.white);
                     if (previousHexagon != null && previousHexagon != hoveredHexagon)
-                        previousHexagon.HexagonRenderer.material = ResourcesManager.instance.HexNormalMaterial;
+                        previousHexagon.ShowOverTile(false, Color.white);
                     previousHexagon = hoveredHexagon;
                  }
 

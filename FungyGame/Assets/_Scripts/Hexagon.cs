@@ -36,6 +36,7 @@ public class Hexagon : MonoBehaviour
     public TreeType Type;
     public Fungi TreeInfection; // tree infection
     public Fungi TileInfection; // hexagon infection
+    public GameObject OverTile; //Tile with borders
 
     private float growTime = 10f;
     private float randomGrowTimeRange = 5f;
@@ -199,6 +200,11 @@ public class Hexagon : MonoBehaviour
             case HexagonState.CurrentlyInfectingTreeAndFungi:
                 break;
         }
+    }
+    public void ShowOverTile(bool state, Color color)
+    {
+        OverTile.SetActive(state);
+        OverTile.GetComponent<SpriteRenderer>().color = color;
     }
 
     public void updateFungi(Fungi fungi)
@@ -385,20 +391,16 @@ public class Hexagon : MonoBehaviour
         }
     }
 
-    public IEnumerator FlashHexagon(Material flashMat)
+    public IEnumerator FlashHexagon(Color color)
     {
         bool tmp = false;
         do
         {
-            if (tmp)
-            {
-                HexagonRenderer.material = ResourcesManager.instance.HexNormalMaterial;
-                tmp = false;
-            } else
-            {
-                HexagonRenderer.material = flashMat;
-                tmp = true;
-            }
+            if(tmp)
+                ShowOverTile(true, color);
+            else
+                ShowOverTile(false, color);
+            tmp = !tmp;
             yield return new WaitForSeconds(.4f);
         } while (isTarget);
 

@@ -49,7 +49,7 @@ public class Planter : MonoBehaviour
         _targetHex.isTarget = true;
         _targetTr = _targetHex.transform;
         //Highlight the hexgon
-        StartCoroutine(_targetHex.FlashHexagon(ResourcesManager.instance.HexPlanterTargetMat));
+        StartCoroutine(_targetHex.FlashHexagon(new Color32(1,71,99,255)));
 
         //2:Looking for the spawn hexagon
         _spawnHex = Map.instance.HexBorders[Random.Range(0, Map.instance.HexBorders.Length)];

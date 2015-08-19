@@ -61,7 +61,7 @@ public class Lumberjack : MonoBehaviour
         _targetHex.isTarget = true;
         _targetTr = _targetHex.transform;
 
-        StartCoroutine(_targetHex.FlashHexagon(ResourcesManager.instance.HexLumberjackTargetMat));
+        StartCoroutine(_targetHex.FlashHexagon(new Color32(99,1,78,255)));
     }
 
     private IEnumerator MoveLumberjack()
