@@ -59,6 +59,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   fixedRotationAngle: 90
   fixedRotationDirection: 0
+  Important: 0
 --- !u!114 &11499422
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -70,6 +71,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c53ed1edd8459ea458a0304d58237a96, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  LumberjackWithLog: {fileID: 21300000, guid: 8eb8a7c6b5a8f8f4aa269ee1157ea9b4, type: 3}
   MoveTime: 3
   ChopActionTime: 5
 --- !u!212 &21275110

@@ -4,6 +4,7 @@ using System.Collections.Generic;
 
 public class Lumberjack : MonoBehaviour
 {
+    public Sprite LumberjackWithLog;
     public static bool isLumberjackWaiting = false;
     public float MoveTime = 0.5f;
     public float ChopActionTime = 5.0f;
@@ -94,8 +95,7 @@ public class Lumberjack : MonoBehaviour
         _targetHex.ReplaceTree(TreeType.CutTree);
         yield return new WaitForSeconds(ChopActionTime / 2f);
         ChopDownTree();
-            
-        yield return new WaitForSeconds(ChopActionTime);
+        GetComponent<SpriteRenderer>().sprite = LumberjackWithLog;
         #endregion
 
         #region 3:Moving out the map
