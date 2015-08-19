@@ -8,6 +8,7 @@ public delegate void HexagonEventHandler(object sender,EventArgs e,int clickID);
 public class Hexagon : MonoBehaviour
 {
     public bool infected { get; set; }
+    public Fungi _infection;
 
     public NGO ngo { get; set; }
     public enum SelectionState
@@ -61,10 +62,10 @@ public class Hexagon : MonoBehaviour
             {
                 CheckState();
             }
-            if (_HexTree._infection != null)
+            if (_infection != null)
             {
-                var infection = _HexTree._infection;
-                if (infection.stage == _HexTree._infection.maxStage)
+                var infection = _infection;
+                if (infection.stage == _infection.maxStage)
                 {
                     Debug.Log("Tree should be dead");
                     //Does not do anything, just here for completion sake
@@ -130,7 +131,7 @@ public class Hexagon : MonoBehaviour
             GameObject treeInfect = Instantiate(_HexTree._treeInfectPrefab, _HexTree.transform.position + new Vector3(0f, 0f, 0.01f), _HexTree.transform.rotation) as GameObject;
             treeInfect.transform.parent = _HexTree.transform;
             _HexTree.occupiedHexagon.Fungi.stage = 0;
-            _HexTree._infection = treeInfect.GetComponent<Fungi>();
+            _infection = treeInfect.GetComponent<Fungi>();
             _HexTree.State = TreeState.Infected;
         
             GridManager.instance.UserInteraction.updateView();

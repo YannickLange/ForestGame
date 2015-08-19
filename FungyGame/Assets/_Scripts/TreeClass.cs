@@ -17,8 +17,6 @@ public class TreeClass : MonoBehaviour
     public Hexagon occupiedHexagon {get; set;}
     public GameObject _treeInfectPrefab;
 
-    //Cached components
-    public Fungi _infection;
 
     void Awake()
     {
