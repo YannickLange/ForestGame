@@ -73,12 +73,13 @@ public class Map : MonoBehaviour
         BuildMap();
         int rand = UnityEngine.Random.Range(0, _hexagons.Length - 1);
         int maxTries = 1000;
-        while (_hexagons[rand].HexTree == null || _hexagons[rand].Type == TreeType.Sapling)
+        while (_hexagons[rand].HexState != HexagonState.WithTree)
         {
             --maxTries;
             Debug.Assert(maxTries > 0);
             if (maxTries == 0)
                 return;
+
             rand = UnityEngine.Random.Range(0, _hexagons.Length - 1);
         }
         SpawnFungi(_hexagons[rand]);
@@ -94,8 +95,6 @@ public class Map : MonoBehaviour
             hex.addTileInfectingFungi();
         } else
         {
-            //remove the spawned one
-
             //Browsing all the hexagons to get at least "MinimumSpawnTrees"
             for (int i = 0; i < Hexagons.Length; i++)
             {
@@ -103,6 +102,10 @@ public class Map : MonoBehaviour
                 treesTiles = GetAccessibleTiles(Hexagons[i]);
                 if (treesTiles.Count > MinimumSpawnTrees)
                 {
+                    if (Hexagons[i].HexState == HexagonState.Empty)
+                    {
+                        Hexagons[i].ReplaceTree(TreeType.SmallTree);
+                    }
                     Hexagons[i].addTileInfectingFungi();
                     return;
                 }
