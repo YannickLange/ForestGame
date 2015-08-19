@@ -263,7 +263,7 @@ public class Hexagon : MonoBehaviour
             int typeValue = (int)Type;
         
             int newType = typeValue + 1;
-            if (newType > (int)TreeType.CutTree)
+            if (newType > (int)TreeType.DeadTree)
                 return;
             _nextEventTime = Time.time + UnityEngine.Random.Range(growTime, growTime + randomGrowTimeRange); //Set the next event time value
             ReplaceTree((TreeType)newType);
