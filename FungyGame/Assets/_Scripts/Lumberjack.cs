@@ -133,8 +133,8 @@ public class Lumberjack : MonoBehaviour
     {
         if (_targetHex.Fungi != null)
             Destroy(_targetHex.Fungi.gameObject);
-        if (_targetHex._infection != null)
-            Destroy(_targetHex._infection.gameObject);
+        if (_targetHex.TreeInfection != null)
+            Destroy(_targetHex.TreeInfection.gameObject);
         if (_targetHex.HexTree != null)
             Destroy(_targetHex.HexTree.gameObject);
 

@@ -40,7 +40,7 @@ public class Hexagon : MonoBehaviour
 
     private TreeState State;
     public TreeType Type;
-    public Fungi _infection; // tree infection
+    public Fungi TreeInfection; // tree infection
     public Fungi Fungi; // hexagon infection
     public float growTime = 10f;
     public float randomGrowTimeRange = 5f;
@@ -96,9 +96,9 @@ public class Hexagon : MonoBehaviour
             {
                 CheckState();
             }
-            if (_infection != null)
+            if (TreeInfection != null)
             {
-                var infection = _infection;
+                var infection = TreeInfection;
                 if (infection.IsAtMaxStage)
                 {
                     Debug.Log("Tree should be dead");
@@ -118,9 +118,9 @@ public class Hexagon : MonoBehaviour
         {
             updateFungi(Fungi);
         }
-        if (_infection)
+        if (TreeInfection)
         {
-            updateFungi(_infection);
+            updateFungi(TreeInfection);
         }
     }
 
@@ -186,7 +186,7 @@ public class Hexagon : MonoBehaviour
             GameObject treeInfect = Instantiate(_treeInfectPrefab, _HexTree.transform.position + new Vector3(0f, 0f, 0.01f), _HexTree.transform.rotation) as GameObject;
             treeInfect.transform.parent = _HexTree.transform;
             _HexTree.occupiedHexagon.Fungi.reset();
-            _infection = treeInfect.GetComponent<Fungi>();
+            TreeInfection = treeInfect.GetComponent<Fungi>();
             State = TreeState.Infected;
         
             GridManager.instance.UserInteraction.updateView();
