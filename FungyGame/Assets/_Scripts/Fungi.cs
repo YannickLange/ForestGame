@@ -4,12 +4,13 @@ using System.Collections.Generic;
 
 public class Fungi : MonoBehaviour
 {
+    //Configuration
     public string tileSheetName = "fungusTest";
-    private float timer = 0f;
     public float maxTimer = 10f;
-    private int lastStage = -1;
-    public int stage = 0;
     public Sprite[] stageSprites;
+    private int lastStage = -1;
+    private float timer = 0f;
+    private int stage = 0;
 
     //Cached components
     public SpriteRenderer spriteRenderer;
@@ -22,6 +23,11 @@ public class Fungi : MonoBehaviour
     }
 
     public bool IsAtMaxStage{ get { return stage == stageSprites.Length - 1; } }
+
+    public void reset()
+    {
+        timer = 0f;
+    }
 
     public void Update()
     {

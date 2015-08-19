@@ -167,7 +167,7 @@ public class Hexagon : MonoBehaviour
         {
             GameObject treeInfect = Instantiate(_treeInfectPrefab, _HexTree.transform.position + new Vector3(0f, 0f, 0.01f), _HexTree.transform.rotation) as GameObject;
             treeInfect.transform.parent = _HexTree.transform;
-            _HexTree.occupiedHexagon.Fungi.stage = 0;
+            _HexTree.occupiedHexagon.Fungi.reset();
             _infection = treeInfect.GetComponent<Fungi>();
             State = TreeState.Infected;
         

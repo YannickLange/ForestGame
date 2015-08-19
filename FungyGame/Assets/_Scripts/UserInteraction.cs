@@ -367,6 +367,6 @@ public class UserInteraction : MonoBehaviour
     {
         endHexagon.Fungi = Map.instance.CreateFungiOn(endHexagon);
         endHexagon.infected = true;
-        startHexChildScript.stage = 0;
+        startHexChildScript.reset();
     }
 }
