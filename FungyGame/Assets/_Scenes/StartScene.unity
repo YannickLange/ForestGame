@@ -116,10 +116,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: .941176474, b: .941176474, a: 1}
+  m_Color: {r: 0, g: 0, b: 0, a: 1}
   m_FontData:
     m_Font: {fileID: 12800000, guid: 380ffd57f60d28f4f9568503e80370ca, type: 3}
-    m_FontSize: 24
+    m_FontSize: 32
     m_FontStyle: 0
     m_BestFit: 0
     m_MinSize: 10
@@ -164,7 +164,7 @@ GameObject:
   - 222: {fileID: 148219384}
   - 114: {fileID: 148219383}
   m_Layer: 5
-  m_Name: Image (1)
+  m_Name: Background
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -185,7 +185,7 @@ RectTransform:
   m_AnchorMin: {x: .5, y: .5}
   m_AnchorMax: {x: .5, y: .5}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 800, y: 410}
+  m_SizeDelta: {x: 1152, y: 590.400024}
   m_Pivot: {x: .5, y: .5}
 --- !u!114 &148219383
 MonoBehaviour:
@@ -262,7 +262,7 @@ MonoBehaviour:
   m_UiScaleMode: 1
   m_ReferencePixelsPerUnit: 100
   m_ScaleFactor: 1
-  m_ReferenceResolution: {x: 800, y: 600}
+  m_ReferenceResolution: {x: 960, y: 540}
   m_ScreenMatchMode: 0
   m_MatchWidthOrHeight: 0
   m_PhysicalUnit: 3
@@ -439,10 +439,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: .941176474, b: .941176474, a: 1}
+  m_Color: {r: 0, g: 0, b: 0, a: 1}
   m_FontData:
     m_Font: {fileID: 12800000, guid: 380ffd57f60d28f4f9568503e80370ca, type: 3}
-    m_FontSize: 24
+    m_FontSize: 32
     m_FontStyle: 0
     m_BestFit: 0
     m_MinSize: 10
@@ -492,8 +492,8 @@ RectTransform:
   m_RootOrder: 3
   m_AnchorMin: {x: .5, y: .5}
   m_AnchorMax: {x: .5, y: .5}
-  m_AnchoredPosition: {x: 0, y: 50}
-  m_SizeDelta: {x: 281.399994, y: 36}
+  m_AnchoredPosition: {x: 0, y: 20}
+  m_SizeDelta: {x: 256, y: 59}
   m_Pivot: {x: .5, y: .5}
 --- !u!114 &487200966
 MonoBehaviour:
@@ -667,8 +667,8 @@ RectTransform:
   m_RootOrder: 4
   m_AnchorMin: {x: .5, y: .5}
   m_AnchorMax: {x: .5, y: .5}
-  m_AnchoredPosition: {x: 0, y: 4.5300003e-06}
-  m_SizeDelta: {x: 281.399994, y: 36}
+  m_AnchoredPosition: {x: 0, y: -50}
+  m_SizeDelta: {x: 256, y: 59}
   m_Pivot: {x: .5, y: .5}
 --- !u!114 &829697071
 MonoBehaviour:
@@ -760,7 +760,7 @@ GameObject:
   - 222: {fileID: 1212403580}
   - 114: {fileID: 1212403579}
   m_Layer: 5
-  m_Name: Image
+  m_Name: ButtonHolder
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -996,8 +996,8 @@ RectTransform:
   m_RootOrder: 2
   m_AnchorMin: {x: .5, y: .5}
   m_AnchorMax: {x: .5, y: .5}
-  m_AnchoredPosition: {x: 1, y: 100}
-  m_SizeDelta: {x: 281.399994, y: 36}
+  m_AnchoredPosition: {x: 1, y: 90}
+  m_SizeDelta: {x: 256, y: 59}
   m_Pivot: {x: .5, y: .5}
 --- !u!1 &1826033271
 GameObject:
@@ -1045,10 +1045,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: .941176474, b: .941176474, a: 1}
+  m_Color: {r: 0, g: 0, b: 0, a: 1}
   m_FontData:
     m_Font: {fileID: 12800000, guid: 380ffd57f60d28f4f9568503e80370ca, type: 3}
-    m_FontSize: 24
+    m_FontSize: 32
     m_FontStyle: 0
     m_BestFit: 0
     m_MinSize: 10
