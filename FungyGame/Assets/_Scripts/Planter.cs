@@ -26,6 +26,7 @@ public class Planter : MonoBehaviour
     {
         _thisTransform = transform;
         _rb = GetComponent<Rigidbody>();
+        isPlanterWaiting = false;
     }
 
     public void Spawn()

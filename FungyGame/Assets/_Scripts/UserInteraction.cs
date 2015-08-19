@@ -12,7 +12,7 @@ public class UserInteraction : MonoBehaviour
         StartedMoving,
         StartedDragging
     }
-    private Hexagon startHexagon, endHexagon;
+    private Hexagon startHexagon, endHexagon, previousHexagon;
     private Fungi startHexChildScript;
     private Hexagon _prevHexagon = null;
     private UserInteractionState userInteractionState = UserInteractionState.Idle;
@@ -34,12 +34,26 @@ public class UserInteraction : MonoBehaviour
         {
             if (hit.collider.tag == "Hexagon")
             {
-                var hoveredHexagon = hit.collider.gameObject.GetComponent<Hexagon>();
-                
+                Hexagon hoveredHexagon = hit.collider.gameObject.GetComponent<Hexagon>();
+                if (NGO.ProtectionSelection)
+                {
+                    if (hoveredHexagon.Fungi != null)
+                        hoveredHexagon.HexagonRenderer.material = ResourcesManager.instance.HexWhiteBorders;
+                    if (previousHexagon != null && previousHexagon != hoveredHexagon)
+                        previousHexagon.HexagonRenderer.material = ResourcesManager.instance.HexNormalMaterial;
+                    previousHexagon = hoveredHexagon;
+                 }
+
                 //start the drag by pressing the screen
                 if (Input.GetMouseButton(0))
                 {
                     OnPressingHexagon(hoveredHexagon);
+
+                    //NGO placement:
+                    if(NGO.ProtectionSelection)
+                    {
+                        StartCoroutine(NGO.instance.PlaceNGO(hoveredHexagon));
+                    }
                 }
                 else
                 {//check to see if the finger left the screen

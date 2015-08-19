@@ -10,6 +10,7 @@ public class ResourcesManager : MonoBehaviour
     public Material HexPlanterTargetMat;
     public Material HexLumberjackTargetMat;
     public Material HexNGOTargetMat;
+    public Material HexWhiteBorders;
 
     public Material[] TreeMat;
 

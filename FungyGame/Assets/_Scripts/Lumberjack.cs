@@ -23,6 +23,7 @@ public class Lumberjack : MonoBehaviour
     {
         _thisTransform = transform;
         _rb = GetComponent<Rigidbody>();
+        isLumberjackWaiting = false;
     }
     public void Spawn()
     {
@@ -40,8 +41,10 @@ public class Lumberjack : MonoBehaviour
 
     private void SelectTarget()
     {
-        if (_targetHex != null)
+        if (_targetHex != null && _targetHex.ngo == null)
             _targetHex.isTarget = false;
+        /*if(_targetHex.ngo != null)
+            _targetHex.StopBlink*/
         List<Hexagon> fullHex = new List<Hexagon>();
         //1:Looking for a spot:
         for (int i = 0; i < Map.instance.Hexagons.Length; i++)
@@ -71,7 +74,7 @@ public class Lumberjack : MonoBehaviour
         Vector3 newPosition;
         while (sqrRemainingDistance > 1e-6)
         {
-            if(_targetHex.HexTree.Type == TreeType.DeadTree)
+            if(_targetHex.HexTree.Type == TreeType.DeadTree || _targetHex.ngo != null)
             {
                 SelectTarget();
             }

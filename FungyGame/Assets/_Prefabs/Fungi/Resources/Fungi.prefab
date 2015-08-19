@@ -58,7 +58,7 @@ MonoBehaviour:
   tileSheetName: fungiHexSheet
   timer: 0
   timerSpeedMultiplier: 1
-  maxTimer: 10
+  maxTimer: 2
   stage: 0
   maxStage: 6
 --- !u!212 &21248412
@@ -108,7 +108,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 0}
       propertyPath: maxTimer
-      value: 10
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 0}
       propertyPath: m_Sprite

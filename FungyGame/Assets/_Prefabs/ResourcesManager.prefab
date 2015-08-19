@@ -49,6 +49,7 @@ MonoBehaviour:
   HexLumberjackTargetMat: {fileID: 2100000, guid: f78d001e2bc48234bac8a04bc42222c1,
     type: 2}
   HexNGOTargetMat: {fileID: 2100000, guid: b05c70ae31e13574e9d26b399a4526c7, type: 2}
+  HexWhiteBorders: {fileID: 2100000, guid: ecc4ada07e9c33148b4350d6c3ae8247, type: 2}
   TreeMat:
   - {fileID: 0}
   - {fileID: 0}

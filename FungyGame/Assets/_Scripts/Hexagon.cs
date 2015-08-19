@@ -8,7 +8,19 @@ public delegate void HexagonEventHandler(object sender,EventArgs e,int clickID);
 public class Hexagon : MonoBehaviour
 {
     public bool infected { get; set; }
-    public NGO ngo { get; set; }
+    private NGO _ngo;
+    public NGO ngo
+    {
+        get
+        {
+            return _ngo;
+        }
+        set
+        {
+            _ngo = value;
+            HexagonRenderer.material = ResourcesManager.instance.HexNormalMaterial;
+        }
+    }
     public enum SelectionState
     {
         NotSelected,
@@ -102,10 +114,10 @@ public class Hexagon : MonoBehaviour
             {
                 _renderer.material = ResourcesManager.instance.HexValidSurroundingMaterial;
             }
-            else
+            /*else
             {
                 _renderer.material = ResourcesManager.instance.HexInvalidSurroundingMaterial;
-            }
+            }*/
         }
         else
         {

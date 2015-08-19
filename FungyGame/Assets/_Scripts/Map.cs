@@ -12,6 +12,12 @@ public class Map : MonoBehaviour
     //private array of hexagons
     private Hexagon[] _hexagons;
     public int MinimumSpawnTrees = 1;
+
+    public float Plantertimer = 0f;
+    public float Lumberjacktimer = 0f;
+    public float NGOtimer = 0f;
+    public float timerSpeedMultiplier = 1f;
+
     //Readonly hexagons
     public Hexagon[] Hexagons
     {
@@ -22,17 +28,17 @@ public class Map : MonoBehaviour
     }
 
     //Spawner variables
-    public float _planterNextSpawn = 6f;
-    public float _planterRndUp = 7f;
-    public float _planterRndDown = 10f;
+    public float _planterSpawn = 20f;
+    public float _planterRndUp = 10f;
+    public float _planterRndDown = 30f;
 
-    public float _lumberjackNextSpawn = 4f;
-    public float _lumberjackRndUp = 7f;
-    public float _lumberjackRndDown = 10f;
+    public float _lumberjackSpawn = 20f;
+    public float _lumberjackRndUp = 10f;
+    public float _lumberjackRndDown = 30f;
 
-    public float _NGONextSpawn = 4f;
-    public float _NGORndUp = 7f;
-    public float _NGORndDown = 10f;
+    public float _NGOSpawn = 20f;
+    public float _NGORndUp = 10f;
+    public float _NGORndDown = 30f;
     //Map singleton
     public static Map instance = null;
 
@@ -58,11 +64,11 @@ public class Map : MonoBehaviour
         //DontDestroyOnLoad(gameObject);
 
         _planter = GameObject.Find("Planters").transform;
-        _planterNextSpawn = 6f;
+        _planterSpawn = Random.Range(_planterRndDown, _planterRndUp);
         _lumberjack = GameObject.Find("Lumberjacks").transform;
-        _planterNextSpawn = 4f;
+        _lumberjackSpawn = Random.Range(_lumberjackRndDown, _lumberjackRndUp);
         _ngo = GameObject.Find("NGO").transform;
-        _planterNextSpawn = 4f;
+        _NGOSpawn = Random.Range(_NGORndDown, _NGORndUp);
     }
 
     void Start()
@@ -83,7 +89,7 @@ public class Map : MonoBehaviour
         fungiObject.transform.parent = hex.gameObject.transform;
         //NGO checking
         if (hex.ngo != null)
-            StartCoroutine(hex.ngo.StartProtecting());
+            StartCoroutine(hex.ngo.PickupNGO());
     }
 
     public void SpawnFungi(Hexagon hex)
@@ -153,64 +159,49 @@ public class Map : MonoBehaviour
 
     void Update()
     {
+        #region Timer
+        Plantertimer += 1f * Time.deltaTime * timerSpeedMultiplier;
+        NGOtimer += 1f * Time.deltaTime * timerSpeedMultiplier;
+        Lumberjacktimer += 1f * Time.deltaTime * timerSpeedMultiplier;
+        #endregion
         #region Planter
-        if(Time.time > _planterNextSpawn && !Planter.isPlanterWaiting)
+        if (Plantertimer >= _planterSpawn && !Planter.isPlanterWaiting)
         {
-            _planterNextSpawn = Time.time + Mathf.Exp(Random.Range(_planterRndDown, _planterRndUp));
-            _planterRndDown -= 0.2f;
-            if (_planterRndDown <= 0)
-                _planterRndDown = 2.6f;
-            _planterRndUp -= 0.2f;
-            if (_planterRndUp <= 0)
-                _planterRndUp = 4f;
-
+            Plantertimer = 0f;
+            _planterSpawn = Random.Range(_planterRndDown, _planterRndUp);
 
             GameObject planter = Instantiate(ResourcesManager.instance.Planter) as GameObject;
             planter.transform.SetParent(_planter);
             planter.GetComponent<Planter>().Spawn();
         }
-        else if(Planter.isPlanterWaiting)
-            _planterNextSpawn = Time.time + Mathf.Exp(Random.Range(_planterRndDown, _planterRndUp));
+        else if (Planter.isPlanterWaiting)
+            Plantertimer = 0f;
 
         #endregion
         #region Lumberjack
-        if (Time.time > _lumberjackNextSpawn && !Lumberjack.isLumberjackWaiting)
+        if (Lumberjacktimer >= _lumberjackSpawn && !Lumberjack.isLumberjackWaiting)
         {
-            _lumberjackNextSpawn = Time.time + Mathf.Exp(Random.Range(_lumberjackRndDown, _lumberjackRndUp));
-            _lumberjackRndDown -= 0.2f;
-            if (_lumberjackRndDown <= 0)
-                _lumberjackRndDown = 2.2f;
-            _lumberjackRndUp -= 0.2f;
-            if (_lumberjackRndUp <= 0)
-                _lumberjackRndUp = 3.8f;
-
+            _lumberjackSpawn = Random.Range(_lumberjackRndDown, _lumberjackRndUp);
 
             GameObject lumberjack = Instantiate(ResourcesManager.instance.Lumberjack) as GameObject;
             lumberjack.transform.SetParent(_lumberjack);
             lumberjack.GetComponent<Lumberjack>().Spawn();
         }
-        else if(Lumberjack.isLumberjackWaiting)
-            _lumberjackNextSpawn = Time.time + Mathf.Exp(Random.Range(_lumberjackRndDown, _lumberjackRndUp));
+        else if (Lumberjack.isLumberjackWaiting)
+            Lumberjacktimer = 0f;
         #endregion
 
         #region NGO
-        if (Time.time > _NGONextSpawn && !NGO.isNGOWaiting)
+        if (NGOtimer > _NGOSpawn && !NGO.isNGOWaiting)
         {
-            _NGONextSpawn = Time.time + Mathf.Exp(Random.Range(_lumberjackRndDown, _lumberjackRndUp));
-            _NGORndDown -= 0.2f;
-            if (_NGORndDown <= 0)
-                _NGORndDown = 2.2f;
-            _NGORndUp -= 0.2f;
-            if (_NGORndUp <= 0)
-                _NGORndUp = 3.8f;
-
+            _NGOSpawn = Random.Range(_NGORndDown, _NGORndUp);
 
             GameObject ngo = Instantiate(ResourcesManager.instance.NGO) as GameObject;
             ngo.transform.SetParent(_ngo);
             ngo.GetComponent<NGO>().Spawn();
         }
-        else if(NGO.isNGOWaiting)
-            _NGONextSpawn = Time.time + Mathf.Exp(Random.Range(_lumberjackRndDown, _lumberjackRndUp));
+        else if (NGO.isNGOWaiting)
+            NGOtimer= 0f;
         #endregion
     }
 
