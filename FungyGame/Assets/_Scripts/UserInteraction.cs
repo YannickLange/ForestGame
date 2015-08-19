@@ -105,7 +105,7 @@ public class UserInteraction : MonoBehaviour
     
     private bool isInfectButtonActive(Hexagon selectedHexagon)
     {
-        return selectedHexagon != null && userInteractionState == UserInteractionState.HexagonSelected && selectedHexagon.canInfectTree();
+        return selectedHexagon != null && userInteractionState == UserInteractionState.HexagonSelected && selectedHexagon.TreeIsInfectable;
     }
     
     UserInteractionState _DEBUG_lastState = UserInteractionState.Idle;
@@ -252,6 +252,7 @@ public class UserInteraction : MonoBehaviour
     public void OnHexagonClickedEvent(object sender, EventArgs e, int clickID)
     {
         Hexagon hex = sender as Hexagon;
+        Debug.Log("hexstate: " + hex.HexState);
         switch (clickID)
         {
             case 0:

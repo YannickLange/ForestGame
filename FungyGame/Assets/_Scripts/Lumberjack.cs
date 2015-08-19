@@ -90,7 +90,7 @@ public class Lumberjack : MonoBehaviour
         yield return new WaitForSeconds(ChopActionTime / 2f);
         _targetHex.ChopTree();
         yield return new WaitForSeconds(ChopActionTime / 2f);
-        _targetHex.TakeDeadWoodAway();
+        _targetHex.TakeCuttedTreeAway();
         GetComponent<SpriteRenderer>().sprite = LumberjackWithLog;
         #endregion
 
