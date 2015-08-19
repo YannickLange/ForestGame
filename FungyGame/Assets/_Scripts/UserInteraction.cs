@@ -365,7 +365,7 @@ public class UserInteraction : MonoBehaviour
     
     public void EndDrag(Hexagon endHexagon)
     {
-        endHexagon.TileInfection = Map.instance.CreateFungiOn(endHexagon);
+        endHexagon.addTileInfectingFungi();
         startHexChildScript.reset();
     }
 }

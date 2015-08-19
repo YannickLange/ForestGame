@@ -21,11 +21,7 @@ public class TreeGenerator
             if (Random.value <= density)
             {
                 int treetype = Random.Range(0, ResourcesManager.instance.TreeTypes.Length - 2);
-                GameObject tree = GameObject.Instantiate(ResourcesManager.instance.TreeTypes[treetype], Map.instance.Hexagons[i].transform.position, Quaternion.identity) as GameObject;
-                tree.transform.parent = Forest.transform;
-                Map.instance.Hexagons[i].HexTree = tree.GetComponent<TreeClass>();
-                Map.instance.Hexagons[i].Type = (TreeType)treetype;
-                tree.GetComponent<TreeClass>().occupiedHexagon = Map.instance.Hexagons[i];
+                Map.instance.Hexagons[i].ReplaceTree((TreeType)treetype);
             }
         }
         //TODO: minimum amount of trees
@@ -33,9 +29,7 @@ public class TreeGenerator
 
     public static void SpawnSapling(Hexagon hex)
     {
-        GameObject tree = GameObject.Instantiate(ResourcesManager.instance.TreeTypes[0], hex.transform.position, Quaternion.identity) as GameObject;
-        tree.transform.parent = GameObject.Find("Forest").transform;
-        hex.HexTree = tree.GetComponent<TreeClass>();
+        hex.ReplaceTree(TreeType.Sapling);
     }
 
 

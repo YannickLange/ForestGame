@@ -138,8 +138,7 @@ public class Lumberjack : MonoBehaviour
         if (_targetHex.HexTree != null)
             Destroy(_targetHex.HexTree.gameObject);
 
-        _targetHex.TileInfection = null;
-        _targetHex.HexTree = null;
+        _targetHex.ReplaceTree(TreeType.CutTree);
         GridManager.instance.Meter.Forest(5);
     }
 }

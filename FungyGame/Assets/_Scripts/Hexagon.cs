@@ -5,13 +5,6 @@ using System;
 
 public delegate void HexagonEventHandler(object sender,EventArgs e,int clickID);
 
-public enum TreeState
-{
-    Alive,
-    Infected,
-    Dead
-}
-
 public enum TreeType
 {
     Sapling = 0,
@@ -25,10 +18,13 @@ public enum TreeType
 public enum HexagonState
 {
     Empty,
+    WithCutTree,
     WithSapling,
     WithTree,
+    WithDeadWood,
     WithSaplingAndFungi,
     WithTreeAndFungi,
+    WithCurrentlyInfectingTreeAndFungi,
     WithDeadWoodAndFungi
 }
 
@@ -42,18 +38,21 @@ public class Hexagon : MonoBehaviour
     public Fungi TreeInfection; // tree infection
     public Fungi TileInfection; // hexagon infection
 
-    private TreeState State;
     private float growTime = 10f;
     private float randomGrowTimeRange = 5f;
     private float _nextEventTime = 0f;
 
     //cached components
+    private GameObject _tileInfectPrefab;
     private GameObject _treeInfectPrefab;
     private NGO _ngo;
+    private SelectionState _currentSelectionState = SelectionState.NotSelected;
+
+    public bool HasInfectableTree { get { return HasTree && (Type == TreeType.BigTree || Type == TreeType.DeadTree || Type == TreeType.SmallTree); } }
 
     public bool canInfectTree()
     {
-        return HexagonContainsFungus && State == TreeState.Alive && (Type == TreeType.BigTree || Type == TreeType.DeadTree || Type == TreeType.SmallTree) && HexTree != null && TileInfection.IsAtMaxStage;
+        return HexagonContainsFungus && HasInfectableTree && TileInfection != null && TileInfection.IsAtMaxStage;
     }
 
     public bool HexagonContainsFungus    { get { return (TileInfection != null); } }
@@ -76,8 +75,6 @@ public class Hexagon : MonoBehaviour
         IsSelected
     }
 
-    private SelectionState _currentSelectionState = SelectionState.NotSelected;
-
     public SelectionState CurrentSelectionState
     {
         get { return _currentSelectionState; }
@@ -87,30 +84,92 @@ public class Hexagon : MonoBehaviour
             updateMaterial();
         }
     }
+
+    bool HasTree
+    {
+        get
+        {
+            switch (HexState)
+            {
+                case HexagonState.WithSapling:
+                case HexagonState.WithTree:
+                case HexagonState.WithSaplingAndFungi:
+                case HexagonState.WithTreeAndFungi:
+                case HexagonState.WithCurrentlyInfectingTreeAndFungi:
+                    return true;
+                case HexagonState.WithDeadWood:
+                case HexagonState.WithCutTree:
+                case HexagonState.WithDeadWoodAndFungi:
+                case HexagonState.Empty:
+                    return false;
+                default:
+                    Debug.Assert(false);
+                    return false;
+            }
+        }
+    }
+
+    void OnTreeInfectionAtMax()
+    {
+        switch (HexState)
+        {
+            case HexagonState.Empty:
+            case HexagonState.WithSapling:
+            case HexagonState.WithTree:
+            case HexagonState.WithSaplingAndFungi:
+            case HexagonState.WithDeadWoodAndFungi:
+            case HexagonState.WithTreeAndFungi:
+            case HexagonState.WithCutTree:
+            case HexagonState.WithDeadWood:
+                Debug.Assert(false, "unexpected state");
+                break;
+            case HexagonState.WithCurrentlyInfectingTreeAndFungi:
+                ReplaceTree(TreeType.DeadTree);
+                break;
+        }
+    }
     
-    void Update()
+    private void removeTileInfection()
+    {
+        if (TileInfection != null)
+        {
+            Destroy(TileInfection.gameObject);
+            TileInfection = null;
+        }
+    }
+    
+    private void removeTreeInfection()
+    {
+        if (TreeInfection != null)
+        {
+            Debug.Log("removeTreeInfection: " + HexState);
+            Destroy(TreeInfection.gameObject);
+            TreeInfection = null;
+        }
+    }
+    
+    private void removeTree()
     {
         if (_HexTree != null)
         {
-            CheckState();
-            if (TreeInfection != null)
+            Destroy(HexTree.gameObject);
+            _HexTree = null;
+        }
+    }
+
+    void Update()
+    {
+        if (HasTree)
+        {
+            if (Time.time >= _nextEventTime)
             {
-                var infection = TreeInfection;
-                if (infection.IsAtMaxStage)
-                {
-                    Debug.Log("Tree should be dead");
-                
-                    ReplaceTree(TreeType.DeadTree);
-                    //Does not do anything, just here for completion sake
-                    State = TreeState.Dead;
-                    //End of useless code
-                    Debug.Log(_HexTree);
-                    Debug.Log(infection);
-                    Debug.Log(infection.gameObject);
-                    Destroy(infection.gameObject);
-                }
+                GrowTree();
             }
         }
+
+        if (TreeInfection != null && TreeInfection.IsAtMaxStage)
+            OnTreeInfectionAtMax();
+
         if (HexagonContainsFungus && _HexTree != null)
         {
             updateFungi(TileInfection);
@@ -118,6 +177,29 @@ public class Hexagon : MonoBehaviour
         if (TreeInfection)
         {
             updateFungi(TreeInfection);
+        }
+        
+        switch (HexState)
+        {
+            case HexagonState.Empty:
+                removeTree();
+                removeTileInfection();
+                removeTreeInfection();
+                break;
+            case HexagonState.WithSapling:
+            case HexagonState.WithTree:
+            case HexagonState.WithCutTree:
+            case HexagonState.WithDeadWood:
+                removeTileInfection();
+                removeTreeInfection();
+                break;
+            case HexagonState.WithSaplingAndFungi:
+            case HexagonState.WithDeadWoodAndFungi:
+            case HexagonState.WithTreeAndFungi:
+                removeTreeInfection();
+                break;
+            case HexagonState.WithCurrentlyInfectingTreeAndFungi:
+                break;
         }
     }
 
@@ -133,25 +215,6 @@ public class Hexagon : MonoBehaviour
             speed = 1 + 0.5f + (UnityEngine.Random.value / 2);
         }
         fungi.advanceGrowth(speed);
-    }
-    
-    public void CheckState()
-    {
-        if (_HexTree != null)
-        {
-            switch (State)
-            {
-                case TreeState.Alive:
-                    if (Time.time >= _nextEventTime)
-                    {
-                        GrowTree();
-                    }
-                    break;
-            }
-        } else
-        {
-            Debug.Log("should not get here");
-        }
     }
     
     /// <summary>
@@ -178,46 +241,94 @@ public class Hexagon : MonoBehaviour
     
     public void InfectTree()
     {
-        if (_HexTree != null)
+        switch (HexState)
         {
-            GameObject treeInfect = Instantiate(_treeInfectPrefab, _HexTree.transform.position + new Vector3(0f, 0f, 0.01f), _HexTree.transform.rotation) as GameObject;
-            treeInfect.transform.parent = _HexTree.transform;
-            _HexTree.occupiedHexagon.TileInfection.reset();
-            TreeInfection = treeInfect.GetComponent<Fungi>();
-            State = TreeState.Infected;
-        
-            GridManager.instance.UserInteraction.updateView();
-        } else
-        {
-            Debug.Log("should not get here");
+            case HexagonState.WithCutTree:
+            case HexagonState.Empty:
+            case HexagonState.WithSapling:
+            case HexagonState.WithTree:
+            case HexagonState.WithSaplingAndFungi:
+            case HexagonState.WithDeadWoodAndFungi:
+            case HexagonState.WithCurrentlyInfectingTreeAndFungi:
+            case HexagonState.WithDeadWood:
+                Debug.Assert(false, "unexpected state");
+                break;
+            case HexagonState.WithTreeAndFungi:
+                addTreeInfectingFungi();
+
+                GridManager.instance.UserInteraction.updateView();
+                _HexState = HexagonState.WithCurrentlyInfectingTreeAndFungi;
+                break;
         }
     }
     
     public void ReplaceTree(TreeType newType)
     {
-        if (_HexTree != null)
+        //create the new tree
+        TreeClass tree = (Instantiate(ResourcesManager.instance.TreeTypes [(int)newType], transform.position, transform.rotation) as GameObject).GetComponent<TreeClass>();
+        //Make the forest the parent
+        tree.transform.parent = GameObject.Find("Forest").transform;
+        //Make sure the hexagon and the tree now know their significant other
+        var oldTree = _HexTree;
+        _HexTree = tree;
+        Type = newType;
+
+        //destroy the original
+        if (oldTree != null)
         {
-            //create the new tree
-            GameObject tree = Instantiate(ResourcesManager.instance.TreeTypes[(int)newType], _HexTree.gameObject.transform.position, _HexTree.gameObject.transform.rotation) as GameObject;
-            TreeClass newTreeClassScript = tree.GetComponent<TreeClass>();
-            //Make the forest the parent
-            tree.transform.parent = GameObject.Find("Forest").transform;
-            //Make sure the hexagon and the tree now know their significant other
-            newTreeClassScript.occupiedHexagon = this;
-            var oldTree = _HexTree;
-            _HexTree = newTreeClassScript;
-            State = TreeState.Alive;
-            Type = newType;
-            if (newType == TreeType.DeadTree)
-                GridManager.instance.Meter.Fungus(5);
-            //destroy the original
-            GameObject.Destroy(oldTree.gameObject);
-        
-            GridManager.instance.UserInteraction.updateView();
-        } else
-        {
-            Debug.Log("should not get here");
+            Debug.Log("destroy old tree: " + oldTree);
+            Destroy(oldTree.gameObject);
         }
+
+        switch (HexState)
+        {
+            case HexagonState.Empty:
+            case HexagonState.WithCutTree:
+            case HexagonState.WithSapling:
+            case HexagonState.WithTree:
+            case HexagonState.WithDeadWood:
+                switch (newType)
+                {
+                    case TreeType.Sapling:
+                        _HexState = HexagonState.WithSapling;
+                        break;
+                    case TreeType.SmallTree:
+                    case TreeType.BigTree:
+                        _HexState = HexagonState.WithTree;
+                        break;
+                    case TreeType.DeadTree:
+                        _HexState = HexagonState.WithDeadWood;
+                        GridManager.instance.Meter.Fungus(5);
+                        break;
+                    case TreeType.CutTree:
+                        _HexState = HexagonState.Empty;
+                        break;
+                }
+                break;
+            case HexagonState.WithSaplingAndFungi:
+            case HexagonState.WithDeadWoodAndFungi:
+            case HexagonState.WithCurrentlyInfectingTreeAndFungi:
+            case HexagonState.WithTreeAndFungi:
+                switch (newType)
+                {
+                    case TreeType.Sapling:
+                        _HexState = HexagonState.WithSaplingAndFungi;
+                        break;
+                    case TreeType.SmallTree:
+                    case TreeType.BigTree:
+                        _HexState = HexagonState.WithTreeAndFungi;
+                        break;
+                    case TreeType.DeadTree:
+                        _HexState = HexagonState.WithDeadWoodAndFungi;
+                        GridManager.instance.Meter.Fungus(5);
+                        break;
+                    case TreeType.CutTree:
+                        _HexState = HexagonState.Empty;
+                        break;
+                }
+                break;
+        }
+        GridManager.instance.UserInteraction.updateView();
     }
 
     public bool isAdjacentToSelectedHexagon()
@@ -338,20 +449,45 @@ public class Hexagon : MonoBehaviour
     public TreeClass HexTree
     {
         get{ return _HexTree;}
-        set
+    }
+
+    private Fungi CreateFungi(GameObject prefab)
+    {
+        GameObject fungiObject = Instantiate(prefab, transform.position + new Vector3(0, 0.001f, 0), Quaternion.LookRotation(Vector3.up * 90)) as GameObject;
+        fungiObject.transform.parent = gameObject.transform;
+        //NGO checking
+        if (ngo != null)
+            StartCoroutine(ngo.PickupNGO());
+        
+        return fungiObject.GetComponent<Fungi>();
+    }
+
+    public void addTreeInfectingFungi()
+    {
+        TreeInfection = CreateFungi(_treeInfectPrefab);
+    }
+    
+    public void addTileInfectingFungi()
+    {
+        TileInfection = CreateFungi(_tileInfectPrefab);
+        
+        switch (HexState)
         {
-            if (_HexTree != value)
-            {
-                if (_HexTree)
-                { //remove from from old
-                    _HexTree.occupiedHexagon = null;
-                }
-                _HexTree = value;
-                if (_HexTree)
-                { //add to new hexagon
-                    _HexTree.occupiedHexagon = this;
-                }
-            }
+            case HexagonState.WithCutTree:
+            case HexagonState.Empty:
+            case HexagonState.WithCurrentlyInfectingTreeAndFungi:
+            case HexagonState.WithDeadWood:
+            case HexagonState.WithSaplingAndFungi:
+            case HexagonState.WithDeadWoodAndFungi:
+            case HexagonState.WithTreeAndFungi:
+                Debug.Assert(false, "unexpected state: " + HexState);
+                break;
+            case HexagonState.WithSapling:
+                _HexState = HexagonState.WithSaplingAndFungi;
+                break;
+            case HexagonState.WithTree:
+                _HexState = HexagonState.WithTreeAndFungi;
+                break;
         }
     }
 
@@ -362,6 +498,7 @@ public class Hexagon : MonoBehaviour
     void Awake()
     {
         _treeInfectPrefab = (GameObject)Resources.Load("InfectLoadingBar");
+        _tileInfectPrefab = (GameObject)Resources.Load("Fungi");
         _renderer = GetComponent<Renderer>();
         isTarget = false;
         _nextEventTime = Time.time + UnityEngine.Random.Range(growTime, growTime + randomGrowTimeRange);

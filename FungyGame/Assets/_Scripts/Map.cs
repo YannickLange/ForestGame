@@ -7,7 +7,6 @@ using System;
 public class Map : MonoBehaviour
 {
     //<<<<<<<<<<<<<<<<<<
-    public GameObject fungi;
     private TreeGenerator treeGenerator;
     //private array of hexagons
     private Hexagon[] _hexagons;
@@ -85,17 +84,6 @@ public class Map : MonoBehaviour
         SpawnFungi(_hexagons[rand]);
     }
 
-    public Fungi CreateFungiOn(Hexagon hex)
-    {
-        GameObject fungiObject = Instantiate(fungi, hex.transform.position + new Vector3(0, 0.001f, 0), Quaternion.LookRotation(Vector3.up * 90)) as GameObject;
-        fungiObject.transform.parent = hex.gameObject.transform;
-        //NGO checking
-        if (hex.ngo != null)
-            StartCoroutine(hex.ngo.PickupNGO());
-
-        return fungiObject.GetComponent<Fungi>();
-    }
-
     public void SpawnFungi(Hexagon hex)
     {
         //get all the surrounding hexagons that contains a tree
@@ -103,7 +91,7 @@ public class Map : MonoBehaviour
         //If there's one or more tile with a tree on it
         if (treesTiles.Count > MinimumSpawnTrees)
         {
-            hex.TileInfection = CreateFungiOn(hex);
+            hex.addTileInfectingFungi();
         } else
         {
             //remove the spawned one
@@ -115,13 +103,13 @@ public class Map : MonoBehaviour
                 treesTiles = GetAccessibleTiles(Hexagons[i]);
                 if (treesTiles.Count > MinimumSpawnTrees)
                 {
-                    Hexagons[i].TileInfection = CreateFungiOn(Hexagons[i]);
+                    Hexagons[i].addTileInfectingFungi();
                     return;
                 }
             }
             //Spawn a new tree
             List<Hexagon> surroundingTiles = GetSurroundingTiles(hex);
-            hex.TileInfection = CreateFungiOn(hex);
+            hex.addTileInfectingFungi();
             int count = MinimumSpawnTrees - treesTiles.Count;
             for (int i = 0; i < surroundingTiles.Count; i ++)
             {
