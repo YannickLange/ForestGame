@@ -33,9 +33,6 @@ public class Hexagon : MonoBehaviour
             HexagonRenderer.material = ResourcesManager.instance.HexNormalMaterial;
         }
     }
-            HexagonRenderer.material = ResourcesManager.instance.HexNormalMaterial;
-        }
-    }
     public enum SelectionState
     {
         NotSelected,
@@ -240,7 +237,7 @@ public class Hexagon : MonoBehaviour
             if (adjacentSelectedHexagon.isAbleToMoveAwayFrom() && isAccessible())
             {
                 _renderer.material = ResourcesManager.instance.HexValidSurroundingMaterial;
-            } else
+            } //else
             /*else
             {
                 _renderer.material = ResourcesManager.instance.HexInvalidSurroundingMaterial;
