@@ -42,6 +42,7 @@ public class Planter : MonoBehaviour
         if (emptyHex.Count == 0)
         {
             Destroy(gameObject);
+            _targetHex.ShowOverTile(false, new Color());
             return;
         }
 
@@ -49,7 +50,7 @@ public class Planter : MonoBehaviour
         _targetHex.isTarget = true;
         _targetTr = _targetHex.transform;
         //Highlight the hexgon
-        StartCoroutine(_targetHex.FlashHexagon(new Color32(1,71,99,255)));
+        _targetHex.StartCoroutine(_targetHex.FlashHexagon(new Color32(1,71,99,255)));
 
         //2:Looking for the spawn hexagon
         _spawnHex = Map.instance.HexBorders[Random.Range(0, Map.instance.HexBorders.Length)];
@@ -57,7 +58,7 @@ public class Planter : MonoBehaviour
         //4:Enable the movement
         transform.position = _spawnHex.transform.position;
 
-        StartCoroutine(MovePlanter());
+        _targetHex.StartCoroutine(MovePlanter());
     }
 
     private IEnumerator MovePlanter()
@@ -115,6 +116,7 @@ public class Planter : MonoBehaviour
         _targetHex.HexagonRenderer.material = ResourcesManager.instance.HexNormalMaterial;
         isPlanterWaiting = false;
         Destroy(gameObject);
+        _targetHex.ShowOverTile(false, new Color());
         #endregion
     }
 

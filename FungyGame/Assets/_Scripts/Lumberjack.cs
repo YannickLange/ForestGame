@@ -55,7 +55,10 @@ public class Lumberjack : MonoBehaviour
                 fullHex.Add(Map.instance.Hexagons[i]);
         }
         if (fullHex.Count == 0)
+        {
             Destroy(gameObject);
+            _targetHex.ShowOverTile(false, new Color());
+        }
 
         _targetHex = fullHex[Random.Range(0, fullHex.Count)];
         _targetHex.isTarget = true;
@@ -126,6 +129,7 @@ public class Lumberjack : MonoBehaviour
         _targetHex.HexagonRenderer.material = ResourcesManager.instance.HexNormalMaterial;
         isLumberjackWaiting = false;
         Destroy(gameObject);
+        _targetHex.ShowOverTile(false, new Color());
         #endregion
     }
 }
