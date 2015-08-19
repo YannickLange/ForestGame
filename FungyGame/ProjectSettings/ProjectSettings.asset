@@ -72,14 +72,14 @@ PlayerSettings:
     16:9: 1
     Others: 1
   bundleIdentifier: se.miun.summerschool2015.fungygame
-  bundleVersion: 1.13
+  bundleVersion: 1.14
   preloadedAssets: []
   metroEnableIndependentInputSource: 0
   metroEnableLowLatencyPresentationAPI: 0
   xboxOneDisableKinectGpuReservation: 0
   virtualRealitySupported: 0
   productGUID: f89d16ac67bbfde4ebb7e3caddc00ba1
-  AndroidBundleVersionCode: 14
+  AndroidBundleVersionCode: 15
   AndroidMinSdkVersion: 9
   AndroidPreferredInstallLocation: 1
   aotOptions: 
@@ -137,6 +137,20 @@ PlayerSettings:
     m_Icons:
     - m_Icon: {fileID: 0}
       m_Size: 128
+  - m_BuildTarget: Android
+    m_Icons:
+    - m_Icon: {fileID: 2800000, guid: ca7ac18e1ce2b544fa3dd2c6335f80a9, type: 3}
+      m_Size: 192
+    - m_Icon: {fileID: 2800000, guid: 88a42f7d33e213843a01d6aa431aa24e, type: 3}
+      m_Size: 144
+    - m_Icon: {fileID: 2800000, guid: 1a07e9725d825a84ba28927b81efe063, type: 3}
+      m_Size: 96
+    - m_Icon: {fileID: 2800000, guid: df704c3f119008346872f5b7d750e1cd, type: 3}
+      m_Size: 72
+    - m_Icon: {fileID: 2800000, guid: ed44bd2cbcd12184cbf95c41cba6e690, type: 3}
+      m_Size: 48
+    - m_Icon: {fileID: 2800000, guid: 48572407bf5500b439170d959937d8b9, type: 3}
+      m_Size: 36
   m_BuildTargetBatching: []
   m_BuildTargetGraphicsAPIs: []
   webPlayerTemplate: APPLICATION:Default
@@ -256,7 +270,8 @@ PlayerSettings:
   psp2InfoBarColor: 0
   psmSplashimage: {fileID: 0}
   spritePackerPolicy: 
-  scriptingDefineSymbols: {}
+  scriptingDefineSymbols:
+    2: 
   metroPackageName: FungyGame
   metroPackageLogo: 
   metroPackageLogo140: 
