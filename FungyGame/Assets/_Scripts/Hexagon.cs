@@ -5,6 +5,9 @@ using System;
 
 public delegate void HexagonEventHandler(object sender,EventArgs e,int clickID);
 
+public enum TreeState { Alive, Infected, Dead };
+public enum TreeType { Sapling = 0, SmallTree = 1, BigTree = 2, DeadTree = 3, CutTree = 4 }; //DEADTREE must be last!
+
 public class Hexagon : MonoBehaviour
 {
     public TreeState State;
