@@ -55,27 +55,8 @@ public class Meter : MonoBehaviour {
         
         Indicator.transform.localPosition = new Vector2(-100 + aliveTreesSize, 0);
 
-        /*// GameOver
-        if(Indicator.transform.position.x <= -100 && Indicator.transform.position.y >= 100) {
-            //GameOver ();
-
+        if(aliveTrees <= 0) {
+            //GameOver();
         }
-
-        // worst ending
-        if(Indicator.transform.position.x > -100 && Indicator.transform.position.y < -80 || 
-           Indicator.transform.position.x > 80 && Indicator.transform.position.y < 100) {
-            
-        }
-
-        // semi ending
-        if(Indicator.transform.position.x > -80 && Indicator.transform.position.y < -10 || 
-           Indicator.transform.position.x > 10 && Indicator.transform.position.y < 80) {
-            
-        }
-
-        // good ending
-        if(Indicator.transform.position.x > -10 && Indicator.transform.position.y < 10) {
-            
-        }*/
     }
 }
