@@ -18,12 +18,10 @@ public class TreeClass : MonoBehaviour
     public GameObject _treeInfectPrefab;
 
     //Cached components
-    public TreeClass _treeClassScript;
     public Fungi _infection;
 
     void Awake()
     {
-        _treeClassScript = GetComponent<TreeClass>();
         _treeInfectPrefab = (GameObject)Resources.Load("InfectLoadingBar");
         _nextEventTime = Time.time + Random.Range(growTime, growTime + randomGrowTimeRange);
         _processStarted = true;
