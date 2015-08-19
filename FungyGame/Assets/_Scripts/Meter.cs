@@ -5,7 +5,8 @@ public class Meter : MonoBehaviour {
 
     private GameObject Indicator;
 
-    public Reset r = new Reset();
+    float fungusCount = 3;
+    float forestCount = 3;
 
     // Use this for initialization
     void Start () {
@@ -13,23 +14,54 @@ public class Meter : MonoBehaviour {
     }
 
     public void Forest (float dmg) {
-        Indicator.transform.position = new Vector2(Indicator.transform.position.x + dmg, 
-                                                   Indicator.transform.position.y);
+        ++forestCount;
     }
 
     public void Fungus (float dmg) {
-        Indicator.transform.position = new Vector2(Indicator.transform.position.x - dmg,
-                                                   Indicator.transform.position.y);
+        ++fungusCount;
     }
 
     void Update () {
-        // GameOver
-        if(Indicator.transform.position.x <= -100 && Indicator.transform.position.y >= 100) {
-            //GameOver ();
-            r.PressReset();
+        /*float totalAverage = 200 / (forestCount + fungusCount);
+        float choppedWood = forestCount * totalAverage;
+        float infectWood = fungusCount * totalAverage;
+
+        Indicator.transform.position = new Vector2(infectWood, Indicator.transform.position.y);
+
+        if(infectWood >= 80f) {
+            //GameOver();
+        }
+*/
+        
+
+        float aliveTrees = 0;
+        float totalTrees = 0; 
+
+        foreach (var hexagon in Map.instance.Hexagons)
+        {
+            //Debug.Log(hexagon.HexTree);
+            if (hexagon.HexTree != null)
+            {
+                ++totalTrees;
+                if (hexagon.HexTree.State == TreeState.Alive)
+                {
+                    ++aliveTrees;
+                }
+            }
         }
 
-        /*// worst ending
+        float unitSize = 200f / totalTrees; // divides by 200
+        float aliveTreesSize = aliveTrees * unitSize;
+        
+        Indicator.transform.localPosition = new Vector2(-100 + aliveTreesSize, 0);
+
+        /*// GameOver
+        if(Indicator.transform.position.x <= -100 && Indicator.transform.position.y >= 100) {
+            //GameOver ();
+
+        }
+
+        // worst ending
         if(Indicator.transform.position.x > -100 && Indicator.transform.position.y < -80 || 
            Indicator.transform.position.x > 80 && Indicator.transform.position.y < 100) {
             

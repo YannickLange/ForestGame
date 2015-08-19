@@ -131,7 +131,11 @@ public class Lumberjack : MonoBehaviour
         if (_targetHex.Fungi != null)
             GameObject.Destroy(_targetHex.Fungi.gameObject);
         _targetHex.HexTree = null;
-            GridManager.instance.Meter.Forest(5);
+<<<<<<< HEAD
+        GridManager.instance.Meter.Forest(5);
+=======
         _targetHex.infected = false;
+        GridManager.instance.Meter.Forest(2);
+>>>>>>> 4951c96e09375349ec45359c6e37dfac27624ce5
     }
 }
