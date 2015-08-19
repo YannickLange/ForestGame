@@ -71,7 +71,7 @@ public class Meter : MonoBehaviour
         Score += addedScore;
       
         if(aliveTrees <= MaxLivingTrees || totalFungi <= 0) {
-            HighScores.SaveHighScore("You lost with score: ", (int)Score);
+            HighScores.SaveHighScore((int)Score);
             Application.LoadLevel(1);
         }
     }

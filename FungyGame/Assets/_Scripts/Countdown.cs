@@ -18,7 +18,7 @@ public class Countdown : MonoBehaviour {
         text.text = (TimeLength - timeTheGameIsRunning).ToString("0") + "s left";
         if (timeTheGameIsRunning > TimeLength)
         {
-            HighScores.SaveHighScore("You finished with score: ", (int)GridManager.instance.Meter.Score);
+            HighScores.SaveHighScore((int)GridManager.instance.Meter.Score);
             Application.LoadLevel(1);
         }
 	}

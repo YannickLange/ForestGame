@@ -1,54 +1,61 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public static class HighScores {
-
-    public static void SaveHighScore(string name, int score)
+public static class HighScores
+{
+    private static string getKey(int i)
     {
-        Highscore newScore, oldScore;
-        newScore.Score = score;
-        newScore.Name = name;
+        return i + "HScore";
+    }
 
+    public static void SaveHighScore(int score)
+    {
+        var highScores = GetHighScores();
         for (int i = 0; i < 10; i++)
         {
-            if (PlayerPrefs.HasKey(i + "HScore"))
+            if (highScores [i] <= score)
             {
-                if (PlayerPrefs.GetInt(i + "HScore") < newScore.Score)
+                Debug.Log(highScores [i] + " < " + score);
+                for (int j = 9; j > i; j--)
                 {
-                    // new Score is higher than the stored Score
-                    oldScore.Score = PlayerPrefs.GetInt(i + "HScore");
-                    oldScore.Name = PlayerPrefs.GetString(i + "HScoreName");
-                    PlayerPrefs.SetInt(i + "HScore", newScore.Score);
-                    PlayerPrefs.SetString(i + "HScoreName", newScore.Name);
-                    newScore.Score = oldScore.Score;
-                    newScore.Name = oldScore.Name;
+                    Debug.Log(j + " <-- " + (j - 1) + " (" + highScores [j] + "<---" + highScores [j - 1] + ")");
+                    highScores [j] = highScores [j - 1];
                 }
-            }
-            else
-            {
-                PlayerPrefs.SetInt(i + "HScore", newScore.Score);
-                PlayerPrefs.SetString(i + "HScoreName", newScore.Name);
-                newScore.Score = 0;
-                newScore.Name = "";
+                highScores [i] = score;
+                break;
             }
         }
-    } 
+        SetHighScores(highScores);
+        PlayerPrefs.SetInt("LastHighscore", score);
+    }
 
-    public static Highscore[] GetHighScores()
+    public static int[] GetHighScores()
     {
-        Highscore[] scores = new Highscore[10];
+        int[] scores = new int[10];
         for (int i = 0; i < 10; i++)
         {
-            scores[i].Score = PlayerPrefs.GetInt(i + "HScore");
-           scores[i].Name = PlayerPrefs.GetString(i + "HScoreName");
+            if (PlayerPrefs.HasKey(getKey(i)))
+            {
+                scores [i] = PlayerPrefs.GetInt(getKey(i));
+                Debug.Log("score=" + scores [i]);
+            } else
+            {
+                scores [i] = 0;
+            }
         }
+        Debug.Log(scores);
         return scores;
     }
-}
-
-
-public struct Highscore
-{
-    public int Score;
-    public string Name;
+    
+    public static void SetHighScores(int[] highscore)
+    {
+        for (int i = 0; i < 10; i++)
+        {
+            PlayerPrefs.DeleteKey(getKey(i));
+        }
+        for (int i = 0; i < 10; i++)
+        {
+            PlayerPrefs.SetInt(getKey(i), highscore [i]);
+        }
+    }
 }

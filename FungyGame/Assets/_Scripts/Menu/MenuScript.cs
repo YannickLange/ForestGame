@@ -2,7 +2,8 @@
 using UnityEngine.UI;
 using System.Collections;
 
-public class MenuScript : MonoBehaviour {
+public class MenuScript : MonoBehaviour
+{
 
     void OnLevelWasLoaded(int level)
     {
@@ -10,22 +11,35 @@ public class MenuScript : MonoBehaviour {
         //Highscorescene
         if (level == 1)
         {
-            int count = 0;
-            GameObject[] highscoreText = GameObject.FindGameObjectsWithTag("HighScoreText");
-            Highscore[] scores = HighScores.GetHighScores();
-            for (int i = 0; i < 10; i++)
+            int lastScore = 0;
+            if (PlayerPrefs.HasKey("LastHighscore"))
             {
-                Text tex = highscoreText[i].GetComponent<Text>();
-                if (scores[i].Score != 0)
-                    tex.text = scores[i].Name + ": - - : " + scores[i].Score;
-                else
+                lastScore = PlayerPrefs.GetInt("LastHighscore");
+            }
+
+            int count = 0;
+            int[] scores = HighScores.GetHighScores();
+            for (int i = 9; i >= 0; i--)
+            {
+                Text tex = GameObject.Find("Highscore" + (i + 1)).GetComponent<Text>();
+                if (scores [i] != 0)
                 {
-                    tex.text = "";
+                    if (lastScore == scores [i])
+                    {
+                        lastScore = 0;
+                        tex.text = scores [i].ToString() + " <---";
+                    } else
+                    {
+                        tex.text = scores [i].ToString();
+                    }
+                } else
+                {
+                    tex.text = "-";
                     count++;
                 }
             }
             if (count == 10)
-                highscoreText[0].GetComponent<Text>().text = "No highscores yet";
+                GameObject.Find("Highscore1").GetComponent<Text>().text = "No highscores yet";
         }
     }
 
