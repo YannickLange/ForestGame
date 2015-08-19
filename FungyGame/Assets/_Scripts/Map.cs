@@ -82,7 +82,6 @@ public class Map : MonoBehaviour
                 return;
             rand = UnityEngine.Random.Range(0, _hexagons.Length - 1);
         }
-        _hexagons[rand].infected = true;
         SpawnFungi(_hexagons[rand]);
     }
 

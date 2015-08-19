@@ -99,7 +99,7 @@ public class UserInteraction : MonoBehaviour
     
     private bool isMoveButtonActive(Hexagon selectedHexagon)
     {
-        return selectedHexagon != null && selectedHexagon.isAbleToMoveAwayFrom() && userInteractionState == UserInteractionState.HexagonSelected && selectedHexagon.infected;
+        return selectedHexagon != null && selectedHexagon.isAbleToMoveAwayFrom() && userInteractionState == UserInteractionState.HexagonSelected && selectedHexagon.HexagonContainsFungus;
     }
     
     private bool isInfectButtonActive(Hexagon selectedHexagon)
@@ -218,7 +218,7 @@ public class UserInteraction : MonoBehaviour
         {
             case UserInteractionState.Idle:
             case UserInteractionState.HexagonSelected:
-                if (hexagon.infected)
+                if (hexagon.HexagonContainsFungus)
                 {
                     selectDifferentHexagon(hexagon);
                     userInteractionState = UserInteractionState.HexagonSelected;
@@ -230,7 +230,7 @@ public class UserInteraction : MonoBehaviour
                 }
                 break;
             case UserInteractionState.StartedMoving:
-                if (hexagon.isAccessible() && !hexagon.infected)
+                if (hexagon.isAccessible() && !hexagon.HexagonContainsFungus)
                 {
                     EndDrag(hexagon);
                     selectDifferentHexagon(null);
@@ -276,7 +276,7 @@ public class UserInteraction : MonoBehaviour
         switch (userInteractionState)
         {
             case UserInteractionState.Idle:
-                if (hexagon.infected)
+                if (hexagon.HexagonContainsFungus)
                 {
                     selectDifferentHexagon(hexagon);
                     userInteractionState = UserInteractionState.HexagonSelected;
@@ -342,7 +342,7 @@ public class UserInteraction : MonoBehaviour
                 userInteractionState = UserInteractionState.StartedMoving;
                 break;
             case UserInteractionState.StartedDragging:
-                if (hexagon.isAccessible() && !hexagon.infected)
+                if (hexagon.isAccessible() && !hexagon.HexagonContainsFungus)
                 {
                     EndDrag(hexagon);
                     selectDifferentHexagon(null);
@@ -366,7 +366,6 @@ public class UserInteraction : MonoBehaviour
     public void EndDrag(Hexagon endHexagon)
     {
         endHexagon.Fungi = Map.instance.CreateFungiOn(endHexagon);
-        endHexagon.infected = true;
         startHexChildScript.reset();
     }
 }

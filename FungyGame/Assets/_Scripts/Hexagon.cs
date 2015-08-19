@@ -40,10 +40,8 @@ public class Hexagon : MonoBehaviour
 
     private TreeState State;
     public TreeType Type;
-
-    public bool infected { get; set; }
-
-    public Fungi _infection;
+    public Fungi _infection; // tree infection
+    public Fungi Fungi; // hexagon infection
     public float growTime = 10f;
     public float randomGrowTimeRange = 5f;
     public float _nextEventTime = 0f;
@@ -55,8 +53,10 @@ public class Hexagon : MonoBehaviour
 
     public bool canInfectTree()
     {
-        return infected && State == TreeState.Alive && (Type == TreeType.BigTree || Type == TreeType.DeadTree || Type == TreeType.SmallTree) && HexTree != null && Fungi != null && Fungi.IsAtMaxStage;
+        return HexagonContainsFungus && State == TreeState.Alive && (Type == TreeType.BigTree || Type == TreeType.DeadTree || Type == TreeType.SmallTree) && HexTree != null && Fungi.IsAtMaxStage;
     }
+
+    public bool HexagonContainsFungus    { get { return (Fungi != null); } }
 
     public NGO ngo
     {
@@ -88,8 +88,6 @@ public class Hexagon : MonoBehaviour
         }
     }
     
-    public Fungi Fungi;
-    
     void Update()
     {
         if (_HexTree != null)
@@ -116,7 +114,7 @@ public class Hexagon : MonoBehaviour
                 }
             }
         }
-        if (Fungi != null && _HexTree != null)
+        if (HexagonContainsFungus && _HexTree != null)
         {
             updateFungi(Fungi);
         }
@@ -244,7 +242,7 @@ public class Hexagon : MonoBehaviour
     
     public bool isAccessible()
     {
-        return isAdjacentToSelectedHexagon() && HexTree != null && !infected;
+        return isAdjacentToSelectedHexagon() && HexTree != null && !HexagonContainsFungus;
     }
     
     public bool adjacentAccessibleHexagonExists()
@@ -259,7 +257,7 @@ public class Hexagon : MonoBehaviour
     
     public bool isAbleToMoveAwayFrom()
     {
-        return infected && Fungi != null && Fungi.IsAtMaxStage && adjacentAccessibleHexagonExists();
+        return HexagonContainsFungus && Fungi.IsAtMaxStage && adjacentAccessibleHexagonExists();
     }
 
     public void updateMaterial()
