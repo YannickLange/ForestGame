@@ -23,16 +23,16 @@ public class Map : MonoBehaviour
 
     //Spawner variables
     public float _planterNextSpawn = 6f;
-    public float _planterRndUp = 2.6f;
-    public float _planterRndDown = 4f;
+    public float _planterRndUp = 7f;
+    public float _planterRndDown = 10f;
 
     public float _lumberjackNextSpawn = 4f;
-    public float _lumberjackRndUp = 2.2f;
-    public float _lumberjackRndDown = 3.8f;
+    public float _lumberjackRndUp = 7f;
+    public float _lumberjackRndDown = 10f;
 
     public float _NGONextSpawn = 4f;
-    public float _NGORndUp = 2.2f;
-    public float _NGORndDown = 3.8f;
+    public float _NGORndUp = 7f;
+    public float _NGORndDown = 10f;
     //Map singleton
     public static Map instance = null;
 
@@ -55,11 +55,14 @@ public class Map : MonoBehaviour
             //Then destroy this. This enforces our singleton pattern, meaning there can only ever be one instance of a GameManager.
             Destroy(gameObject);
         }
-        DontDestroyOnLoad(gameObject);
+        //DontDestroyOnLoad(gameObject);
 
         _planter = GameObject.Find("Planters").transform;
+        _planterNextSpawn = 6f;
         _lumberjack = GameObject.Find("Lumberjacks").transform;
+        _planterNextSpawn = 4f;
         _ngo = GameObject.Find("NGO").transform;
+        _planterNextSpawn = 4f;
     }
 
     void Start()
@@ -151,7 +154,7 @@ public class Map : MonoBehaviour
     void Update()
     {
         #region Planter
-        if(Time.time > _planterNextSpawn)
+        if(Time.time > _planterNextSpawn && !Planter.isPlanterWaiting)
         {
             _planterNextSpawn = Time.time + Mathf.Exp(Random.Range(_planterRndDown, _planterRndUp));
             _planterRndDown -= 0.2f;
@@ -166,10 +169,12 @@ public class Map : MonoBehaviour
             planter.transform.SetParent(_planter);
             planter.GetComponent<Planter>().Spawn();
         }
+        else if(Planter.isPlanterWaiting)
+            _planterNextSpawn = Time.time + Mathf.Exp(Random.Range(_planterRndDown, _planterRndUp));
 
         #endregion
         #region Lumberjack
-        if (Time.time > _lumberjackNextSpawn)
+        if (Time.time > _lumberjackNextSpawn && !Lumberjack.isLumberjackWaiting)
         {
             _lumberjackNextSpawn = Time.time + Mathf.Exp(Random.Range(_lumberjackRndDown, _lumberjackRndUp));
             _lumberjackRndDown -= 0.2f;
@@ -184,6 +189,8 @@ public class Map : MonoBehaviour
             lumberjack.transform.SetParent(_lumberjack);
             lumberjack.GetComponent<Lumberjack>().Spawn();
         }
+        else if(Lumberjack.isLumberjackWaiting)
+            _lumberjackNextSpawn = Time.time + Mathf.Exp(Random.Range(_lumberjackRndDown, _lumberjackRndUp));
         #endregion
 
         #region NGO

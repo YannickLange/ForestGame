@@ -4,6 +4,7 @@ using System.Collections.Generic;
 
 public class Lumberjack : MonoBehaviour
 {
+    public static bool isLumberjackWaiting = false;
     public float MoveTime = 0.5f;
     public float ChopActionTime = 5.0f;
 
@@ -25,6 +26,7 @@ public class Lumberjack : MonoBehaviour
     }
     public void Spawn()
     {
+        isLumberjackWaiting = true;
         SelectTarget();   
 
         //2:Looking for the spawn hexagon
@@ -51,7 +53,10 @@ public class Lumberjack : MonoBehaviour
                 fullHex.Add(Map.instance.Hexagons[i]);
         }
         if (fullHex.Count == 0)
+        {
+            Destroy(gameObject);
             return;
+        }
         _targetHex = fullHex[Random.Range(0, fullHex.Count)];
         _targetHex.isTarget = true;
         _targetTr = _targetHex.transform;
@@ -120,6 +125,7 @@ public class Lumberjack : MonoBehaviour
         #region 4:Destroy the lumberjack
         _targetHex.isTarget = false;
         _targetHex.HexagonRenderer.material = ResourcesManager.instance.HexNormalMaterial;
+        isLumberjackWaiting = false;
         Destroy(gameObject);
         #endregion
     }
@@ -129,7 +135,18 @@ public class Lumberjack : MonoBehaviour
         //1:Destroy the current tree
         GameObject.Destroy(_targetHex.HexTree.gameObject);
         if (_targetHex.Fungi != null)
+        {
+            int fungusCount = 0;
+            //Checking if the deleted fungi is the last one:
+            for (int i = 0; i < Map.instance.Hexagons.Length; i++ )
+            {
+                if (Map.instance.Hexagons[i].Fungi != null)
+                    fungusCount++;
+            }
+            if (fungusCount == 1)
+                GridManager.instance.Meter.r.PressReset();
             GameObject.Destroy(_targetHex.Fungi.gameObject);
+        }
         _targetHex.HexTree = null;
         GridManager.instance.Meter.Forest(5);
         _targetHex.infected = false;

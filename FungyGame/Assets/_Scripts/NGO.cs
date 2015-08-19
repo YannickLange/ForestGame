@@ -8,7 +8,7 @@ public class NGO : MonoBehaviour
     public Sprite PickupWithFungiSprite;
     public Sprite PickupSprite;
     public Sprite NormalSprite;
-    public float MoveTime = 0.6f;
+    public float MoveTime = 3f;
     public float ProtectActionTime = 5.0f;
     public float ProtectionTime = 10.0f;
 
@@ -45,8 +45,6 @@ public class NGO : MonoBehaviour
         _targetHex.isTarget = true;
         _targetHex.ngo = this;
         _targetTr = _targetHex.transform;
-        //Highlight the hexgon
-        //StartCoroutine(_targetHex.FlashHexagon(ResourcesManager.instance.HexNGOTargetMat));
 
         //2:Looking for the spawn hexagon
         _spawnHex = Map.instance.HexBorders[Random.Range(0, Map.instance.HexBorders.Length)];

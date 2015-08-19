@@ -3,19 +3,14 @@ using System.Collections;
 
 public class Reset : MonoBehaviour {
 
-	// Use this for initialization
-	void Start () {
-	
-	}
-	
-	// Update is called once per frame
-	void Update () {
-
-	
-	}
+	void OnGUI()
+    {
+        if (GUI.Button(new Rect(10, 10, 100, 100), "GameOver"))
+            PressReset();
+    }
 
     public void PressReset()
     {
-        Application.LoadLevel(Application.loadedLevel);
+        Application.LoadLevel(0);
     }
 }

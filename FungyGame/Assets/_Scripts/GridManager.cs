@@ -38,7 +38,7 @@ public class GridManager : MonoBehaviour
             Destroy(gameObject);
         hexGridGO = new GameObject("HexGrid").transform;
         hexGridGO.SetParent(transform);
-        DontDestroyOnLoad(gameObject);
+        //DontDestroyOnLoad(gameObject);
 
 
         //Get the size of the hexagon prefab

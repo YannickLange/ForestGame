@@ -4,6 +4,7 @@ using System.Collections.Generic;
 
 public class Planter : MonoBehaviour
 {
+    public static bool isPlanterWaiting = false;
     public Sprite PlanterWithSapling;
     public Sprite PlanterWithoutSapling;
     public float MoveTime = 0.6f;
@@ -29,6 +30,7 @@ public class Planter : MonoBehaviour
 
     public void Spawn()
     {
+        isPlanterWaiting = true;
         List<Hexagon> emptyHex = new List<Hexagon>();
         //1:Looking for a spot:
         for (int i = 0; i < Map.instance.Hexagons.Length; i++)
@@ -37,7 +39,10 @@ public class Planter : MonoBehaviour
                 emptyHex.Add(Map.instance.Hexagons[i]);
         }
         if (emptyHex.Count == 0)
+        {
+            Destroy(gameObject);
             return;
+        }
 
         _targetHex = emptyHex[Random.Range(0, emptyHex.Count)];
         _targetHex.isTarget = true;
@@ -107,6 +112,7 @@ public class Planter : MonoBehaviour
         #region 4:Destroy the planter
         _targetHex.isTarget = false;
         _targetHex.HexagonRenderer.material = ResourcesManager.instance.HexNormalMaterial;
+        isPlanterWaiting = false;
         Destroy(gameObject);
         #endregion
     }
