@@ -72,7 +72,7 @@ public class Map : MonoBehaviour
     void Start()
     {
         BuildMap();
-        int rand = UnityEngine.Random.Range(0, _hexagons.Length - 1);
+        int rand = UnityEngine.Random.Range(0, _hexagons.Length/2);
         int maxTries = 1000;
         while (_hexagons[rand].HexTree == null || _hexagons[rand].Type == TreeType.Sapling)
         {
@@ -80,7 +80,6 @@ public class Map : MonoBehaviour
             Debug.Assert(maxTries > 0);
             if (maxTries == 0)
                 return;
-            rand = UnityEngine.Random.Range(0, _hexagons.Length - 1);
         }
         _hexagons[rand].infected = true;
         SpawnFungi(_hexagons[rand]);
@@ -107,20 +106,7 @@ public class Map : MonoBehaviour
             hex.Fungi = CreateFungiOn(hex);
         } else
         {
-            //remove the spawned one
-
-            //Browsing all the hexagons to get at least "MinimumSpawnTrees"
-            for (int i = 0; i < Hexagons.Length; i++)
-            {
-                //Get the surroundings tiles for hex
-                treesTiles = GetAccessibleTiles(Hexagons[i]);
-                if (treesTiles.Count > MinimumSpawnTrees)
-                {
                     Hexagons[i].Fungi = CreateFungiOn(Hexagons[i]);
-                    return;
-                }
-            }
-            //Spawn a new tree
             List<Hexagon> surroundingTiles = GetSurroundingTiles(hex);
             hex.Fungi = CreateFungiOn(hex);
             int count = MinimumSpawnTrees - treesTiles.Count;
@@ -131,7 +117,10 @@ public class Map : MonoBehaviour
                     TreeGenerator.SpawnSapling(surroundingTiles[i]);
                     count--;
                     if (count == 0)
+                    {
+                        PutFungiOn(hex);
                         return;
+                    }
                 }
             }
         }
