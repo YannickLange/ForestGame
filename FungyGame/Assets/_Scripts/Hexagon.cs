@@ -256,7 +256,6 @@ public class Hexagon : MonoBehaviour
                 addTreeInfectingFungi();
                 TileInfection.reset();
 
-
                 GridManager.instance.UserInteraction.updateView();
                 _HexState = HexagonState.WithCurrentlyInfectingTreeAndFungi;
                 break;
@@ -304,7 +303,7 @@ public class Hexagon : MonoBehaviour
                         GridManager.instance.Meter.Fungus(5);
                         break;
                     case TreeType.CutTree:
-                        _HexState = HexagonState.Empty;
+                        _HexState = HexagonState.WithCutTree;
                         break;
                 }
                 break;
@@ -326,7 +325,7 @@ public class Hexagon : MonoBehaviour
                         GridManager.instance.Meter.Fungus(5);
                         break;
                     case TreeType.CutTree:
-                        _HexState = HexagonState.Empty;
+                        _HexState = HexagonState.WithCutTree;
                         break;
                 }
                 break;
@@ -353,7 +352,7 @@ public class Hexagon : MonoBehaviour
     
     public bool isAccessible()
     {
-        return isAdjacentToSelectedHexagon() && HexTree != null && !HexagonContainsFungus;
+        return isAdjacentToSelectedHexagon() && HexTree != null && !HexagonContainsFungus && HexState != HexagonState.WithCutTree;
     }
     
     public bool adjacentAccessibleHexagonExists()
@@ -382,11 +381,7 @@ public class Hexagon : MonoBehaviour
             if (adjacentSelectedHexagon.isAbleToMoveAwayFrom() && isAccessible())
             {
                 _renderer.material = ResourcesManager.instance.HexValidSurroundingMaterial;
-            } //else
-            /*else
-            {
-                _renderer.material = ResourcesManager.instance.HexInvalidSurroundingMaterial;
-            }*/
+            }
         } else
         {
             _renderer.material = ResourcesManager.instance.HexNormalMaterial;
