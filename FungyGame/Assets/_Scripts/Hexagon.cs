@@ -49,7 +49,7 @@ public class Hexagon : MonoBehaviour
 	{
 		if (_HexTree != null) {
 			if (_HexTree._processStarted) {
-				_HexTree.CheckState ();
+				CheckState ();
 			}
 			if (_HexTree._infection != null) {
 				if (_HexTree._infection.stage == _HexTree._infection.maxStage) {
@@ -62,6 +62,19 @@ public class Hexagon : MonoBehaviour
 					_HexTree.ReplaceTree ((int)TreeType.DeadTree);
 					Destroy (_HexTree._infection.gameObject);
 				}
+			}
+		}
+	}
+	
+	public void CheckState ()
+	{
+		if (_HexTree != null) {
+			switch (_HexTree.State) {
+			case TreeState.Alive:
+				if (Time.time >= _HexTree._nextEventTime) {
+					_HexTree.GrowTree ();
+				}
+				break;
 			}
 		}
 	}

@@ -34,7 +34,7 @@ public class TreeClass : MonoBehaviour
     /// <summary>
     /// Set the next state of the tree
     /// </summary>
-    private void GrowTree()
+    public void GrowTree()
 	{
 		int typeValue = (int)Type;
         /*if (typeValue >= (int)TreeType.DeadTree) //TODO: Change this back to deadtree when they exist
@@ -45,19 +45,6 @@ public class TreeClass : MonoBehaviour
             return;
         _nextEventTime = Time.time + Random.Range(growTime, growTime + randomGrowTimeRange); //Set the next event time value
         ReplaceTree(newType);
-    }
-    
-	public void CheckState()
-	{
-        switch (State)
-        {
-            case TreeState.Alive:
-				if(Time.time >= _nextEventTime)
-				{
-					GrowTree();
-				}
-			break;
-        }
     }
 
     public void InfectTree()
