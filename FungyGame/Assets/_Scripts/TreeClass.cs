@@ -9,12 +9,5 @@ public class TreeClass : MonoBehaviour
     public TreeState State;
     public TreeType Type;
 
-    public bool _processStarted = false;
     public Hexagon occupiedHexagon {get; set;}
-
-
-    void Awake()
-    {
-        _processStarted = true;
-    }
 }

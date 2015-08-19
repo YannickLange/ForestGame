@@ -13,6 +13,7 @@ public class Hexagon : MonoBehaviour
     public float growTime = 10f;
     public float randomGrowTimeRange = 5f;
     public float _nextEventTime = 0f;
+    public bool _processStarted = false;
 
     //cached components
     public GameObject _treeInfectPrefab;
@@ -65,7 +66,7 @@ public class Hexagon : MonoBehaviour
     {
         if (_HexTree != null)
         {
-            if (_HexTree._processStarted)
+            if (_processStarted)
             {
                 CheckState();
             }
@@ -317,6 +318,7 @@ public class Hexagon : MonoBehaviour
         _renderer = GetComponent<Renderer>();
         isTarget = false;
         _nextEventTime = Time.time + UnityEngine.Random.Range(growTime, growTime + randomGrowTimeRange);
+        _processStarted = true;
     }
 
     private int _posX = -1;
