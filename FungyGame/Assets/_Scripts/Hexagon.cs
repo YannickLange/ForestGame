@@ -9,6 +9,10 @@ public class Hexagon : MonoBehaviour
 {
     public bool infected { get; set; }
     public Fungi _infection;
+    
+    public float growTime = 10f;
+    public float randomGrowTimeRange = 5f;
+    public float _nextEventTime = 0f;
 
     //cached components
     public GameObject _treeInfectPrefab;
@@ -93,7 +97,7 @@ public class Hexagon : MonoBehaviour
             switch (_HexTree.State)
             {
                 case TreeState.Alive:
-                    if (Time.time >= _HexTree._nextEventTime)
+                    if (Time.time >= _nextEventTime)
                     {
                         GrowTree();
                     }
@@ -119,7 +123,7 @@ public class Hexagon : MonoBehaviour
             int newType = typeValue + 1;
             if (newType >= (int)TreeType.DeadTree)
                 return;
-            _HexTree._nextEventTime = Time.time + UnityEngine.Random.Range(_HexTree.growTime, _HexTree.growTime + _HexTree.randomGrowTimeRange); //Set the next event time value
+            _nextEventTime = Time.time + UnityEngine.Random.Range(growTime, growTime + randomGrowTimeRange); //Set the next event time value
             ReplaceTree(newType);
         } else
         {
@@ -312,6 +316,7 @@ public class Hexagon : MonoBehaviour
         _treeInfectPrefab = (GameObject)Resources.Load("InfectLoadingBar");
         _renderer = GetComponent<Renderer>();
         isTarget = false;
+        _nextEventTime = Time.time + UnityEngine.Random.Range(growTime, growTime + randomGrowTimeRange);
     }
 
     private int _posX = -1;
