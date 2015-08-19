@@ -8,11 +8,13 @@ public class Fungi : MonoBehaviour
     public string tileSheetName = "fungusTest";
     public float maxTimer = 10f;
     public Sprite[] stageSprites;
-    private int lastStage = -1;
+
+    //State
     private float timer = 0f;
     private int stage = 0;
 
-    //Cached components
+    //Cache
+    private int lastStage = -1;
     public SpriteRenderer spriteRenderer;
 
     void Awake()
