@@ -10,6 +10,7 @@ public class Loader : MonoBehaviour
     public GameObject infectButton;
     public GameObject userInteraction;
     public GameObject meter;
+    public GameObject resetButton;
 
     void Awake()
     {
@@ -24,5 +25,6 @@ public class Loader : MonoBehaviour
         GridManager.instance.GetComponent<GridManager>().MoveButton = moveButton.GetComponent<MoveButton>();
         GridManager.instance.GetComponent<GridManager>().UserInteraction = userInteraction.GetComponent<UserInteraction>();
         GridManager.instance.GetComponent<GridManager>().Meter = meter.GetComponent<Meter>();
+        GridManager.instance.GetComponent<GridManager>().ResetButton = resetButton.GetComponent<Reset>();
     }
 }
