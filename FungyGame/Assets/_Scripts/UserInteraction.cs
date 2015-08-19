@@ -12,7 +12,7 @@ public class UserInteraction : MonoBehaviour
         StartedMoving,
         StartedDragging
     }
-    private Hexagon startHexagon, endHexagon;
+    private Hexagon startHexagon, endHexagon, previousHexagon;
     private Fungi startHexChildScript;
     private Hexagon _prevHexagon = null;
     private UserInteractionState userInteractionState = UserInteractionState.Idle;
@@ -34,12 +34,26 @@ public class UserInteraction : MonoBehaviour
         {
             if (hit.collider.tag == "Hexagon")
             {
-                var hoveredHexagon = hit.collider.gameObject.GetComponent<Hexagon>();
-                
+                Hexagon hoveredHexagon = hit.collider.gameObject.GetComponent<Hexagon>();
+                if (NGO.ProtectionSelection)
+                {
+                    if (hoveredHexagon.TileInfection != null)
+                        hoveredHexagon.HexagonRenderer.material = ResourcesManager.instance.HexWhiteBorders;
+                    if (previousHexagon != null && previousHexagon != hoveredHexagon)
+                        previousHexagon.HexagonRenderer.material = ResourcesManager.instance.HexNormalMaterial;
+                    previousHexagon = hoveredHexagon;
+                 }
+
                 //start the drag by pressing the screen
                 if (Input.GetMouseButton(0))
                 {
                     OnPressingHexagon(hoveredHexagon);
+
+                    //NGO placement:
+                    if(NGO.ProtectionSelection)
+                    {
+                        StartCoroutine(NGO.instance.PlaceNGO(hoveredHexagon));
+                    }
                 }
                 else
                 {//check to see if the finger left the screen
@@ -85,12 +99,12 @@ public class UserInteraction : MonoBehaviour
     
     private bool isMoveButtonActive(Hexagon selectedHexagon)
     {
-        return selectedHexagon != null && selectedHexagon.isAbleToMoveAwayFrom() && userInteractionState == UserInteractionState.HexagonSelected && selectedHexagon.infected;
+        return selectedHexagon != null && selectedHexagon.isAbleToMoveAwayFrom() && userInteractionState == UserInteractionState.HexagonSelected && selectedHexagon.HexagonContainsFungus;
     }
     
     private bool isInfectButtonActive(Hexagon selectedHexagon)
     {
-        return selectedHexagon != null && userInteractionState == UserInteractionState.HexagonSelected && selectedHexagon.infected && selectedHexagon.HexTree.State == TreeState.Alive && (selectedHexagon.HexTree.Type == TreeType.BigTree || selectedHexagon.HexTree.Type == TreeType.DeadTree || selectedHexagon.HexTree.Type == TreeType.SmallTree) && selectedHexagon.HexTree && selectedHexagon.Fungi != null && selectedHexagon.Fungi.stage == selectedHexagon.Fungi.maxStage;
+        return selectedHexagon != null && userInteractionState == UserInteractionState.HexagonSelected && selectedHexagon.canInfectTree();
     }
     
     UserInteractionState _DEBUG_lastState = UserInteractionState.Idle;
@@ -179,7 +193,7 @@ public class UserInteraction : MonoBehaviour
             case UserInteractionState.HexagonSelected:
                 if (isInfectButtonActive(_prevHexagon))
                 {
-                    _prevHexagon.HexTree.InfectTree();
+                    _prevHexagon.InfectTree();
                     selectDifferentHexagon(null);
                     userInteractionState = UserInteractionState.Idle;
                 }
@@ -204,7 +218,7 @@ public class UserInteraction : MonoBehaviour
         {
             case UserInteractionState.Idle:
             case UserInteractionState.HexagonSelected:
-                if (hexagon.infected)
+                if (hexagon.HexagonContainsFungus)
                 {
                     selectDifferentHexagon(hexagon);
                     userInteractionState = UserInteractionState.HexagonSelected;
@@ -216,7 +230,7 @@ public class UserInteraction : MonoBehaviour
                 }
                 break;
             case UserInteractionState.StartedMoving:
-                if (hexagon.isAccessible() && !hexagon.infected)
+                if (hexagon.isAccessible() && !hexagon.HexagonContainsFungus)
                 {
                     EndDrag(hexagon);
                     selectDifferentHexagon(null);
@@ -262,7 +276,7 @@ public class UserInteraction : MonoBehaviour
         switch (userInteractionState)
         {
             case UserInteractionState.Idle:
-                if (hexagon.infected)
+                if (hexagon.HexagonContainsFungus)
                 {
                     selectDifferentHexagon(hexagon);
                     userInteractionState = UserInteractionState.HexagonSelected;
@@ -328,7 +342,7 @@ public class UserInteraction : MonoBehaviour
                 userInteractionState = UserInteractionState.StartedMoving;
                 break;
             case UserInteractionState.StartedDragging:
-                if (hexagon.isAccessible() && !hexagon.infected)
+                if (hexagon.isAccessible() && !hexagon.HexagonContainsFungus)
                 {
                     EndDrag(hexagon);
                     selectDifferentHexagon(null);
@@ -346,14 +360,12 @@ public class UserInteraction : MonoBehaviour
     public void StartDrag(Hexagon startHexagon)
     {
         this.startHexagon = startHexagon;
-        startHexChildScript = startHexagon.Fungi;
+        startHexChildScript = startHexagon.TileInfection;
     }
     
     public void EndDrag(Hexagon endHexagon)
     {
-        Map.instance.PutFungiOn(endHexagon);
-        endHexagon.infected = true;
-        startHexChildScript.stage = 0;
-        startHexChildScript.UpdateSprite();
+        endHexagon.addTileInfectingFungi();
+        startHexChildScript.reset();
     }
 }

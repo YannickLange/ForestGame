@@ -22,6 +22,7 @@ public class GridManager : MonoBehaviour
 
     public UserInteraction UserInteraction  { get; set; }
     public Meter Meter  { get; set; }
+    public Reset ResetButton  { get; set; }
 
     //GridManager singleton
     public static GridManager instance = null;
@@ -38,7 +39,7 @@ public class GridManager : MonoBehaviour
             Destroy(gameObject);
         hexGridGO = new GameObject("HexGrid").transform;
         hexGridGO.SetParent(transform);
-        DontDestroyOnLoad(gameObject);
+        //DontDestroyOnLoad(gameObject);
 
 
         //Get the size of the hexagon prefab
@@ -60,11 +61,11 @@ public class GridManager : MonoBehaviour
         Vector3 initPos;
         var xCenter = (gridWidthInHexes) / 2f ;
         var zCenter = (gridHeightInHexes) / 2f - 0.75f;
-        Debug.Log("centers: " + xCenter + " " + zCenter);
-        Debug.Log("widths: " + hexWidth + " " + hexHeight);
+        //Debug.Log("centers: " + xCenter + " " + zCenter);
+        //Debug.Log("widths: " + hexWidth + " " + hexHeight);
         //the initial position will be in the left upper corner
         initPos = new Vector3(xCenter * -hexWidth + (hexWidth / 2f), 0, zCenter * hexHeight - hexHeight / 2f);
-        Debug.Log(initPos);
+        //Debug.Log(initPos);
 
         return initPos;
     }

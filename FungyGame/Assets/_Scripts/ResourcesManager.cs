@@ -9,6 +9,8 @@ public class ResourcesManager : MonoBehaviour
     public Material HexSelectedMaterial;
     public Material HexPlanterTargetMat;
     public Material HexLumberjackTargetMat;
+    public Material HexNGOTargetMat;
+    public Material HexWhiteBorders;
 
     public Material[] TreeMat;
 
@@ -16,6 +18,7 @@ public class ResourcesManager : MonoBehaviour
 
     public GameObject Planter;
     public GameObject Lumberjack;
+    public GameObject NGO;
 
     public static ResourcesManager instance;
 
@@ -29,6 +32,6 @@ public class ResourcesManager : MonoBehaviour
         else if (instance != this)
             //Then destroy this. This enforces our singleton pattern, meaning there can only ever be one instance of a GameManager.
             Destroy(gameObject);
-        DontDestroyOnLoad(gameObject);
+        //DontDestroyOnLoad(gameObject);
     }
 }

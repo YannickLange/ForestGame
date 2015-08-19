@@ -4,10 +4,10 @@ using System.Collections.Generic;
 
 public class Lumberjack : MonoBehaviour
 {
+    public Sprite LumberjackWithLog;
+    public static bool isLumberjackWaiting = false;
     public float MoveTime = 0.5f;
     public float ChopActionTime = 5.0f;
-
-
     private Hexagon _targetHex = null;
     private Transform _targetTr = null;
     private Hexagon _spawnHex = null;
@@ -17,14 +17,16 @@ public class Lumberjack : MonoBehaviour
     private Transform _thisTransform;
     private Rigidbody _rb;
 
-
     void Awake()
     {
         _thisTransform = transform;
         _rb = GetComponent<Rigidbody>();
+        isLumberjackWaiting = false;
     }
+
     public void Spawn()
     {
+        isLumberjackWaiting = true;
         SelectTarget();   
 
         //2:Looking for the spawn hexagon
@@ -38,20 +40,23 @@ public class Lumberjack : MonoBehaviour
 
     private void SelectTarget()
     {
-        if (_targetHex != null)
+        if (_targetHex != null && _targetHex.ngo == null)
             _targetHex.isTarget = false;
+        /*if(_targetHex.ngo != null)
+            _targetHex.StopBlink*/
         List<Hexagon> fullHex = new List<Hexagon>();
         //1:Looking for a spot:
         for (int i = 0; i < Map.instance.Hexagons.Length; i++)
         {
             if (Map.instance.Hexagons[i].HexTree != null &&
                 !Map.instance.Hexagons[i].isTarget &&
-                Map.instance.Hexagons[i].HexTree.Type != TreeType.Sapling &&
-                Map.instance.Hexagons[i].HexTree.Type != TreeType.DeadTree)
+                Map.instance.Hexagons[i].Type != TreeType.Sapling &&
+                Map.instance.Hexagons[i].Type != TreeType.DeadTree)
                 fullHex.Add(Map.instance.Hexagons[i]);
         }
         if (fullHex.Count == 0)
-            return;
+            Destroy(gameObject);
+
         _targetHex = fullHex[Random.Range(0, fullHex.Count)];
         _targetHex.isTarget = true;
         _targetTr = _targetHex.transform;
@@ -66,7 +71,7 @@ public class Lumberjack : MonoBehaviour
         Vector3 newPosition;
         while (sqrRemainingDistance > 1e-6)
         {
-            if(_targetHex.HexTree.Type == TreeType.DeadTree)
+            if (_targetHex.Type == TreeType.DeadTree || _targetHex.ngo != null)
             {
                 SelectTarget();
             }
@@ -83,11 +88,10 @@ public class Lumberjack : MonoBehaviour
         #region 2:ChopTree
         //Change the sprite of the tree:
         yield return new WaitForSeconds(ChopActionTime / 2f);
-        _targetHex.HexTree.ReplaceTree(4);
+        _targetHex.ReplaceTree(TreeType.CutTree);
         yield return new WaitForSeconds(ChopActionTime / 2f);
         ChopDownTree();
-            
-        yield return new WaitForSeconds(ChopActionTime);
+        GetComponent<SpriteRenderer>().sprite = LumberjackWithLog;
         #endregion
 
         #region 3:Moving out the map
@@ -117,21 +121,17 @@ public class Lumberjack : MonoBehaviour
         }
         #endregion
 
-        #region 4:Destroy the planter
+        #region 4:Destroy the lumberjack
         _targetHex.isTarget = false;
         _targetHex.HexagonRenderer.material = ResourcesManager.instance.HexNormalMaterial;
+        isLumberjackWaiting = false;
         Destroy(gameObject);
         #endregion
     }
 
     private void ChopDownTree()
     {
-        //1:Destroy the current tree
-        GameObject.Destroy(_targetHex.HexTree.gameObject);
-        if (_targetHex.Fungi != null)
-            GameObject.Destroy(_targetHex.Fungi.gameObject);
-        _targetHex.HexTree = null;
-            GridManager.instance.Meter.Forest(5);
-        _targetHex.infected = false;
+        _targetHex.ReplaceTree(TreeType.CutTree);
+        GridManager.instance.Meter.Forest(5);
     }
 }

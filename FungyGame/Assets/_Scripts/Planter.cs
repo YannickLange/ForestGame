@@ -4,6 +4,9 @@ using System.Collections.Generic;
 
 public class Planter : MonoBehaviour
 {
+    public static bool isPlanterWaiting = false;
+    public Sprite PlanterSapling;
+    public Sprite PlanterWithoutSapling;
     public float MoveTime = 0.6f;
     public float PlantActionTime = 5.0f;
 
@@ -23,30 +26,24 @@ public class Planter : MonoBehaviour
     {
         _thisTransform = transform;
         _rb = GetComponent<Rigidbody>();
-    }
-    public static float GetNextSpawnTime()
-    {
-        float val = 0f;
-
-        //y = 
-
-
-
-
-        return val;
+        isPlanterWaiting = false;
     }
 
     public void Spawn()
     {
+        isPlanterWaiting = true;
         List<Hexagon> emptyHex = new List<Hexagon>();
         //1:Looking for a spot:
         for (int i = 0; i < Map.instance.Hexagons.Length; i++)
         {
-            if (Map.instance.Hexagons[i].HexTree == null && !Map.instance.Hexagons[i].isTarget)
+            if ((Map.instance.Hexagons[i].HexState == HexagonState.Empty || Map.instance.Hexagons[i].HexState == HexagonState.CutTree) && !Map.instance.Hexagons[i].isTarget)
                 emptyHex.Add(Map.instance.Hexagons[i]);
         }
         if (emptyHex.Count == 0)
+        {
+            Destroy(gameObject);
             return;
+        }
 
         _targetHex = emptyHex[Random.Range(0, emptyHex.Count)];
         _targetHex.isTarget = true;
@@ -82,7 +79,7 @@ public class Planter : MonoBehaviour
         #region 2:PlantSeed
         yield return new WaitForSeconds(PlantActionTime);
         PlantSeed();
-
+        GetComponent<SpriteRenderer>().sprite = PlanterWithoutSapling;
         yield return new WaitForSeconds(PlantActionTime);
         #endregion
 
@@ -116,6 +113,7 @@ public class Planter : MonoBehaviour
         #region 4:Destroy the planter
         _targetHex.isTarget = false;
         _targetHex.HexagonRenderer.material = ResourcesManager.instance.HexNormalMaterial;
+        isPlanterWaiting = false;
         Destroy(gameObject);
         #endregion
     }

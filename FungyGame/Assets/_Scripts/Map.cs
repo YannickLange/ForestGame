@@ -7,10 +7,15 @@ using System;
 public class Map : MonoBehaviour
 {
     //<<<<<<<<<<<<<<<<<<
-    public GameObject fungi;
     private TreeGenerator treeGenerator;
     //private array of hexagons
     private Hexagon[] _hexagons;
+    public int MinimumSpawnTrees = 1;
+    public float Plantertimer = 0f;
+    public float Lumberjacktimer = 0f;
+    public float NGOtimer = 0f;
+    public float timerSpeedMultiplier = 1f;
+
     //Readonly hexagons
     public Hexagon[] Hexagons
     {
@@ -21,21 +26,24 @@ public class Map : MonoBehaviour
     }
 
     //Spawner variables
-    private float _planterNextSpawn = 6f;
-    private float _planterRndUp = 2.6f;
-    private float _planterRndDown = 4f;
-
-    private float _lumberjackNextSpawn = 4f;
-    private float _lumberjackRndUp = 2.2f;
-    private float _lumberjackRndDown = 3.8f;
+    public float _planterSpawn = 20f;
+    public float _planterRndUp = 10f;
+    public float _planterRndDown = 30f;
+    public float _lumberjackSpawn = 20f;
+    public float _lumberjackRndUp = 10f;
+    public float _lumberjackRndDown = 30f;
+    public float _NGOSpawn = 20f;
+    public float _NGORndUp = 10f;
+    public float _NGORndDown = 30f;
     //Map singleton
     public static Map instance = null;
 
     public Hexagon[] HexBorders { get; set; }
 
-    //TEMP
     private Transform _planter;
     private Transform _lumberjack;
+    private Transform _ngo;
+
     void Awake()
     {
         //Check if instance already exists
@@ -50,45 +58,70 @@ public class Map : MonoBehaviour
             //Then destroy this. This enforces our singleton pattern, meaning there can only ever be one instance of a GameManager.
             Destroy(gameObject);
         }
-        DontDestroyOnLoad(gameObject);
+        //DontDestroyOnLoad(gameObject);
 
         _planter = GameObject.Find("Planters").transform;
+        _planterSpawn = Random.Range(_planterRndDown, _planterRndUp);
         _lumberjack = GameObject.Find("Lumberjacks").transform;
+        _lumberjackSpawn = Random.Range(_lumberjackRndDown, _lumberjackRndUp);
+        _ngo = GameObject.Find("NGO").transform;
+        _NGOSpawn = Random.Range(_NGORndDown, _NGORndUp);
     }
 
     void Start()
     {
         BuildMap();
         int rand = UnityEngine.Random.Range(0, _hexagons.Length - 1);
-        while (_hexagons[rand].HexTree == null || _hexagons[rand].HexTree.Type == TreeType.Sapling)
+        int maxTries = 1000;
+        while (_hexagons[rand].HexState != HexagonState.Tree)
         {
+            --maxTries;
+            Debug.Assert(maxTries > 0);
+            if (maxTries == 0)
+                return;
+
             rand = UnityEngine.Random.Range(0, _hexagons.Length - 1);
         }
-        _hexagons[rand].infected = true;
-        PutFungiOn(_hexagons[rand]);
-        CheckSpawn(_hexagons[rand]);
+        SpawnFungi(_hexagons[rand]);
     }
 
-    public void PutFungiOn(Hexagon hex)
+    public void SpawnFungi(Hexagon hex)
     {
-        GameObject fungiObject = Instantiate(fungi, hex.transform.position + new Vector3(0, 0.001f, 0), Quaternion.LookRotation(Vector3.up * 90)) as GameObject;
-        fungiObject.transform.parent = hex.gameObject.transform;
-    }
-
-    public void CheckSpawn(Hexagon hex)
-    {
-        List<Hexagon> surroundings = GetSurroundingTiles(hex);
-        if (surroundings.Count > 1)
-            return;
-        else
+        //get all the surrounding hexagons that contains a tree
+        List<Hexagon> treesTiles = GetAccessibleTiles(hex);
+        //If there's one or more tile with a tree on it
+        if (treesTiles.Count > MinimumSpawnTrees)
         {
+            hex.addTileInfectingFungi();
+        } else
+        {
+            //Browsing all the hexagons to get at least "MinimumSpawnTrees"
             for (int i = 0; i < Hexagons.Length; i++)
             {
-                surroundings = GetSurroundingTiles(hex);
-                if (surroundings.Count > 1)
+                //Get the surroundings tiles for hex
+                treesTiles = GetAccessibleTiles(Hexagons[i]);
+                if (treesTiles.Count > MinimumSpawnTrees)
                 {
-                    PutFungiOn(Hexagons[i]);
+                    if (Hexagons[i].HexState == HexagonState.Empty)
+                    {
+                        Hexagons[i].ReplaceTree(TreeType.SmallTree);
+                    }
+                    Hexagons[i].addTileInfectingFungi();
                     return;
+                }
+            }
+            //Spawn a new tree
+            List<Hexagon> surroundingTiles = GetSurroundingTiles(hex);
+            hex.addTileInfectingFungi();
+            int count = MinimumSpawnTrees - treesTiles.Count;
+            for (int i = 0; i < surroundingTiles.Count; i ++)
+            {
+                if (surroundingTiles[i].HexTree == null)
+                {
+                    TreeGenerator.SpawnSapling(surroundingTiles[i]);
+                    count--;
+                    if (count == 0)
+                        return;
                 }
             }
         }
@@ -102,12 +135,12 @@ public class Map : MonoBehaviour
         for (int x = 0; x < GridManager.instance.gridWidthInHexes; x++)
             for (int y = 0; y < GridManager.instance.gridHeightInHexes; y++)
             {
-            _hexagons[x + y * GridManager.instance.gridWidthInHexes] = GridManager.instance.CreateHexagonAt(x, y);
-            _hexagons[x + y * GridManager.instance.gridWidthInHexes].ClickEvent += new HexagonEventHandler(GridManager.instance.UserInteraction.OnHexagonClickedEvent);
+                _hexagons[x + y * GridManager.instance.gridWidthInHexes] = GridManager.instance.CreateHexagonAt(x, y);
+                _hexagons[x + y * GridManager.instance.gridWidthInHexes].ClickEvent += new HexagonEventHandler(GridManager.instance.UserInteraction.OnHexagonClickedEvent);
                 //Making the border array:
                 if (x == 0 || y == 0 || x == GridManager.instance.gridWidthInHexes - 1 || y == GridManager.instance.gridHeightInHexes - 1)
-                borders.Add(_hexagons[x + y * GridManager.instance.gridWidthInHexes]);
-        }
+                    borders.Add(_hexagons[x + y * GridManager.instance.gridWidthInHexes]);
+            }
 
         HexBorders = new Hexagon[borders.Count];
         borders.CopyTo(HexBorders, 0);
@@ -122,40 +155,45 @@ public class Map : MonoBehaviour
 
     void Update()
     {
+        #region Timer
+        Plantertimer += 1f * Time.deltaTime * timerSpeedMultiplier;
+        NGOtimer += 1f * Time.deltaTime * timerSpeedMultiplier;
+        Lumberjacktimer += 1f * Time.deltaTime * timerSpeedMultiplier;
+        #endregion
         #region Planter
-        if(Time.time > _planterNextSpawn)
+        if (Plantertimer >= _planterSpawn && !Planter.isPlanterWaiting)
         {
-            _planterNextSpawn = Time.time + Mathf.Exp(Random.Range(_planterRndDown, _planterRndUp));
-            _planterRndDown -= 0.2f;
-            if (_planterRndDown <= 0)
-                _planterRndDown = 2.6f;
-            _planterRndUp -= 0.2f;
-            if (_planterRndUp <= 0)
-                _planterRndUp = 4f;
-
+            Plantertimer = 0f;
+            _planterSpawn = Random.Range(_planterRndDown, _planterRndUp);
 
             GameObject planter = Instantiate(ResourcesManager.instance.Planter) as GameObject;
             planter.transform.SetParent(_planter);
             planter.GetComponent<Planter>().Spawn();
-        }
+        } else if (Planter.isPlanterWaiting)
+            Plantertimer = 0f;
 
         #endregion
         #region Lumberjack
-        if (Time.time > _lumberjackNextSpawn)
+        if (Lumberjacktimer >= _lumberjackSpawn && !Lumberjack.isLumberjackWaiting)
         {
-            _lumberjackNextSpawn = Time.time + Mathf.Exp(Random.Range(_lumberjackRndDown, _lumberjackRndUp));
-            _lumberjackRndDown -= 0.3f;
-            if (_lumberjackRndDown <= 0)
-                _lumberjackRndDown = 2.2f;
-            _lumberjackRndUp -= 0.3f;
-            if (_lumberjackRndUp <= 0)
-                _lumberjackRndUp = 3.8f;
-
+            _lumberjackSpawn = Random.Range(_lumberjackRndDown, _lumberjackRndUp);
 
             GameObject lumberjack = Instantiate(ResourcesManager.instance.Lumberjack) as GameObject;
             lumberjack.transform.SetParent(_lumberjack);
             lumberjack.GetComponent<Lumberjack>().Spawn();
-        }
+        } else if (Lumberjack.isLumberjackWaiting)
+            Lumberjacktimer = 0f;
+        #endregion
+        #region NGO
+        if (NGOtimer >= _NGOSpawn && !NGO.isNGOWaiting)
+        {
+            _NGOSpawn = Random.Range(_NGORndDown, _NGORndUp);
+
+            GameObject ngo = Instantiate(ResourcesManager.instance.NGO) as GameObject;
+            ngo.transform.SetParent(_ngo);
+            ngo.GetComponent<NGO>().Spawn();
+        } else if (NGO.isNGOWaiting)
+            NGOtimer = 0f;
         #endregion
     }
 
@@ -174,8 +212,7 @@ public class Map : MonoBehaviour
             {
                 surroundingHexs.Add(_hexagons[x + (y - 1) * GridManager.instance.gridWidthInHexes]);
             }
-        }
-        else if (!IsOutOfBounds(x - 1, y - 1))
+        } else if (!IsOutOfBounds(x - 1, y - 1))
         {
             surroundingHexs.Add(_hexagons[(x - 1) + (y - 1) * GridManager.instance.gridWidthInHexes]);
         }
@@ -193,8 +230,7 @@ public class Map : MonoBehaviour
             {
                 surroundingHexs.Add(_hexagons[x + (y + 1) * GridManager.instance.gridWidthInHexes]);
             }
-        }
-        else if (!IsOutOfBounds(x - 1, y + 1))
+        } else if (!IsOutOfBounds(x - 1, y + 1))
         {
             surroundingHexs.Add(_hexagons[(x - 1) + (y + 1) * GridManager.instance.gridWidthInHexes]);
         }
@@ -206,8 +242,7 @@ public class Map : MonoBehaviour
         {
             if (!IsOutOfBounds(x, y + 1))
                 surroundingHexs.Add(_hexagons[x + (y + 1) * GridManager.instance.gridWidthInHexes]);
-        }
-        else if (!IsOutOfBounds(x + 1, y + 1))
+        } else if (!IsOutOfBounds(x + 1, y + 1))
             surroundingHexs.Add(_hexagons[(x + 1) + (y + 1) * GridManager.instance.gridWidthInHexes]);
         //Right tile
         if (!IsOutOfBounds(x + 1, y))
@@ -217,8 +252,7 @@ public class Map : MonoBehaviour
         {
             if (!IsOutOfBounds(x, y - 1))
                 surroundingHexs.Add(_hexagons[x + (y - 1) * GridManager.instance.gridWidthInHexes]);
-        }
-        else if (!IsOutOfBounds(x + 1, y - 1))
+        } else if (!IsOutOfBounds(x + 1, y - 1))
             surroundingHexs.Add(_hexagons[(x + 1) + (y - 1) * GridManager.instance.gridWidthInHexes]);
         #endregion
 
@@ -228,5 +262,16 @@ public class Map : MonoBehaviour
     private bool IsOutOfBounds(int x, int y)
     {
         return (y < 0 || x < 0 || x >= GridManager.instance.gridWidthInHexes || y >= GridManager.instance.gridHeightInHexes);
+    }
+
+    public List<Hexagon> GetAccessibleTiles(Hexagon hex)
+    {
+        List<Hexagon> surroundingTrees = new List<Hexagon>();
+        foreach (Hexagon h in GetSurroundingTiles(hex))
+        {
+            if (h.HexTree != null)
+                surroundingTrees.Add(h);
+        }
+        return surroundingTrees;
     }
 }

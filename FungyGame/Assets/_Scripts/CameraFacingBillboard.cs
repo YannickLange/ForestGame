@@ -20,7 +20,7 @@ public class CameraFacingBillboard : MonoBehaviour
         m_Camera = Camera.main;
     }
 
-    void Update()
+    public void Update()
     {
         transform.LookAt(transform.position + m_Camera.transform.rotation * Vector3.forward,
             m_Camera.transform.rotation * Vector3.up);
@@ -44,7 +44,13 @@ public class CameraFacingBillboard : MonoBehaviour
         }
 
         spriteRenderer.sortingOrder = (int)Camera.main.WorldToScreenPoint (transform.position).y * -1;
-
+        
+        if (parentSpriteRenderer == null)
+        {
+            //Debug.Log("Can not set sorting layer without the spriteRenderer component: " + spriteRenderer);
+            //TODO. find out why this happens
+            return;
+        }
         if (Important)
             spriteRenderer.sortingOrder = parentSpriteRenderer.sortingOrder + 1;
 

@@ -182,6 +182,7 @@ MonoBehaviour:
   infectButton: {fileID: 2128808898}
   userInteraction: {fileID: 1552663117}
   meter: {fileID: 448677864}
+  resetButton: {fileID: 2005771341}
 --- !u!4 &298880043
 Transform:
   m_ObjectHideFlags: 0
@@ -205,6 +206,7 @@ GameObject:
   - 222: {fileID: 448677867}
   - 114: {fileID: 448677866}
   - 114: {fileID: 448677868}
+  - 114: {fileID: 448677869}
   m_Layer: 5
   m_Name: Healthbar
   m_TagString: Untagged
@@ -266,6 +268,17 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 3a9f46273d9b5ec4b87e8ad540d4fc7a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &448677869
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 448677864}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 06a17296a6ac1f5408829366b9b55372, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &680027938
@@ -605,6 +618,33 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 1
+--- !u!1 &1080060340
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 4
+  m_Component:
+  - 4: {fileID: 1080060341}
+  m_Layer: 0
+  m_Name: NGO
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1080060341
+Transform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1080060340}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 8
 --- !u!1 &1168236501
 GameObject:
   m_ObjectHideFlags: 0
@@ -860,7 +900,7 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1579406100}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: .308064222, y: .113354653, z: -.387412906}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -1103,12 +1143,12 @@ GameObject:
   - 114: {fileID: 2005771344}
   - 114: {fileID: 2005771343}
   m_Layer: 5
-  m_Name: RotateRight (1)
+  m_Name: ResetButton
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &2005771342
 RectTransform:
   m_ObjectHideFlags: 0
@@ -1238,7 +1278,7 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 2043654573}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: .308064222, y: .113354653, z: -.387412906}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}

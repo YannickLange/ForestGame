@@ -1,15 +1,23 @@
-﻿using UnityEngine;
+using UnityEngine;
 using System.Collections;
 
-public class Meter : MonoBehaviour {
+public class Meter : MonoBehaviour
+{
 
     private GameObject Indicator;
 
     float fungusCount = 3;
     float forestCount = 3;
+    public Reset r { get; set; }
+
+    void Awake()
+    {
+        r = GetComponent<Reset>();
+    }
 
     // Use this for initialization
-    void Start () {
+    void Start ()
+    {
         Indicator = this.gameObject.transform.GetChild(0).gameObject;
     }
 
@@ -21,19 +29,8 @@ public class Meter : MonoBehaviour {
         ++fungusCount;
     }
 
-    void Update () {
-        /*float totalAverage = 200 / (forestCount + fungusCount);
-        float choppedWood = forestCount * totalAverage;
-        float infectWood = fungusCount * totalAverage;
-
-        Indicator.transform.position = new Vector2(infectWood, Indicator.transform.position.y);
-
-        if(infectWood >= 80f) {
-            //GameOver();
-        }
-*/
-        
-
+    void Update ()
+    {
         float aliveTrees = 0;
         float totalTrees = 0; 
 

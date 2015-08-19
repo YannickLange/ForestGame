@@ -2,68 +2,59 @@
 using System.Collections;
 using System.Collections.Generic;
 
-public class Fungi : MonoBehaviour {
+public class Fungi : MonoBehaviour
+{
+    //Configuration
     public string tileSheetName = "fungusTest";
-
-    public float timer = 0f;
-    public float timerSpeedMultiplier = 1f;
     public float maxTimer = 10f;
+    public Sprite[] stageSprites;
 
-    public int stage = 0;
-    public int maxStage = 6;
+    //State
+    private float timer = 0f;
+    private int stage = 0;
 
-    private SpriteRenderer spriteRenderer;
-    private Sprite[] stageSprites;
-    private Hexagon startHexagon, endHexagon;
-    public Hexagon occupiedHexagon { get; set; }
+    //Cache
+    private int lastStage = -1;
+    public SpriteRenderer spriteRenderer;
 
     void Awake()
     {
         // load all frames in fruitsSprites array
         spriteRenderer = GetComponent<SpriteRenderer>();
         stageSprites = Resources.LoadAll<Sprite>(tileSheetName);
-        maxStage = maxStage - 1;
     }
 
-    void Start()
+    public bool IsAtMaxStage{ get { return stage == stageSprites.Length - 1; } }
+
+    public void reset()
     {
-        //Hacky code here, causes bugs with the infectionbar!
-        occupiedHexagon = transform.parent.GetComponent<Hexagon>();
+        stage = 0;
+        timer = 0f;
     }
-	
-	// Update is called once per frame
-	void Update () {
-        //Only works for fungi on the ground Hacky, need to work around
-        if (occupiedHexagon != null)
-        {
-            //Should adjust it for multiple types, not extendable code! TODO
-            if (occupiedHexagon.HexTree.Type == TreeType.SmallTree)
-            {
-                timerSpeedMultiplier = 1 + 0.3f + (Random.value / 4);
-            }
-            else if (occupiedHexagon.HexTree.Type == TreeType.BigTree)
-            {
-                timerSpeedMultiplier = 1 + 0.5f + (Random.value / 2);
-            }
-        }
-        if (stage < maxStage)
-        {
-            timer += 1f * Time.deltaTime * timerSpeedMultiplier;
 
+    public void Update()
+    {
+        if (lastStage != stage)
+        {
+            lastStage = stage;
+            //Update the stage sprite
+            spriteRenderer.sprite = stageSprites[stage];
+            GridManager.instance.UserInteraction.updateView();
+        }
+    }
+
+    public void advanceGrowth(float speed)
+    {
+        if (!IsAtMaxStage)
+        {
+            timer += 1f * Time.deltaTime * speed;
+            
             if (timer >= maxTimer)
             {
                 stage++;
                 timer = 0f;
-
-                UpdateSprite();
             }
         }
-	}
-
-    public void UpdateSprite()
-    {
-        //Update the stage sprite
-        spriteRenderer.sprite = stageSprites[stage];
-        GridManager.instance.UserInteraction.updateView();
     }
+
 }

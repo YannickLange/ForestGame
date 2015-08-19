@@ -7,6 +7,8 @@ TagManager:
   - Hexagon
   - Planter
   - Lumberjack
+  - NGO
+  - HighScoreText
   layers:
   - Default
   - TransparentFX
