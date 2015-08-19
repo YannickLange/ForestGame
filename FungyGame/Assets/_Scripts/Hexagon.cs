@@ -9,8 +9,8 @@ public enum TreeState
 {
     Alive,
     Infected,
-    Dead }
-;
+    Dead
+}
 
 public enum TreeType
 {
@@ -18,12 +18,27 @@ public enum TreeType
     SmallTree = 1,
     BigTree = 2,
     DeadTree = 3,
-    CutTree = 4 }
-; //DEADTREE must be last!
+    CutTree = 4
+}
+//DEADTREE must be last!
+
+public enum HexagonState
+{
+    Empty,
+    WithSapling,
+    WithTree,
+    WithSaplingAndFungi,
+    WithTreeAndFungi,
+    WithDeadWoodAndFungi
+}
 
 public class Hexagon : MonoBehaviour
 {
-    public TreeState State;
+    private HexagonState _HexState = HexagonState.Empty;
+
+    public HexagonState HexState { get { return _HexState; } }
+
+    private TreeState State;
     public TreeType Type;
 
     public bool infected { get; set; }
@@ -37,6 +52,11 @@ public class Hexagon : MonoBehaviour
     //cached components
     public GameObject _treeInfectPrefab;
     private NGO _ngo;
+
+    public bool canInfectTree()
+    {
+        return infected && State == TreeState.Alive && (Type == TreeType.BigTree || Type == TreeType.DeadTree || Type == TreeType.SmallTree) && HexTree != null && Fungi != null && Fungi.IsAtMaxStage;
+    }
 
     public NGO ngo
     {
