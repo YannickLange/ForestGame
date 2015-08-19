@@ -6,7 +6,6 @@ public enum TreeType { Sapling = 0, SmallTree = 1, BigTree = 2, DeadTree = 3, Cu
 
 public class TreeClass : MonoBehaviour
 {
-    public TreeState State;
     public TreeType Type;
 
     public Hexagon occupiedHexagon {get; set;}

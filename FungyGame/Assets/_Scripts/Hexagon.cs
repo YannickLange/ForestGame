@@ -7,6 +7,8 @@ public delegate void HexagonEventHandler(object sender,EventArgs e,int clickID);
 
 public class Hexagon : MonoBehaviour
 {
+    public TreeState State;
+
     public bool infected { get; set; }
     public Fungi _infection;
     
@@ -77,7 +79,7 @@ public class Hexagon : MonoBehaviour
                 {
                     Debug.Log("Tree should be dead");
                     //Does not do anything, just here for completion sake
-                    _HexTree.State = TreeState.Dead;
+                    State = TreeState.Dead;
                     _HexTree.Type = TreeType.DeadTree;
                     //End of useless code
                 
@@ -95,7 +97,7 @@ public class Hexagon : MonoBehaviour
     {
         if (_HexTree != null)
         {
-            switch (_HexTree.State)
+            switch (State)
             {
                 case TreeState.Alive:
                     if (Time.time >= _nextEventTime)
@@ -140,7 +142,7 @@ public class Hexagon : MonoBehaviour
             treeInfect.transform.parent = _HexTree.transform;
             _HexTree.occupiedHexagon.Fungi.stage = 0;
             _infection = treeInfect.GetComponent<Fungi>();
-            _HexTree.State = TreeState.Infected;
+            State = TreeState.Infected;
         
             GridManager.instance.UserInteraction.updateView();
         } else
@@ -162,6 +164,7 @@ public class Hexagon : MonoBehaviour
             newTreeClassScript.occupiedHexagon = this;
             var oldTree = _HexTree;
             _HexTree = newTreeClassScript;
+            State = TreeState.Alive;
             if (newTreeClassScript.Type == TreeType.DeadTree)
                 GridManager.instance.Meter.Fungus(5);
             //destroy the original
