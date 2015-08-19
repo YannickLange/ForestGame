@@ -5,7 +5,7 @@ using System.Collections.Generic;
 public class Planter : MonoBehaviour
 {
     public static bool isPlanterWaiting = false;
-    public Sprite PlanterWithSapling;
+    public Sprite PlanterSapling;
     public Sprite PlanterWithoutSapling;
     public float MoveTime = 0.6f;
     public float PlantActionTime = 5.0f;
@@ -36,7 +36,7 @@ public class Planter : MonoBehaviour
         //1:Looking for a spot:
         for (int i = 0; i < Map.instance.Hexagons.Length; i++)
         {
-            if (Map.instance.Hexagons[i].HexTree == null && !Map.instance.Hexagons[i].isTarget)
+            if ((Map.instance.Hexagons[i].HexState == HexagonState.Empty || Map.instance.Hexagons[i].HexState == HexagonState.CutTree) && !Map.instance.Hexagons[i].isTarget)
                 emptyHex.Add(Map.instance.Hexagons[i]);
         }
         if (emptyHex.Count == 0)

@@ -8,8 +8,6 @@ public class Lumberjack : MonoBehaviour
     public static bool isLumberjackWaiting = false;
     public float MoveTime = 0.5f;
     public float ChopActionTime = 5.0f;
-
-
     private Hexagon _targetHex = null;
     private Transform _targetTr = null;
     private Hexagon _spawnHex = null;
@@ -19,13 +17,13 @@ public class Lumberjack : MonoBehaviour
     private Transform _thisTransform;
     private Rigidbody _rb;
 
-
     void Awake()
     {
         _thisTransform = transform;
         _rb = GetComponent<Rigidbody>();
         isLumberjackWaiting = false;
     }
+
     public void Spawn()
     {
         isLumberjackWaiting = true;
@@ -57,10 +55,8 @@ public class Lumberjack : MonoBehaviour
                 fullHex.Add(Map.instance.Hexagons[i]);
         }
         if (fullHex.Count == 0)
-        {
             Destroy(gameObject);
-            return;
-        }
+
         _targetHex = fullHex[Random.Range(0, fullHex.Count)];
         _targetHex.isTarget = true;
         _targetTr = _targetHex.transform;
@@ -75,7 +71,7 @@ public class Lumberjack : MonoBehaviour
         Vector3 newPosition;
         while (sqrRemainingDistance > 1e-6)
         {
-            if(_targetHex.Type == TreeType.DeadTree || _targetHex.ngo != null)
+            if (_targetHex.Type == TreeType.DeadTree || _targetHex.ngo != null)
             {
                 SelectTarget();
             }
@@ -135,23 +131,7 @@ public class Lumberjack : MonoBehaviour
 
     private void ChopDownTree()
     {
-        //1:Destroy the current tree
-        GameObject.Destroy(_targetHex.HexTree.gameObject);
-        if (_targetHex.Fungi != null)
-        {
-            int fungusCount = 0;
-            //Checking if the deleted fungi is the last one:
-            for (int i = 0; i < Map.instance.Hexagons.Length; i++ )
-            {
-                if (Map.instance.Hexagons[i].Fungi != null)
-                    fungusCount++;
-            }
-            if (fungusCount == 1)
-                GridManager.instance.Meter.r.PressReset();
-            GameObject.Destroy(_targetHex.Fungi.gameObject);
-        }
-        _targetHex.HexTree = null;
+        _targetHex.ReplaceTree(TreeType.CutTree);
         GridManager.instance.Meter.Forest(5);
-        _targetHex.infected = false;
     }
 }

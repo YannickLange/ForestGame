@@ -7,7 +7,6 @@ using System;
 public class Map : MonoBehaviour
 {
     //<<<<<<<<<<<<<<<<<<
-    public GameObject fungi;
     private TreeGenerator treeGenerator;
     //private array of hexagons
     private Hexagon[] _hexagons;
@@ -74,27 +73,16 @@ public class Map : MonoBehaviour
         BuildMap();
         int rand = UnityEngine.Random.Range(0, _hexagons.Length - 1);
         int maxTries = 1000;
-        while (_hexagons[rand].HexTree == null || _hexagons[rand].Type == TreeType.Sapling)
+        while (_hexagons[rand].HexState != HexagonState.Tree)
         {
             --maxTries;
             Debug.Assert(maxTries > 0);
             if (maxTries == 0)
                 return;
+
             rand = UnityEngine.Random.Range(0, _hexagons.Length - 1);
         }
-        _hexagons[rand].infected = true;
         SpawnFungi(_hexagons[rand]);
-    }
-
-    public Fungi CreateFungiOn(Hexagon hex)
-    {
-        GameObject fungiObject = Instantiate(fungi, hex.transform.position + new Vector3(0, 0.001f, 0), Quaternion.LookRotation(Vector3.up * 90)) as GameObject;
-        fungiObject.transform.parent = hex.gameObject.transform;
-        //NGO checking
-        if (hex.ngo != null)
-            StartCoroutine(hex.ngo.PickupNGO());
-
-        return fungiObject.GetComponent<Fungi>();
     }
 
     public void SpawnFungi(Hexagon hex)
@@ -104,11 +92,9 @@ public class Map : MonoBehaviour
         //If there's one or more tile with a tree on it
         if (treesTiles.Count > MinimumSpawnTrees)
         {
-            hex.Fungi = CreateFungiOn(hex);
+            hex.addTileInfectingFungi();
         } else
         {
-            //remove the spawned one
-
             //Browsing all the hexagons to get at least "MinimumSpawnTrees"
             for (int i = 0; i < Hexagons.Length; i++)
             {
@@ -116,13 +102,17 @@ public class Map : MonoBehaviour
                 treesTiles = GetAccessibleTiles(Hexagons[i]);
                 if (treesTiles.Count > MinimumSpawnTrees)
                 {
-                    Hexagons[i].Fungi = CreateFungiOn(Hexagons[i]);
+                    if (Hexagons[i].HexState == HexagonState.Empty)
+                    {
+                        Hexagons[i].ReplaceTree(TreeType.SmallTree);
+                    }
+                    Hexagons[i].addTileInfectingFungi();
                     return;
                 }
             }
             //Spawn a new tree
             List<Hexagon> surroundingTiles = GetSurroundingTiles(hex);
-            hex.Fungi = CreateFungiOn(hex);
+            hex.addTileInfectingFungi();
             int count = MinimumSpawnTrees - treesTiles.Count;
             for (int i = 0; i < surroundingTiles.Count; i ++)
             {
@@ -194,9 +184,8 @@ public class Map : MonoBehaviour
         } else if (Lumberjack.isLumberjackWaiting)
             Lumberjacktimer = 0f;
         #endregion
-
         #region NGO
-        if (NGOtimer > _NGOSpawn && !NGO.isNGOWaiting)
+        if (NGOtimer >= _NGOSpawn && !NGO.isNGOWaiting)
         {
             _NGOSpawn = Random.Range(_NGORndDown, _NGORndUp);
 
