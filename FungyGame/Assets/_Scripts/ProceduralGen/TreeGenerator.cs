@@ -16,7 +16,6 @@ public class TreeGenerator
         //Game object which is the parent of all the hex tiles
         GameObject Forest = new GameObject("Forest");
 
-
         for (int i = 0; i < Map.instance.Hexagons.Length; i++)
         {
             if (Random.value <= density)
@@ -25,9 +24,11 @@ public class TreeGenerator
                 GameObject tree = GameObject.Instantiate(ResourcesManager.instance.TreeTypes[treetype], Map.instance.Hexagons[i].transform.position, Quaternion.identity) as GameObject;
                 tree.transform.parent = Forest.transform;
                 Map.instance.Hexagons[i].HexTree = tree.GetComponent<TreeClass>();
+                Map.instance.Hexagons[i].Type = (TreeType)treetype;
                 tree.GetComponent<TreeClass>().occupiedHexagon = Map.instance.Hexagons[i];
             }
         }
+        //TODO: minimum amount of trees
     }
 
     public static void SpawnSapling(Hexagon hex)

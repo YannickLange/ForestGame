@@ -46,8 +46,8 @@ public class Lumberjack : MonoBehaviour
         {
             if (Map.instance.Hexagons[i].HexTree != null &&
                 !Map.instance.Hexagons[i].isTarget &&
-                Map.instance.Hexagons[i].HexTree.Type != TreeType.Sapling &&
-                Map.instance.Hexagons[i].HexTree.Type != TreeType.DeadTree)
+                Map.instance.Hexagons[i].Type != TreeType.Sapling &&
+                Map.instance.Hexagons[i].Type != TreeType.DeadTree)
                 fullHex.Add(Map.instance.Hexagons[i]);
         }
         if (fullHex.Count == 0)
@@ -66,7 +66,7 @@ public class Lumberjack : MonoBehaviour
         Vector3 newPosition;
         while (sqrRemainingDistance > 1e-6)
         {
-            if(_targetHex.HexTree.Type == TreeType.DeadTree)
+            if(_targetHex.Type == TreeType.DeadTree)
             {
                 SelectTarget();
             }
@@ -83,7 +83,7 @@ public class Lumberjack : MonoBehaviour
         #region 2:ChopTree
         //Change the sprite of the tree:
         yield return new WaitForSeconds(ChopActionTime / 2f);
-        _targetHex.ReplaceTree(4);
+        _targetHex.ReplaceTree(TreeType.CutTree);
         yield return new WaitForSeconds(ChopActionTime / 2f);
         ChopDownTree();
             

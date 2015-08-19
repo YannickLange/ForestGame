@@ -90,7 +90,7 @@ public class UserInteraction : MonoBehaviour
     
     private bool isInfectButtonActive(Hexagon selectedHexagon)
     {
-        return selectedHexagon != null && userInteractionState == UserInteractionState.HexagonSelected && selectedHexagon.infected && selectedHexagon.State == TreeState.Alive && (selectedHexagon.HexTree.Type == TreeType.BigTree || selectedHexagon.HexTree.Type == TreeType.DeadTree || selectedHexagon.HexTree.Type == TreeType.SmallTree) && selectedHexagon.HexTree && selectedHexagon.Fungi != null && selectedHexagon.Fungi.stage == selectedHexagon.Fungi.maxStage;
+        return selectedHexagon != null && userInteractionState == UserInteractionState.HexagonSelected && selectedHexagon.infected && selectedHexagon.State == TreeState.Alive && (selectedHexagon.Type == TreeType.BigTree || selectedHexagon.Type == TreeType.DeadTree || selectedHexagon.Type == TreeType.SmallTree) && selectedHexagon.HexTree && selectedHexagon.Fungi != null && selectedHexagon.Fungi.stage == selectedHexagon.Fungi.maxStage;
     }
     
     UserInteractionState _DEBUG_lastState = UserInteractionState.Idle;

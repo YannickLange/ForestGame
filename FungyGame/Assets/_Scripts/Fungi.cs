@@ -36,12 +36,13 @@ public class Fungi : MonoBehaviour {
         //Only works for fungi on the ground Hacky, need to work around
         if (occupiedHexagon != null)
         {
+            Debug.Assert(occupiedHexagon.HexTree != null);
             //Should adjust it for multiple types, not extendable code! TODO
-            if (occupiedHexagon.HexTree.Type == TreeType.SmallTree)
+            if (occupiedHexagon.Type == TreeType.SmallTree)
             {
                 timerSpeedMultiplier = 1 + 0.3f + (Random.value / 4);
             }
-            else if (occupiedHexagon.HexTree.Type == TreeType.BigTree)
+            else if (occupiedHexagon.Type == TreeType.BigTree)
             {
                 timerSpeedMultiplier = 1 + 0.5f + (Random.value / 2);
             }

@@ -8,6 +8,7 @@ public delegate void HexagonEventHandler(object sender,EventArgs e,int clickID);
 public class Hexagon : MonoBehaviour
 {
     public TreeState State;
+    public TreeType Type;
 
     public bool infected { get; set; }
     public Fungi _infection;
@@ -78,12 +79,11 @@ public class Hexagon : MonoBehaviour
                 if (infection.stage == _infection.maxStage)
                 {
                     Debug.Log("Tree should be dead");
+                
+                    ReplaceTree(TreeType.DeadTree);
                     //Does not do anything, just here for completion sake
                     State = TreeState.Dead;
-                    _HexTree.Type = TreeType.DeadTree;
                     //End of useless code
-                
-                    ReplaceTree((int)TreeType.DeadTree);
                     Debug.Log(_HexTree);
                     Debug.Log(infection);
                     Debug.Log(infection.gameObject);
@@ -119,7 +119,7 @@ public class Hexagon : MonoBehaviour
     {
         if (_HexTree != null)
         {
-            int typeValue = (int)_HexTree.Type;
+            int typeValue = (int)Type;
             /*if (typeValue >= (int)TreeType.DeadTree) //TODO: Change this back to deadtree when they exist
             return;*/
         
@@ -127,7 +127,7 @@ public class Hexagon : MonoBehaviour
             if (newType >= (int)TreeType.DeadTree)
                 return;
             _nextEventTime = Time.time + UnityEngine.Random.Range(growTime, growTime + randomGrowTimeRange); //Set the next event time value
-            ReplaceTree(newType);
+            ReplaceTree((TreeType)newType);
         } else
         {
             Debug.Log("should not get here");
@@ -151,12 +151,12 @@ public class Hexagon : MonoBehaviour
         }
     }
     
-    public void ReplaceTree(int newType)
+    public void ReplaceTree(TreeType newType)
     {
         if (_HexTree != null)
         {
             //create the new tree
-            GameObject tree = Instantiate(ResourcesManager.instance.TreeTypes [newType], _HexTree.gameObject.transform.position, _HexTree.gameObject.transform.rotation) as GameObject;
+            GameObject tree = Instantiate(ResourcesManager.instance.TreeTypes [(int)newType], _HexTree.gameObject.transform.position, _HexTree.gameObject.transform.rotation) as GameObject;
             TreeClass newTreeClassScript = tree.GetComponent<TreeClass>();
             //Make the forest the parent
             tree.transform.parent = GameObject.Find("Forest").transform;
@@ -165,7 +165,8 @@ public class Hexagon : MonoBehaviour
             var oldTree = _HexTree;
             _HexTree = newTreeClassScript;
             State = TreeState.Alive;
-            if (newTreeClassScript.Type == TreeType.DeadTree)
+            Type = newType;
+            if (newType == TreeType.DeadTree)
                 GridManager.instance.Meter.Fungus(5);
             //destroy the original
             GameObject.Destroy(oldTree.gameObject);
