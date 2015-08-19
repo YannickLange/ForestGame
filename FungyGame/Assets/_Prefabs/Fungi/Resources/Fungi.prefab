@@ -26,7 +26,7 @@ Transform:
   m_GameObject: {fileID: 154234}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: .00100000005, z: 0}
-  m_LocalScale: {x: 2.4000001, y: 2.4000001, z: 1}
+  m_LocalScale: {x: 1.39999998, y: 1.20000005, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
@@ -55,10 +55,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e7f781d808d3d464caa128da85f057d4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  tileSheetName: fungiHexSheet
+  tileSheetName: Fungus-Bigger-Mushrooms-2
   timer: 0
   timerSpeedMultiplier: 1
-  maxTimer: 10
+  maxTimer: 1
   stage: 0
   maxStage: 6
 --- !u!212 &21248412
@@ -85,7 +85,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300006, guid: f1a98c98b593d784eb47e4990efbce04, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 7c04f73597773244e95192e4b03ec6a4, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
 --- !u!1001 &100100000
 Prefab:
@@ -96,11 +96,11 @@ Prefab:
     m_Modifications:
     - target: {fileID: 0}
       propertyPath: m_LocalScale.x
-      value: 2.4000001
+      value: 1.39999998
       objectReference: {fileID: 0}
     - target: {fileID: 0}
       propertyPath: m_LocalScale.y
-      value: 2.4000001
+      value: 1.20000005
       objectReference: {fileID: 0}
     - target: {fileID: 0}
       propertyPath: m_LocalScale.z
@@ -108,12 +108,12 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 0}
       propertyPath: maxTimer
-      value: 10
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 0}
       propertyPath: m_Sprite
       value: 
-      objectReference: {fileID: 21300006, guid: f1a98c98b593d784eb47e4990efbce04,
+      objectReference: {fileID: 21300000, guid: 7c04f73597773244e95192e4b03ec6a4,
         type: 3}
     - target: {fileID: 0}
       propertyPath: maxStage
@@ -121,7 +121,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 0}
       propertyPath: tileSheetName
-      value: fungiHexSheet
+      value: Fungus-Bigger-Mushrooms-2
       objectReference: {fileID: 0}
     - target: {fileID: 0}
       propertyPath: fixedRotationDirection
