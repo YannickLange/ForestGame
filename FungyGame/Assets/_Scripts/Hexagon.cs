@@ -68,30 +68,7 @@ public class Hexagon : MonoBehaviour
         }
     }
     
-    public Fungi Fungi
-    {
-        get
-        {
-            var fungiHolder = transform.childCount > 0 ? transform.GetChild(0) : null;
-            var fungi = fungiHolder ? fungiHolder.GetComponent<Fungi>() : null;
-            return fungi;
-        }
-        set
-        {
-            if (Fungi != value)
-            {
-                if (Fungi)
-                { //remove from from old
-                    Fungi.occupiedHexagon = null;
-                }
-                Fungi = value;
-                if (Fungi)
-                { //add to new hexagon
-                    Fungi.occupiedHexagon = this;
-                }
-            }
-        }
-    }
+    public Fungi Fungi;
     
     void Update()
     {

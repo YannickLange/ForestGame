@@ -11,11 +11,10 @@ public class Fungi : MonoBehaviour
     private int lastStage = -1;
     public int stage = 0;
     public int maxStage = 6;
-    public SpriteRenderer spriteRenderer;
     public Sprite[] stageSprites;
-    public Hexagon startHexagon, endHexagon;
 
-    public Hexagon occupiedHexagon { get; set; }
+    //Cached components
+    public SpriteRenderer spriteRenderer;
 
     void Awake()
     {
@@ -27,8 +26,6 @@ public class Fungi : MonoBehaviour
 
     void Start()
     {
-        //Hacky code here, causes bugs with the infectionbar!
-        occupiedHexagon = transform.parent.GetComponent<Hexagon>();
     }
 
     public void Update()

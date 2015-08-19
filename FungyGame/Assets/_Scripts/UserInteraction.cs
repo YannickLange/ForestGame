@@ -365,7 +365,7 @@ public class UserInteraction : MonoBehaviour
     
     public void EndDrag(Hexagon endHexagon)
     {
-        Map.instance.PutFungiOn(endHexagon);
+        endHexagon.Fungi = Map.instance.CreateFungiOn(endHexagon);
         endHexagon.infected = true;
         startHexChildScript.stage = 0;
     }

@@ -12,7 +12,6 @@ public class Map : MonoBehaviour
     //private array of hexagons
     private Hexagon[] _hexagons;
     public int MinimumSpawnTrees = 1;
-
     public float Plantertimer = 0f;
     public float Lumberjacktimer = 0f;
     public float NGOtimer = 0f;
@@ -31,11 +30,9 @@ public class Map : MonoBehaviour
     public float _planterSpawn = 20f;
     public float _planterRndUp = 10f;
     public float _planterRndDown = 30f;
-
     public float _lumberjackSpawn = 20f;
     public float _lumberjackRndUp = 10f;
     public float _lumberjackRndDown = 30f;
-
     public float _NGOSpawn = 20f;
     public float _NGORndUp = 10f;
     public float _NGORndDown = 30f;
@@ -47,6 +44,7 @@ public class Map : MonoBehaviour
     private Transform _planter;
     private Transform _lumberjack;
     private Transform _ngo;
+
     void Awake()
     {
         //Check if instance already exists
@@ -88,14 +86,15 @@ public class Map : MonoBehaviour
         SpawnFungi(_hexagons[rand]);
     }
 
-    public void PutFungiOn(Hexagon hex)
+    public Fungi CreateFungiOn(Hexagon hex)
     {
         GameObject fungiObject = Instantiate(fungi, hex.transform.position + new Vector3(0, 0.001f, 0), Quaternion.LookRotation(Vector3.up * 90)) as GameObject;
         fungiObject.transform.parent = hex.gameObject.transform;
-        Debug.Log(hex.Fungi);
         //NGO checking
         if (hex.ngo != null)
             StartCoroutine(hex.ngo.PickupNGO());
+
+        return fungiObject.GetComponent<Fungi>();
     }
 
     public void SpawnFungi(Hexagon hex)
@@ -104,8 +103,9 @@ public class Map : MonoBehaviour
         List<Hexagon> treesTiles = GetAccessibleTiles(hex);
         //If there's one or more tile with a tree on it
         if (treesTiles.Count > MinimumSpawnTrees)
-            PutFungiOn(hex);
-        else
+        {
+            hex.Fungi = CreateFungiOn(hex);
+        } else
         {
             //remove the spawned one
 
@@ -116,17 +116,17 @@ public class Map : MonoBehaviour
                 treesTiles = GetAccessibleTiles(Hexagons[i]);
                 if (treesTiles.Count > MinimumSpawnTrees)
                 {
-                    PutFungiOn(Hexagons[i]);
+                    Hexagons[i].Fungi = CreateFungiOn(Hexagons[i]);
                     return;
                 }
             }
             //Spawn a new tree
             List<Hexagon> surroundingTiles = GetSurroundingTiles(hex);
-            PutFungiOn(hex);
+            hex.Fungi = CreateFungiOn(hex);
             int count = MinimumSpawnTrees - treesTiles.Count;
-            for (int i = 0; i < surroundingTiles.Count; i ++ )
+            for (int i = 0; i < surroundingTiles.Count; i ++)
             {
-                if(surroundingTiles[i].HexTree == null)
+                if (surroundingTiles[i].HexTree == null)
                 {
                     TreeGenerator.SpawnSapling(surroundingTiles[i]);
                     count--;
@@ -145,12 +145,12 @@ public class Map : MonoBehaviour
         for (int x = 0; x < GridManager.instance.gridWidthInHexes; x++)
             for (int y = 0; y < GridManager.instance.gridHeightInHexes; y++)
             {
-            _hexagons[x + y * GridManager.instance.gridWidthInHexes] = GridManager.instance.CreateHexagonAt(x, y);
-            _hexagons[x + y * GridManager.instance.gridWidthInHexes].ClickEvent += new HexagonEventHandler(GridManager.instance.UserInteraction.OnHexagonClickedEvent);
+                _hexagons[x + y * GridManager.instance.gridWidthInHexes] = GridManager.instance.CreateHexagonAt(x, y);
+                _hexagons[x + y * GridManager.instance.gridWidthInHexes].ClickEvent += new HexagonEventHandler(GridManager.instance.UserInteraction.OnHexagonClickedEvent);
                 //Making the border array:
                 if (x == 0 || y == 0 || x == GridManager.instance.gridWidthInHexes - 1 || y == GridManager.instance.gridHeightInHexes - 1)
-                borders.Add(_hexagons[x + y * GridManager.instance.gridWidthInHexes]);
-        }
+                    borders.Add(_hexagons[x + y * GridManager.instance.gridWidthInHexes]);
+            }
 
         HexBorders = new Hexagon[borders.Count];
         borders.CopyTo(HexBorders, 0);
@@ -179,8 +179,7 @@ public class Map : MonoBehaviour
             GameObject planter = Instantiate(ResourcesManager.instance.Planter) as GameObject;
             planter.transform.SetParent(_planter);
             planter.GetComponent<Planter>().Spawn();
-        }
-        else if (Planter.isPlanterWaiting)
+        } else if (Planter.isPlanterWaiting)
             Plantertimer = 0f;
 
         #endregion
@@ -192,8 +191,7 @@ public class Map : MonoBehaviour
             GameObject lumberjack = Instantiate(ResourcesManager.instance.Lumberjack) as GameObject;
             lumberjack.transform.SetParent(_lumberjack);
             lumberjack.GetComponent<Lumberjack>().Spawn();
-        }
-        else if (Lumberjack.isLumberjackWaiting)
+        } else if (Lumberjack.isLumberjackWaiting)
             Lumberjacktimer = 0f;
         #endregion
 
@@ -205,9 +203,8 @@ public class Map : MonoBehaviour
             GameObject ngo = Instantiate(ResourcesManager.instance.NGO) as GameObject;
             ngo.transform.SetParent(_ngo);
             ngo.GetComponent<NGO>().Spawn();
-        }
-        else if (NGO.isNGOWaiting)
-            NGOtimer= 0f;
+        } else if (NGO.isNGOWaiting)
+            NGOtimer = 0f;
         #endregion
     }
 
@@ -226,8 +223,7 @@ public class Map : MonoBehaviour
             {
                 surroundingHexs.Add(_hexagons[x + (y - 1) * GridManager.instance.gridWidthInHexes]);
             }
-        }
-        else if (!IsOutOfBounds(x - 1, y - 1))
+        } else if (!IsOutOfBounds(x - 1, y - 1))
         {
             surroundingHexs.Add(_hexagons[(x - 1) + (y - 1) * GridManager.instance.gridWidthInHexes]);
         }
@@ -245,8 +241,7 @@ public class Map : MonoBehaviour
             {
                 surroundingHexs.Add(_hexagons[x + (y + 1) * GridManager.instance.gridWidthInHexes]);
             }
-        }
-        else if (!IsOutOfBounds(x - 1, y + 1))
+        } else if (!IsOutOfBounds(x - 1, y + 1))
         {
             surroundingHexs.Add(_hexagons[(x - 1) + (y + 1) * GridManager.instance.gridWidthInHexes]);
         }
@@ -258,8 +253,7 @@ public class Map : MonoBehaviour
         {
             if (!IsOutOfBounds(x, y + 1))
                 surroundingHexs.Add(_hexagons[x + (y + 1) * GridManager.instance.gridWidthInHexes]);
-        }
-        else if (!IsOutOfBounds(x + 1, y + 1))
+        } else if (!IsOutOfBounds(x + 1, y + 1))
             surroundingHexs.Add(_hexagons[(x + 1) + (y + 1) * GridManager.instance.gridWidthInHexes]);
         //Right tile
         if (!IsOutOfBounds(x + 1, y))
@@ -269,8 +263,7 @@ public class Map : MonoBehaviour
         {
             if (!IsOutOfBounds(x, y - 1))
                 surroundingHexs.Add(_hexagons[x + (y - 1) * GridManager.instance.gridWidthInHexes]);
-        }
-        else if (!IsOutOfBounds(x + 1, y - 1))
+        } else if (!IsOutOfBounds(x + 1, y - 1))
             surroundingHexs.Add(_hexagons[(x + 1) + (y - 1) * GridManager.instance.gridWidthInHexes]);
         #endregion
 
@@ -285,7 +278,7 @@ public class Map : MonoBehaviour
     public List<Hexagon> GetAccessibleTiles(Hexagon hex)
     {
         List<Hexagon> surroundingTrees = new List<Hexagon>();
-        foreach(Hexagon h in GetSurroundingTiles(hex))
+        foreach (Hexagon h in GetSurroundingTiles(hex))
         {
             if (h.HexTree != null)
                 surroundingTrees.Add(h);
