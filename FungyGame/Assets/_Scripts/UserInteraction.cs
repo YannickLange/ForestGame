@@ -35,12 +35,13 @@ public class UserInteraction : MonoBehaviour
             if (hit.collider.tag == "Hexagon")
             {
                 Hexagon hoveredHexagon = hit.collider.gameObject.GetComponent<Hexagon>();
+                //NGO selection when we qre zqiting for q tile protection
                 if (NGO.ProtectionSelection)
                 {
                     if (hoveredHexagon.TileInfection != null)
-                        hoveredHexagon.HexagonRenderer.material = ResourcesManager.instance.HexWhiteBorders;
+                        hoveredHexagon.ShowOverTile(true, Color.white);
                     if (previousHexagon != null && previousHexagon != hoveredHexagon)
-                        previousHexagon.HexagonRenderer.material = ResourcesManager.instance.HexNormalMaterial;
+                        previousHexagon.ShowOverTile(false, Color.white);
                     previousHexagon = hoveredHexagon;
                  }
 
@@ -104,7 +105,7 @@ public class UserInteraction : MonoBehaviour
     
     private bool isInfectButtonActive(Hexagon selectedHexagon)
     {
-        return selectedHexagon != null && userInteractionState == UserInteractionState.HexagonSelected && selectedHexagon.canInfectTree();
+        return selectedHexagon != null && userInteractionState == UserInteractionState.HexagonSelected && selectedHexagon.TreeIsInfectable;
     }
     
     UserInteractionState _DEBUG_lastState = UserInteractionState.Idle;
@@ -251,6 +252,7 @@ public class UserInteraction : MonoBehaviour
     public void OnHexagonClickedEvent(object sender, EventArgs e, int clickID)
     {
         Hexagon hex = sender as Hexagon;
+        Debug.Log("hexstate: " + hex.HexState);
         switch (clickID)
         {
             case 0:

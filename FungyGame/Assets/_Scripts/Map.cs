@@ -104,7 +104,7 @@ public class Map : MonoBehaviour
                 {
                     if (Hexagons[i].HexState == HexagonState.Empty)
                     {
-                        Hexagons[i].ReplaceTree(TreeType.SmallTree);
+                        Hexagons[i].PlantTree(TreeType.SmallTree);
                     }
                     Hexagons[i].addTileInfectingFungi();
                     return;
