@@ -9,9 +9,7 @@ public class Planter : MonoBehaviour
     public Sprite PlanterWithoutSapling;
     public float MoveTime = 0.6f;
     public float PlantActionTime = 5.0f;
-
     public const float MaxSpawnConst = 5;
-
     private Hexagon _targetHex = null;
     private Transform _targetTr = null;
     private Hexagon _spawnHex = null;
@@ -20,7 +18,6 @@ public class Planter : MonoBehaviour
     //Cached components:
     private Transform _thisTransform;
     private Rigidbody _rb;
-
 
     void Awake()
     {
@@ -36,8 +33,21 @@ public class Planter : MonoBehaviour
         //1:Looking for a spot:
         for (int i = 0; i < Map.instance.Hexagons.Length; i++)
         {
-            if ((Map.instance.Hexagons[i].HexState == HexagonState.Empty || Map.instance.Hexagons[i].HexState == HexagonState.CutTree) && !Map.instance.Hexagons[i].isTarget)
-                emptyHex.Add(Map.instance.Hexagons[i]);
+            if ((Map.instance.Hexagons [i].HexState == HexagonState.Empty || Map.instance.Hexagons [i].HexState == HexagonState.CutTree) && !Map.instance.Hexagons [i].isTarget)
+            {
+                int amountOfFungiAroundHex = 0;
+                foreach (var hex in Map.instance.Hexagons [i].SurroundingHexagons)
+                {
+                    if (hex.HasFungi)
+                    {
+                        ++amountOfFungiAroundHex;
+                    }
+                }
+                for (int j = 0; j < (amountOfFungiAroundHex*4)+1; ++j)
+                {
+                    emptyHex.Add(Map.instance.Hexagons [i]);
+                }
+            }
         }
         if (emptyHex.Count == 0)
         {
@@ -46,14 +56,14 @@ public class Planter : MonoBehaviour
             return;
         }
 
-        _targetHex = emptyHex[Random.Range(0, emptyHex.Count)];
+        _targetHex = emptyHex [Random.Range(0, emptyHex.Count)];
         _targetHex.isTarget = true;
         _targetTr = _targetHex.transform;
         //Highlight the hexgon
-        _targetHex.StartCoroutine(_targetHex.FlashHexagon(new Color32(1,71,99,255)));
+        _targetHex.StartCoroutine(_targetHex.FlashHexagon(new Color32(1, 71, 99, 255)));
 
         //2:Looking for the spawn hexagon
-        _spawnHex = Map.instance.HexBorders[Random.Range(0, Map.instance.HexBorders.Length)];
+        _spawnHex = Map.instance.HexBorders [Random.Range(0, Map.instance.HexBorders.Length)];
 
         //4:Enable the movement
         transform.position = _spawnHex.transform.position;
@@ -89,10 +99,10 @@ public class Planter : MonoBehaviour
         Hexagon _exitHex = null;
         for (int i = 0; i < Map.instance.HexBorders.Length; i++)
         {
-            if (Vector3.Distance(_thisTransform.position, Map.instance.HexBorders[i].transform.position) < dist)
+            if (Vector3.Distance(_thisTransform.position, Map.instance.HexBorders [i].transform.position) < dist)
             {
-                _exitHex = Map.instance.HexBorders[i];
-                dist = Vector3.Distance(_thisTransform.position, Map.instance.HexBorders[i].transform.position);
+                _exitHex = Map.instance.HexBorders [i];
+                dist = Vector3.Distance(_thisTransform.position, Map.instance.HexBorders [i].transform.position);
             }
         }
         if (_exitHex != null)
